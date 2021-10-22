@@ -118,3 +118,5 @@ Pipfile
 .DS_Store
 
 data/
+*.lock
+Pipfile.lock
