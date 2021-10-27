@@ -38,7 +38,8 @@ def find_sequences(folder_path: str):
     print("Splitting sequences and checking each of them...")
     all_anno_seq = []
     for seq in sequences:
-        seq_blobs = [blobs[i] for i in seq]
+        seq_paths = [image_paths[i] for i in seq]
+        seq_blobs = analyser.get_blobs_in_files(seq_paths)
         seq_names = [image_paths[i].rsplit(os.path.sep, 1)[-1] for i in seq]
         seq_bbox = analyser.get_bbox_if_valid_blob_seq(seq_blobs, names=seq_names)
         if seq_bbox:

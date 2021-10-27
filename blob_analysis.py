@@ -7,6 +7,7 @@ from skimage.morphology import binary_closing, binary_opening
 from skimage import measure
 from scipy.ndimage import gaussian_filter
 import glob
+from numpy.linalg import norm
 
 # image_folder = sys.argv[1]
 # txt_folder = sys.argv[1]
@@ -20,6 +21,12 @@ OUTLET_POS = 740  # Horizontal position for outlet
 MIN_BLOB_SIZE = 50  # Minimum number of pixels in an accepted blob
 N_IMAGES_MEDIAN = 100  # Number of image files used for the median
 SIGMA = 4
+
+class Blob:
+    def __init__(self, bbox, centroid):
+        self.bbox = bbox
+        self.centroid = np.array(centroid)
+
 
 def calculate_median(image_paths: list) -> np.ndarray:
     for idx, img_path in enumerate(image_paths):
@@ -60,19 +67,20 @@ class BlobAnalysis:
     def get_blobs_in_files(self, paths):
         if isinstance(paths, str):
             paths = [paths]
-        all_blobs = []
+        blob_list = []
         for _, p in enumerate(paths):
             img = self.sub_median_and_bin(p)
             img = self.open_and_close(img)
             blobs = self.find_blobs(img)
-            all_blobs.append(blobs)
+            blob_list.append(blobs)
 
-        return all_blobs
+        return blob_list
+
 
     def get_bbox_if_valid_blob_seq(self, blob_seq, names=None):
         """Return bounding boxes for valid sequence"""
         if names:
-            assert len(blob_seq) == len(names)
+            pass
         else:
             names = range(len(blob_seq))
 
@@ -83,6 +91,34 @@ class BlobAnalysis:
         else:
             return None
 
+    @staticmethod
+    def check_rotated(blobs):
+        """
+        :param blobs: list of skimage measure objects
+        :return: New bounding boxes
+        """
+        blobs = [Blob(bbox=blob.bbox, centroid=blob.centroid) for blob in blobs]
+        radii = [abs(blob.bbox[0]-blob.bbox[2]) for blob in blobs]
+        centroids = [blob.centroid for blob in blobs]
+
+        remove = []
+        for idx1, c1 in enumerate(centroids[:-1]):
+            for idx2 in range(idx1+1, len(centroids)):
+                c2 = centroids[idx2]
+                distance = norm((c1-c2))
+                if distance < (radii[idx1] + radii[idx2])/2 and idx2 not in remove:
+                    min_row = np.min((blobs[idx1].bbox[0],blobs[idx2].bbox[0]))
+                    min_col = np.min((blobs[idx1].bbox[1], blobs[idx2].bbox[1]))
+                    max_row = np.min((blobs[idx1].bbox[2], blobs[idx2].bbox[2]))
+                    max_col = np.min((blobs[idx1].bbox[3], blobs[idx2].bbox[3]))
+                    blobs[idx1].bbox = (min_row,min_col,max_row, max_col)
+                    remove += [idx2]
+                    break
+
+        blobs = [blob for idx, blob in enumerate(blobs) if idx not in remove]
+
+        return blobs
+
     def find_blobs(self, binary_image):
         blob_labels = measure.label(binary_image)
         blob_features = measure.regionprops(blob_labels)
@@ -90,6 +126,7 @@ class BlobAnalysis:
         if blob_features:
             # blob_area = sorted([blob.area for blob in blob_features], reverse=True)
             blobs = [blob for blob in blob_features if blob.area >= self.min_blob_size]
+            blobs = self.check_rotated(blobs)
             return blobs
         else:
             return None
