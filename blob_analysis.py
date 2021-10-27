@@ -3,7 +3,7 @@ import numpy as np
 import os
 from PIL import Image
 import matplotlib.pyplot as plt
-from skimage.morphology import binary_closing, binary_opening
+from skimage.morphology import binary_closing, binary_opening, dilation
 from skimage import measure
 from scipy.ndimage import gaussian_filter
 import glob
@@ -60,21 +60,17 @@ class BlobAnalysis:
     def get_blobs_in_files(self, paths):
         if isinstance(paths, str):
             paths = [paths]
-        all_blobs = []
+        # all_blobs = []
         for _, p in enumerate(paths):
             img = self.sub_median_and_bin(p)
             img = self.open_and_close(img)
             blobs = self.find_blobs(img)
-            all_blobs.append(blobs)
+            yield blobs  # all_blobs.append(blobs)
 
-        return all_blobs
+        # return all_blobs
 
-    def get_bbox_if_valid_blob_seq(self, blob_seq, names=None):
+    def get_bbox_if_valid_blob_seq(self, blob_seq, names):
         """Return bounding boxes for valid sequence"""
-        if names:
-            assert len(blob_seq) == len(names)
-        else:
-            names = range(len(blob_seq))
 
         left, center, right = self.count_in_sequence(blob_seq)
         is_valid = self.valid_sequences(left, center, right)
@@ -149,7 +145,7 @@ class BlobAnalysis:
         binary_image = image > 2
         binary_image += image < -2
 
-        return binary_image
+        return image
 
     @staticmethod
     def calculate_median(image_paths: list):
