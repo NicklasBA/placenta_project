@@ -1,0 +1,117 @@
+TRAIN:
+  #Sets network in "Train" mode
+  ENABLE: True
+  #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
+  DATASET: ava
+  #Mini-batch size
+  BATCH_SIZE: 64
+  #Evaluates model every EVAL_PERIOD epochs
+  EVAL_PERIOD: 5
+  #Saves model every CHECKPOINT_PERIOD epoch
+  CHECKPOINT_PERIOD: 1
+  #If true, resumes training from latest checkpoint in outer directory
+  AUTO_RESUME: True
+#CHECKPOINT_FILE_PATH: path to the pretrain checkpoint file.
+  #Can be "caffe2" or "pytorch"
+  CHECKPOINT_TYPE: caffe2
+DATA:
+  #Number of frames sampled by the slow network
+  NUM_FRAMES: 32
+  #Temporal stride
+  SAMPLING_RATE: 2
+  #The spatial augmentation jitter scales for training
+  TRAIN_JITTER_SCALES: [256, 320]
+  #Spatial crop during training. Quadratic crop
+  TRAIN_CROP_SIZE: 224
+  #Spatial crop during testing. Quadratic crop
+  TEST_CROP_SIZE: 224
+  #A list of input channel dimensions
+  INPUT_CHANNEL_NUM: [3, 3]
+#Specifics for AVA
+AVA:
+  DETECTION_SCORE_THRESH: 0.8
+  TRAIN_PREDICT_BOX_LISTS: [
+    "ava_train_v2.2.csv",
+    "person_box_67091280_iou90/ava_detection_train_boxes_and_labels_include_negative_v2.2.csv",
+  ]
+  TEST_PREDICT_BOX_LISTS: ["person_box_67091280_iou90/ava_detection_val_boxes_and_labels.csv"]
+SLOWFAST:
+  #Frame rate reduction ratio
+  ALPHA: 4
+  #Inverse of channel reduction rate
+  BETA_INV: 8
+  #Ratio of channel dimensions between the Slow and Fast pathways.
+  FUSION_CONV_CHANNEL_RATIO: 2
+  #Dimension of the kernel used for fusing information from fast to slow
+  FUSION_KERNEL_SZ: 7
+RESNET:
+  #If true, initialize the gamma of the final BN of each block to zero.
+  ZERO_INIT_FINAL_BN: True
+  # Width of each group (64 -> ResNet; 4 -> ResNeXt).
+  WIDTH_PER_GROUP: 64
+  #Number of groups. 1 for ResNet, and larger than 1 for ResNeXt).
+  NUM_GROUPS: 1
+  #Network depth
+  DEPTH: 50
+  #Transformation function. Options: "bottleneck_transform" and "x3d_transform"
+  TRANS_FUNC: bottleneck_transform
+  #Apply stride to 1x1 conv.
+  STRIDE_1X1: False
+  #Number of blocks for different stages
+  NUM_BLOCK_TEMP_KERNEL: [[3, 3], [4, 4], [6, 6], [3, 3]]
+  #Spatial dilation for different stages
+  SPATIAL_DILATIONS: [[1, 1], [1, 1], [1, 1], [2, 2]]
+  #Spatial strides for different stages
+  SPATIAL_STRIDES: [[1, 1], [2, 2], [2, 2], [1, 1]]
+#Options for Non-local neural networks: https://arxiv.org/abs/1711.07971
+NONLOCAL:
+  LOCATION: [[[], []], [[], []], [[], []], [[], []]]
+  GROUP: [[1, 1], [1, 1], [1, 1], [1, 1]]
+  INSTANTIATION: dot_product
+  POOL: [[[1, 2, 2], [1, 2, 2]], [[1, 2, 2], [1, 2, 2]], [[1, 2, 2], [1, 2, 2]], [[1, 2, 2], [1, 2, 2]]]
+BN:
+  #Asserts precise number of batches
+  USE_PRECISE_STATS: False
+  NUM_BATCHES_PRECISE: 200
+SOLVER:
+  #Base learning rate
+  BASE_LR: 0.1
+  #Polcies, options: "cosine", "steps_with_relative_lrs". Info in utils\lr_policy.py
+  LR_POLICY: 
+  #Steps for 'steps_' policies (in epochs).
+  STEPS: [0, 10, 15, 20]
+  #Learning rates for 'steps_' policies.
+  LRS: [1, 0.1, 0.01, 0.001]
+  MAX_EPOCH: 20
+  MOMENTUM: 0.9
+  WEIGHT_DECAY: 1e-7
+  WARMUP_EPOCHS: 5.0
+  #The start learning rate of the warm up.
+  WARMUP_START_LR: 0.000125
+  OPTIMIZING_METHOD: sgd
+MODEL:
+  NUM_CLASSES: 80
+  #Model architecure
+  ARCH: slowfast
+  MODEL_NAME: SlowFast
+  #Options: "cross_entropy", "soft_cross_entropy" and "bce". BCE is binary cross-entropy
+  LOSS_FUNC: bce
+  DROPOUT_RATE: 0.5
+  #Activation layer for the output head. Options: "sigmoid" and "softmax"
+  HEAD_ACT: sigmoid
+TEST:
+  ENABLE: True
+  DATASET: ava
+  BATCH_SIZE: 8
+DATA_LOADER:
+  #Multi-process loading using NUM_WORKERS workers
+  NUM_WORKERS: 2
+  #Puts the fetched data Tensors in pinned memory, which enables faster data transfer to CUDA-enabled GPUs.
+  PIN_MEMORY: True
+#Number of GPUs to use (applies to both training and testing).
+NUM_GPUS: 8
+#Number of machine to use for the job.
+NUM_SHARDS: 1
+#Random number generator seed
+RNG_SEED: 0
+OUTPUT_DIR: .
