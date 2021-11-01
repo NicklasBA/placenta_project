@@ -17,6 +17,7 @@ def find_sequences(folder_path: str):
     print(f"A total of {len(image_paths)} images to process.")
     print("Finding blobs...")
     blobs = analyser.get_blobs_in_files(image_paths)
+
     print("Finding sequences...")
     _, c, _ = analyser.count_in_sequence(blobs)
     n_seqs = 0
@@ -37,6 +38,24 @@ def find_sequences(folder_path: str):
 
     print("Splitting sequences and checking each of them...")
     all_anno_seq = []
+    new_sequences = []
+    sequences = [seq for seq in sequences if len(seq)>= 10]
+    endings = [[int(image_paths[i].split(".")[0][-4:]) for i in seq] for seq in sequences]
+    combine = []
+    i = 0
+
+    while i < len(endings)-1:
+        comb = sequences[i]
+        for idx in range(i, len(endings)-1):
+            if endings[idx][-1]+1 == endings[idx+1][0]:
+                comb += sequences[idx+1]
+                i+=1
+            else:
+                i+=1
+                break
+        new_sequences.append(comb)
+    sequences = new_sequences
+
     for seq in sequences:
         seq_paths = [image_paths[i] for i in seq]
         seq_blobs = analyser.get_blobs_in_files(seq_paths)
