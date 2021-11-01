@@ -26,7 +26,23 @@ class Blob:
     def __init__(self, bbox, centroid):
         self.bbox = bbox
         self.centroid = np.array(centroid)
+        self.keep = True
+        self.get_radius()
 
+    def get_radius(self):
+        self.radius = abs(self.bbox[0] - self.bbox[2])
+
+    def __sub__(self, blob):
+        return norm(self.centroid - blob.centroid)
+
+    def update_bbox(self, blob):
+        min_row = np.min((self.bbox[0], blob.bbox[0]))
+        min_col = np.min((self.bbox[1], blob.bbox[1]))
+        max_row = np.min((self.bbox[2], blob.bbox[2]))
+        max_col = np.min((self.bbox[3], blob.bbox[3]))
+        self.bbox = (min_row, min_col,max_row, max_col)
+        self.get_radius()
+        blob.keep = False
 
 def calculate_median(image_paths: list) -> np.ndarray:
     for idx, img_path in enumerate(image_paths):
@@ -73,7 +89,6 @@ class BlobAnalysis:
             img = self.open_and_close(img)
             blobs = self.find_blobs(img)
             blob_list.append(blobs)
-
         return blob_list
 
 
@@ -85,7 +100,7 @@ class BlobAnalysis:
             names = range(len(blob_seq))
 
         left, center, right = self.count_in_sequence(blob_seq)
-        is_valid = self.valid_sequences(left, center, right)
+        is_valid = True
         if is_valid:
             return {key: [v.bbox for v in val] for key, val in zip(names, blob_seq)}
         else:
@@ -98,25 +113,15 @@ class BlobAnalysis:
         :return: New bounding boxes
         """
         blobs = [Blob(bbox=blob.bbox, centroid=blob.centroid) for blob in blobs]
-        radii = [abs(blob.bbox[0]-blob.bbox[2]) for blob in blobs]
-        centroids = [blob.centroid for blob in blobs]
 
-        remove = []
-        for idx1, c1 in enumerate(centroids[:-1]):
-            for idx2 in range(idx1+1, len(centroids)):
-                c2 = centroids[idx2]
-                distance = norm((c1-c2))
-                if distance < (radii[idx1] + radii[idx2])/2 and idx2 not in remove:
-                    min_row = np.min((blobs[idx1].bbox[0],blobs[idx2].bbox[0]))
-                    min_col = np.min((blobs[idx1].bbox[1], blobs[idx2].bbox[1]))
-                    max_row = np.min((blobs[idx1].bbox[2], blobs[idx2].bbox[2]))
-                    max_col = np.min((blobs[idx1].bbox[3], blobs[idx2].bbox[3]))
-                    blobs[idx1].bbox = (min_row,min_col,max_row, max_col)
-                    remove += [idx2]
+        for idx1, c1 in enumerate(blobs[:-1]):
+            for idx2, c2 in enumerate(blobs[idx1+1:]):
+                distance =  c1 - c2
+                if distance < (c1.radius + c2.radius)/2 and c2.keep:
+                    c1.update_bbox(c2)
                     break
 
-        blobs = [blob for idx, blob in enumerate(blobs) if idx not in remove]
-
+        blobs = [blob for blob in blobs if blob.keep]
         return blobs
 
     def find_blobs(self, binary_image):
@@ -125,6 +130,7 @@ class BlobAnalysis:
 
         if blob_features:
             # blob_area = sorted([blob.area for blob in blob_features], reverse=True)
+
             blobs = [blob for blob in blob_features if blob.area >= self.min_blob_size]
             blobs = self.check_rotated(blobs)
             return blobs
