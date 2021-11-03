@@ -40,7 +40,7 @@ def find_sequences(folder_path: str):
     all_anno_seq = []
     new_sequences = []
     sequences = [seq for seq in sequences if len(seq)>= 10]
-    endings = [[int(image_paths[i].split(".")[0][-4:]) for i in seq] for seq in sequences]
+    endings = [[int(image_paths[i].split(".")[0].split("_")[-1]) for i in seq] for seq in sequences]
 
     combine = []
     i = 0
@@ -80,7 +80,7 @@ def ensure_continuity(all_anno_seq):
     new_all_anno = []
     for seq in all_anno_seq:
         files = list(seq.keys())
-        endings = [int(i.split(".")[0][-5:]) for i in files]
+        endings = [int(i.split(".")[0].split("_")[-1]) for i in files]
         files = [x for _,x in sorted(zip(endings,files))]
         endings = sorted(endings)
         new_lists = [[]]
