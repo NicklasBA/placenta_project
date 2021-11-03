@@ -102,7 +102,7 @@ class BlobAnalysis:
             bb[1] = b[1]/shapes[1]
             bb[2] = b[2]/shapes[0]
             bb[3] = b[3]/shapes[1]
-            new_bboxes.append(tuple(bbox))
+            new_bboxes.append(tuple(bb))
 
         return new_bboxes
 

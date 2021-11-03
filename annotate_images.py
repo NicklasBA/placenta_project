@@ -85,6 +85,7 @@ def find_sequences(folder_path: str):
             all_anno_seq_ava[idx][key] = bbox_list
     all_anno_seq = ensure_continuity(all_anno_seq)
     all_anno_seq_ava = ensure_continuity(all_anno_seq_ava)
+
     return all_anno_seq, sequences, all_anno_seq_ava
 
 def ensure_continuity(all_anno_seq):
