@@ -30,12 +30,12 @@ conda activate mkenv
 # Running SlowFast
 Train a standard model:
 ```
-python /home/s183993/placenta/slowfast/tools/run_net.py \
+python /home/s183993/slowfast/tools/run_net.py \
   --cfg /home/s183993/placenta/configs/Config.yaml \
 ```
 Test a model
 ```
-python /home/s183993/placenta/slowfast/tools/run_net.py \
+python /home/s183993/slowfast/tools/run_net.py \
   --cfg /home/s183993/placenta/configs/Config.yaml \
   TEST.CHECKPOINT_FILE_PATH path_to_your_checkpoint \
   TRAIN.ENABLE False \
