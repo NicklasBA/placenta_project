@@ -10,6 +10,17 @@ import matplotlib.pyplot as plt
 CATEGORY_D = 0
 CATEGORY_NS = 1
 
+def rename_files(folder_path):
+    files = os.listdir(folder_path)
+
+    for file in files:
+        file_ending = file.split(".")[0].split("_")[-1]
+        if len(file_ending) < 6:
+            file_end_new = "".join([str(0) for i in range(6-len(file_ending))]) + file_ending
+            new_file = file.split(".")[0][:-len(file_ending)]+file_end_new + ".png"
+            os.rename(os.path.join(folder_path,file), os.path.join(folder_path,new_file))
+
+    print("File names were changed")
 
 def find_sequences(folder_path: str):
     analyser = BlobAnalysis(folder_path)
@@ -172,6 +183,7 @@ if __name__ == '__main__':
     # Little input checking
     if not os.path.isdir(args["folder"]):
         raise NotADirectoryError(f"Input path {args['folder']} is not a directory")
+
     if args["output"]:
         if not os.path.isdir(args["output"]):
             raise NotADirectoryError(f"Output path {args['folder']} is not a directory")
@@ -194,6 +206,7 @@ if __name__ == '__main__':
     processed_files = {}
     count = 1
     for path in in_paths:
+        rename_files(folder_path=path)
         print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
         processed_files[path] = create_annotations(path)
         count += 1
