@@ -41,6 +41,7 @@ def find_sequences(folder_path: str):
     new_sequences = []
     sequences = [seq for seq in sequences if len(seq)>= 10]
     endings = [[int(image_paths[i].split(".")[0][-4:]) for i in seq] for seq in sequences]
+
     combine = []
     i = 0
 
@@ -64,26 +65,63 @@ def find_sequences(folder_path: str):
         if seq_bbox:
             all_anno_seq.append(seq_bbox)
 
-    return all_anno_seq, sequences
+    all_anno_seq_ava = []
+    for idx, seq in enumerate(all_anno_seq):
+        all_anno_seq_ava.append({})
+        for key in seq.keys():
+            path = os.path.join(folder_path, key)
+            bbox_list = analyser.ava_coordinate_change(path, seq[key])
+            all_anno_seq_ava[idx][key] = bbox_list
+    all_anno_seq = ensure_continuity(all_anno_seq)
+    all_anno_seq_ava = ensure_continuity(all_anno_seq_ava)
+    return all_anno_seq, sequences, all_anno_seq_ava
+
+def ensure_continuity(all_anno_seq):
+    new_all_anno = []
+    for seq in all_anno_seq:
+        files = list(seq.keys())
+        endings = [int(i.split(".")[0][-5:]) for i in files]
+        files = [x for _,x in sorted(zip(endings,files))]
+        endings = sorted(endings)
+        new_lists = [[]]
+        count = 0
+        for idx in range(len(endings)-1):
+            new_lists[count].append(files[idx])
+            if endings[idx] + 2 < endings[idx+1]:
+                count+= 1
+                new_lists.append([])
+
+        new_lists = [sek for sek in new_lists if len(seq) > 10]
+        for idx in range(len(new_lists)):
+            dc = {name: seq[name] for name in new_lists[idx]}
+            new_all_anno.append(dc)
+
+    return new_all_anno
+
 
 def create_annotations(folder_path: str):
     meas_id, category = find_id_and_class(folder_path)
-    all_seq, sequences = find_sequences(folder_path)
+    all_seq, sequences, ava_sequences = find_sequences(folder_path)
 
-    annotations = pd.DataFrame(columns=["VideoID", "SequenceID", "FrameName", "FrameNumber", "BoundingBox", "Category"])
+    annotations = pd.DataFrame(columns=["VideoID", "SequenceID", "FrameName", "FrameNumber", "BoundingBox","BoundingBoxAva", "Category"])
 
     print("Creating pretty formated annotations...")
     c = 0
-    for anno, seq in zip(all_seq, sequences):
+    for anno, seq, ava_seq in zip(all_seq, sequences, ava_sequences):
         c += 1
         for items, frame in zip(anno.items(), seq):
             name, bboxes = items
-            for bb in bboxes:
+            try:
+                bboxes_ava = ava_seq[name]
+            except:
+                breakpoint()
+            for bb, bb_ava in zip(bboxes, bboxes_ava):
                 entry = {"VideoID": meas_id,
                          "SequenceID": f"{meas_id}_{c:04d}",
                          "FrameName": name,
                          "FrameNumber": frame,
                          "BoundingBox": bb,
+                         "BoundingBoxAva":bb_ava,
                          "Category": category}
                 annotations = annotations.append(entry, ignore_index = True)
 
