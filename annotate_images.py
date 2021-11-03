@@ -115,7 +115,7 @@ def create_annotations(folder_path: str):
     all_seq, sequences, ava_sequences = find_sequences(folder_path)
 
     annotations = pd.DataFrame(columns=["VideoID", "SequenceID", "FrameName", "FrameNumber", "BoundingBox","BoundingBoxAva",
-                                        "x1","y1","x2","y2","Category"])
+                                        "x1","y1","x2","y2","x1A","y1A","x2A","y2A","Category"])
 
     print("Creating pretty formated annotations...")
     c = 0
@@ -138,6 +138,10 @@ def create_annotations(folder_path: str):
                          "y1": bb[0],
                          "x2": bb[3],
                          "y2": bb[2],
+                         "x1A": bb_ava[1],
+                         "y1A": bb_ava[0],
+                         "x2A": bb_ava[3],
+                         "y2A": bb_ava[2],
                          "Category": category}
                 annotations = annotations.append(entry, ignore_index = True)
 
