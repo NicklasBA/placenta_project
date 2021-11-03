@@ -59,7 +59,7 @@ for i in range(len(df)):
     bbox = [np.array([df.x1[i], df.y1[i], df.x2[i], df.y2[i]])]
     draw_bboxes(image,bbox,text)
 
-out = cv2.VideoWriter('project130.mp4',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+out = cv2.VideoWriter('project130.mp4',cv2.VideoWriter_fourcc(*'H264'), 15, size)
 
 for i in range(len(img_array)):
     out.write(img_array[i])
