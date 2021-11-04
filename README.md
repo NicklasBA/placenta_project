@@ -31,12 +31,14 @@ conda activate mkenv
 Train a standard model:
 ```
 python /home/s183993/slowfast/tools/run_net.py \
-  --cfg placenta/configs/Config.yaml \
+  --cfg /home/s183993/placenta/configs/Config.yaml\
+  --gpu 0
 ```
 Test a model
 ```
 python /home/s183993/slowfast/tools/run_net.py \
-  --cfg placenta/configs/Config.yaml \
+  --cfg /home/s183993/placenta/configs/Config.yaml \
+  --gpu 0 \
   TEST.CHECKPOINT_FILE_PATH path_to_your_checkpoint \
   TRAIN.ENABLE False \
 ```

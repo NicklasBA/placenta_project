@@ -91,6 +91,20 @@ class BlobAnalysis:
             blob_list.append(blobs)
         return blob_list
 
+    def ava_coordinate_change(self, path, bbox):
+        img = np.asarray(Image.open(path))
+        shapes = img.shape
+        new_bboxes = []
+
+        for b in bbox:
+            bb = [0,0,0,0]
+            bb[0] = b[0]/shapes[0]
+            bb[1] = b[1]/shapes[1]
+            bb[2] = b[2]/shapes[0]
+            bb[3] = b[3]/shapes[1]
+            new_bboxes.append(tuple(bb))
+
+        return new_bboxes
 
     def get_bbox_if_valid_blob_seq(self, blob_seq, names=None):
         """Return bounding boxes for valid sequence"""
