@@ -108,7 +108,6 @@ def find_id_and_class(name):
     return meas_id, category
 
 
-
 def create(folder_path):
     pass
 
@@ -118,7 +117,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Find sequences and annotate folders containing the image files')
     parser.add_argument('folder', help='Folder containing images to be annotated')
     parser.add_argument('-b', '--batch',
-                        help='Description for bar argument',
+                        help='Look at all subfolders of the provided folder (only one child deep)',
                         action='store_true',
                         required=False)
     parser.add_argument('-o', '--output',
