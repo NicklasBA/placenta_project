@@ -214,6 +214,7 @@ if __name__ == '__main__':
         print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
         processed_files[path] = create_annotations(path)
         processed_files[path].to_csv(outdir+os.path.basename(os.path.abspath(path))+".csv")
+        print(f"Saved {outdir+os.path.basename(os.path.abspath(path))+'.csv'}")
         count += 1
 
     print(f"Created {len(processed_files)} csv files. Wrote to {outdir}")
