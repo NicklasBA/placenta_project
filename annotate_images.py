@@ -213,10 +213,8 @@ if __name__ == '__main__':
         rename_files(folder_path=path)
         print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
         processed_files[path] = create_annotations(path)
+        processed_files[path].to_csv(outdir+os.path.basename(os.path.abspath(path))+".csv")
         count += 1
 
-    print("Saving to csv...")
-    for key, df in processed_files.items():
-        df.to_csv(outdir+os.path.basename(os.path.abspath(key))+".csv")
-
     print(f"Created {len(processed_files)} csv files. Wrote to {outdir}")
+    

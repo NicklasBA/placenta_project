@@ -23,7 +23,9 @@ from scipy.ndimage import gaussian_filter
 
 path= r"C:\Users\Nicklas\OneDrive - Danmarks Tekniske Universitet\Undevisning\FetalMaternal_project\Placenta_package\20180307_5_6mbar_500fps_D130\20180307_5_6mbar_500fps_D130.csv"
 df = pd.read_csv (path)
-
+        
+df1 = df.groupby(by=['FrameName']).agg(list)
+    
 folder_path = r"C:\Users\Nicklas\OneDrive - Danmarks Tekniske Universitet\Undevisning\FetalMaternal_project\Placenta_package\20180307_5_6mbar_500fps_D130"
 
 image_paths = glob.glob(os.path.join(folder_path, df.FrameName[0]))
@@ -46,9 +48,7 @@ def draw_bboxes(img, bboxes,text, color=(0, 0, 255), thickness=1):
         lineType)
         img_array.append(image)
         
-        
 
-    
 img_array = []
 for i in range(len(df)):    
     image_paths = glob.glob(os.path.join(folder_path, df.FrameName[i]))
@@ -56,7 +56,7 @@ for i in range(len(df)):
     image = cv2.imread(image_paths[0])
     height, width, layers = image.shape
     size = (width,height)
-    bbox = [np.array([df.x1[i], df.y1[i], df.x2[i], df.y2[i]])]
+    bbox = [np.array([df1.x1[i], df1.y1[i], df1.x2[i], df1.y2[i]])]
     draw_bboxes(image,bbox,text)
 
 out = cv2.VideoWriter('project130.mp4',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
