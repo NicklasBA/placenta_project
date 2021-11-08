@@ -19,11 +19,26 @@ Start a new session e.g.:
 ```
 tmux new -s test
 ```
+Attach to an existing tmux session:
+```
+tmux attach -t test
+```
 and then activate the conda environment:
 ```
 conda activate mkenv
 ```
-Then PyTorch and everything should be ready.
-
-
-
+# Running SlowFast
+Train a standard model:
+```
+python /home/s183993/slowfast/tools/run_net.py \
+  --cfg /home/s183993/placenta/configs/Config.yaml\
+  --gpu 0
+```
+Test a model
+```
+python /home/s183993/slowfast/tools/run_net.py \
+  --cfg /home/s183993/placenta/configs/Config.yaml \
+  --gpu 0 \
+  TEST.CHECKPOINT_FILE_PATH path_to_your_checkpoint \
+  TRAIN.ENABLE False \
+```

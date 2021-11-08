@@ -43,16 +43,26 @@ def mat_conversion(path):
     mat['RBCs']['outlet'] = flatten(flatten(flatten(mat['RBCs']['outlet'])))
     mat['RBCs']['yref'] = flatten(flatten(flatten(mat['RBCs']['yref'])))
     mat['RBCs']['label'] = flatten(flatten(mat['RBCs']['label']))
-    mat['RBCs']['frame'] = (flatten(flatten(mat['RBCs']['frame'])))
-    mat['RBCs']['centroid'] =  ([flatten(arr) for arr in (flatten(flatten(mat['RBCs']['centroid'])))])
+    mat['RBCs']['frame'] = flatten(flatten(mat['RBCs']['frame']))
+    mat['RBCs']['centroid'] =  [flatten(arr) for arr in (flatten(flatten(mat['RBCs']['centroid'])))]
+    mat['RBCs']['box'] =  [flatten(arr) for arr in (flatten(flatten(mat['RBCs']['box'])))]
+    mat['RBCs']['pixellist'] = [flatten(flatten(arr)) for arr in (flatten(flatten(mat['RBCs']['pixellist'])))]
+    mat['RBCs']['circularity'] = flatten(flatten(mat['RBCs']['circularity']))
+    mat['RBCs']['symmetry'] = flatten(flatten(mat['RBCs']['symmetry']))
+    mat['RBCs']['gradient'] = flatten(flatten(mat['RBCs']['gradient']))
+    mat['RBCs']['eccentricity'] = flatten(flatten(mat['RBCs']['eccentricity']))
+    mat['RBCs']['majoraxis'] = flatten(flatten(mat['RBCs']['majoraxis']))
+    mat['RBCs']['orientation'] = flatten(flatten(mat['RBCs']['orientation']))
+    mat['RBCs']['area'] = flatten(flatten(mat['RBCs']['area']))
+    mat['RBCs']['line'] = [flatten(flatten(arr)) for arr in (flatten(flatten(mat['RBCs']['line'])))]
+        
     
-    
-    #lengths = [len(flatten(flatten(mat['RBCs']['frame']))[i]) for i in range(len(flatten(flatten(mat['RBCs']['frame']))))]
+    #lengths = [len(mat['RBCs'][i]) for i in colnames]
     
     dfObj = pd.DataFrame(mat['RBCs'][0])
-    dfObj = dfObj.explode(['frame','centroid'])
+    #dfObj = dfObj.explode(['frame', 'centroid', 'box', 'pixellist'])
     print("Hello from a function")
-    return dfObj
+    return dfObj, colnames
     
 
 basepath = 'C:/Users/Nicklas/OneDrive - Danmarks Tekniske Universitet/Undevisning/FetalMaternal_project/Placenta_package'
@@ -63,7 +73,7 @@ for entry in os.listdir(path):
     if os.path.isfile(os.path.join(path, entry)):
         testfiles.append(os.path.join(path, entry))
         
-dfObj = mat_conversion(testfiles[8])
+dfObj, cols = mat_conversion(testfiles[8])
 
 # =============================================================================
 # path = os.path.join(basepath)
