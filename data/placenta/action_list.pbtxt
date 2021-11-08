@@ -1,1 +1,8 @@
-label { name: "D" label_id: 0 label_type: PERSON_MOVEMENT } label { name: "NS" label_id: 1 label_type: PERSON_MOVEMENT }
+item { 
+	name: "D" 
+	id: 0 
+} 
+item { 
+	name: "NS" 
+	id: 1 
+}
