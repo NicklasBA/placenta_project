@@ -137,6 +137,7 @@ def get_keyframe_data(boxes_and_labels):
     def sec_to_frame(sec):
         return sec
 
+    AVA_VALID_FRAMES = range(85000)
     keyframe_indices = []
     keyframe_boxes_and_labels = []
     count = 0
@@ -192,6 +193,7 @@ def parse_bboxes_file(
         detect_thresh (float): threshold for accepting predicted boxes, range [0, 1].§
         boxes_sample_rate (int): sample rate for test bounding boxes. Get 1 every `boxes_sample_rate`.
     """
+    AVA_VALID_FRAMES = range(85000)
     all_boxes = {}
     count = 0
     unique_box_count = 0
