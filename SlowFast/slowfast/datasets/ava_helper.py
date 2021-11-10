@@ -10,8 +10,7 @@ from slowfast.utils.env import pathmgr
 logger = logging.getLogger(__name__)
 
 FPS = 1
-AVA_VALID_FRAMES = range(902, 1799)
-
+AVA_VALID_FRAMES = range(85000)
 
 def load_image_lists(cfg, is_train):
     """
@@ -128,13 +127,15 @@ def get_keyframe_data(boxes_and_labels):
             video_idx and sec_idx to a list of boxes and corresponding labels.
     """
 
+    # def sec_to_frame(sec):
+    #     """
+    #     Convert time index (in second) to frame index.
+    #     0: 900
+    #     30: 901
+    #     """
+    #     return (sec - 900) * FPS
     def sec_to_frame(sec):
-        """
-        Convert time index (in second) to frame index.
-        0: 900
-        30: 901
-        """
-        return (sec - 900) * FPS
+        return sec
 
     keyframe_indices = []
     keyframe_boxes_and_labels = []
