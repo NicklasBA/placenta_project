@@ -119,3 +119,4 @@ Pipfile
 
 *.lock
 Pipfile.lock
+/.idea

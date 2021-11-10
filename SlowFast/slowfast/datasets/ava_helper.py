@@ -189,7 +189,7 @@ def parse_bboxes_file(
         ann_filenames (list of str(s)): a list of AVA bounding boxes annotation files.
         ann_is_gt_box (list of bools): a list of boolean to indicate whether the corresponding
             ann_file is ground-truth. `ann_is_gt_box[i]` correspond to `ann_filenames[i]`.
-        detect_thresh (float): threshold for accepting predicted boxes, range [0, 1].
+        detect_thresh (float): threshold for accepting predicted boxes, range [0, 1].§
         boxes_sample_rate (int): sample rate for test bounding boxes. Get 1 every `boxes_sample_rate`.
     """
     all_boxes = {}
@@ -219,10 +219,12 @@ def parse_bboxes_file(
                     all_boxes[video_name] = {}
                     for sec in AVA_VALID_FRAMES:
                         all_boxes[video_name][sec] = {}
-
-                if box_key not in all_boxes[video_name][frame_sec]:
-                    all_boxes[video_name][frame_sec][box_key] = [box, []]
-                    unique_box_count += 1
+                try:
+                    if box_key not in all_boxes[video_name][frame_sec]:
+                        all_boxes[video_name][frame_sec][box_key] = [box, []]
+                        unique_box_count += 1
+                except:
+                    breakpoint()
 
                 all_boxes[video_name][frame_sec][box_key][1].append(label)
                 if label != -1:
