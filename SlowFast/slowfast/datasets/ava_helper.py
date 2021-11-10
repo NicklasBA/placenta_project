@@ -9,7 +9,7 @@ from slowfast.utils.env import pathmgr
 
 logger = logging.getLogger(__name__)
 
-FPS = 30
+FPS = 1
 AVA_VALID_FRAMES = range(902, 1799)
 
 
