@@ -215,7 +215,7 @@ def parse_bboxes_file(
                 # Box with format [x1, y1, x2, y2] with a range of [0, 1] as float.
                 box_key = ",".join(row[2:6])
                 box = list(map(float, row[2:6]))
-                label = -1 if row[6] == "" else int(row[6])
+                label = -1 if row[6] == "" else int(float(row[6]))
 
                 if video_name not in all_boxes:
                     all_boxes[video_name] = {}
