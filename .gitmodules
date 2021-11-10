@@ -1,0 +1,3 @@
+[submodule "SlowFast/detectron2"]
+	path = SlowFast/detectron2
+	url = https://github.com/facebookresearch/detectron2.git
