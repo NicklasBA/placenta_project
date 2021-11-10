@@ -84,9 +84,9 @@ SOLVER:
   OPTIMIZING_METHOD: sgd
 AVA:
   DETECTION_SCORE_THRESH: 0.8
-  FRAME_DIR: "/scratch/s183993/placenta_project/data/frames/"
-  FRAME_LIST_DIR: "/scratch/s183993/placenta_project/data/frame_list/"
-  ANNOTATION_DIR: "/scratch/s183993/placenta_project/data/annotations/"
+  FRAME_DIR: "/scratch/s183993/placenta/raw_data/Placenta_package/"
+  FRAME_LIST_DIR: "/home/s183993/placenta_project/data/placenta/frame_list/"
+  ANNOTATION_DIR: "/home/s183993/placenta_project/data/placenta/annotations/"
   TRAIN_GT_BOX_LISTS: ["annotations_train.csv"]
   TEST_PREDICT_BOX_LISTS: ["annotations_test.csv"]
   #Frames that are should not be included (not used in our case). Maybe use an empty file if nescessary
