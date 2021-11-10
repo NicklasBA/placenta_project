@@ -30,7 +30,7 @@ conda activate mkenv
 # Running SlowFast
 Train a standard model:
 ```
-python /home/s183993//placenta_project/SlowFast/tools/run_net.py \
+python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
   --cfg /home/s183993/placenta_project/configs/Config.yaml\
   --gpu 0
 ```
