@@ -84,11 +84,13 @@ SOLVER:
   OPTIMIZING_METHOD: sgd
 AVA:
   DETECTION_SCORE_THRESH: 0.8
-  FRAME_DIR: "/scratch/s183993/placenta/raw_data/frames/"
-  FRAME_LIST_DIR: "/scratch/s183993/placenta/raw_data/frame_list/"
-  ANNOTATION_DIR: "/scratch/s183993/placenta/raw_data/annotations/"
-  TRAIN_GT_BOX_LISTS: ["annotations_train.csv"]
-  TEST_PREDICT_BOX_LISTS: ["annotations_test.csv"]
+  FRAME_DIR: "/scratch/s183993/placenta/raw_data/Placenta_package/"
+  FRAME_LIST_DIR: "/home/s183993/placenta_project/data/placenta/frame_lists/"
+  ANNOTATION_DIR: "/home/s183993/placenta_project/data/placenta/annotations/"
+  TRAIN_GT_BOX_LISTS: ["train_annotations.csv"]
+  TEST_PREDICT_BOX_LISTS: ["val_annotations.csv"]
+  TRAIN_LISTS: ["train_frame.csv"]
+  TEST_LISTS: ["val_frame.csv"]
   #Frames that are should not be included (not used in our case). Maybe use an empty file if nescessary
   #EXCLUSION_FILE: ""
   #Same as annotations, possibly use a collected annotations file
