@@ -49,6 +49,7 @@ def find_sequences(folder_path: str):
 
     print("Splitting sequences and checking each of them...")
     all_anno_seq = []
+    all_anno_id = []
     new_sequences = []
     sequences = [seq for seq in sequences if len(seq)>= 10]
     endings = [[int(image_paths[i].split(".")[0].split("_")[-1]) for i in seq] for seq in sequences]
@@ -72,9 +73,10 @@ def find_sequences(folder_path: str):
         seq_paths = [image_paths[i] for i in seq]
         seq_blobs = analyser.get_blobs_in_files(seq_paths)
         seq_names = [image_paths[i].rsplit(os.path.sep, 1)[-1] for i in seq]
-        seq_bbox = analyser.get_bbox_if_valid_blob_seq(seq_blobs, names=seq_names)
+        seq_bbox, seq_id = analyser.get_bbox_if_valid_blob_seq(seq_blobs, names=seq_names)
         if seq_bbox:
             all_anno_seq.append(seq_bbox)
+            all_anno_id.append(seq_id)
 
     all_anno_seq_ava = []
     for idx, seq in enumerate(all_anno_seq):
@@ -83,6 +85,7 @@ def find_sequences(folder_path: str):
             path = os.path.join(folder_path, key)
             bbox_list = analyser.ava_coordinate_change(path, seq[key])
             all_anno_seq_ava[idx][key] = bbox_list
+
     all_anno_seq = ensure_continuity(all_anno_seq)
     all_anno_seq_ava = ensure_continuity(all_anno_seq_ava)
 

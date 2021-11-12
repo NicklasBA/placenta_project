@@ -23,17 +23,24 @@ N_IMAGES_MEDIAN = 100  # Number of image files used for the median
 SIGMA = 4
 
 class Blob:
-    def __init__(self, bbox, centroid):
+    def __init__(self, bbox, centroid, moments):
         self.bbox = bbox
         self.centroid = np.array(centroid)
         self.keep = True
         self.get_radius()
+        self.moments = moments
 
     def get_radius(self):
         self.radius = abs(self.bbox[0] - self.bbox[2])
 
     def __sub__(self, blob):
         return norm(self.centroid - blob.centroid)
+
+    def __eq__(self, other):
+        return (isinstance(other, type(self)) and (self.bbox,self.moments)==(other.bbox, other.moments))
+
+    def __hash__(self):
+        return hash((self.bbox, self.moments))
 
     def update_bbox(self, blob):
         min_row = np.min((self.bbox[0], blob.bbox[0]))
@@ -116,7 +123,8 @@ class BlobAnalysis:
         left, center, right = self.count_in_sequence(blob_seq)
         is_valid = True
         if is_valid:
-            return {key: [v.bbox for v in val] for key, val in zip(names, blob_seq)}
+            return {key: [v.bbox for v in val] for key, val in zip(names, blob_seq)}, \
+                   {key: [v.__hash__() for v in val] for key, val in zip(names, blob_seq)}
         else:
             return None
 
@@ -126,7 +134,7 @@ class BlobAnalysis:
         :param blobs: list of skimage measure objects
         :return: New bounding boxes
         """
-        blobs = [Blob(bbox=blob.bbox, centroid=blob.centroid) for blob in blobs]
+        blobs = [Blob(bbox=blob.bbox, centroid=blob.centroid, moments = blob.moments) for blob in blobs]
 
         for idx1, c1 in enumerate(blobs[:-1]):
             for idx2, c2 in enumerate(blobs[idx1+1:]):
