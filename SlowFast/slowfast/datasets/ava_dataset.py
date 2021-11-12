@@ -63,9 +63,10 @@ class Ava(torch.utils.data.Dataset):
         boxes_and_labels = ava_helper.load_boxes_and_labels(
             cfg, mode=self._split
         )
-
-        assert len(boxes_and_labels) == len(self._image_paths)
-
+        try:
+            assert len(boxes_and_labels) == len(self._image_paths)
+        except:
+            breakpoint()
         boxes_and_labels = [
             boxes_and_labels[self._video_idx_to_name[i]]
             for i in range(len(self._image_paths))

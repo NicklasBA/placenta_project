@@ -10,7 +10,7 @@ from slowfast.utils.env import pathmgr
 logger = logging.getLogger(__name__)
 
 FPS = 1
-AVA_VALID_FRAMES = range(85000)
+AVA_VALID_FRAMES = range(2000)
 
 def load_image_lists(cfg, is_train):
     """
@@ -35,10 +35,12 @@ def load_image_lists(cfg, is_train):
     image_paths = defaultdict(list)
     video_name_to_idx = {}
     video_idx_to_name = []
+    counter = 0
     for list_filename in list_filenames:
         with pathmgr.open(list_filename, "r") as f:
             f.readline()
             for line in f:
+                counter += 1
                 row = line.split()
                 # The format of each row should follow:
                 # original_vido_id video_id frame_id path labels.
@@ -61,7 +63,7 @@ def load_image_lists(cfg, is_train):
     logger.info(
         "Finished loading image paths from: %s" % ", ".join(list_filenames)
     )
-
+    print(counter)
     return image_paths, video_idx_to_name
 
 
@@ -137,7 +139,7 @@ def get_keyframe_data(boxes_and_labels):
     def sec_to_frame(sec):
         return sec
 
-    AVA_VALID_FRAMES = range(1000)
+    AVA_VALID_FRAMES = range(2000)
     keyframe_indices = []
     keyframe_boxes_and_labels = []
     count = 0
@@ -193,13 +195,15 @@ def parse_bboxes_file(
         detect_thresh (float): threshold for accepting predicted boxes, range [0, 1].§
         boxes_sample_rate (int): sample rate for test bounding boxes. Get 1 every `boxes_sample_rate`.
     """
-    AVA_VALID_FRAMES = range(1000)
+    AVA_VALID_FRAMES = range(2000)
     all_boxes = {}
     count = 0
+    counter = 0
     unique_box_count = 0
     for filename, is_gt_box in zip(ann_filenames, ann_is_gt_box):
         with pathmgr.open(filename, "r") as f:
             for line in f:
+                counter += 1
                 row = line.strip().split(",")
                 # When we use predicted boxes to train/eval, we need to
                 # ignore the boxes whose scores are below the threshold.
@@ -221,12 +225,9 @@ def parse_bboxes_file(
                     all_boxes[video_name] = {}
                     for sec in AVA_VALID_FRAMES:
                         all_boxes[video_name][sec] = {}
-                try:
-                    if box_key not in all_boxes[video_name][frame_sec]:
-                        all_boxes[video_name][frame_sec][box_key] = [box, []]
-                        unique_box_count += 1
-                except:
-                    breakpoint()
+                if box_key not in all_boxes[video_name][frame_sec]:
+                    all_boxes[video_name][frame_sec][box_key] = [box, []]
+                    unique_box_count += 1
 
                 all_boxes[video_name][frame_sec][box_key][1].append(label)
                 if label != -1:
@@ -238,5 +239,6 @@ def parse_bboxes_file(
             all_boxes[video_name][frame_sec] = list(
                 all_boxes[video_name][frame_sec].values()
             )
+    print(counter)
 
     return all_boxes, count, unique_box_count
