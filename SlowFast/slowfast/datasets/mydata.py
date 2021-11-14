@@ -121,7 +121,7 @@ class Mydata(torch.utils.data.Dataset):
             self._split_idx, path_to_file
         )
         logger.info(
-            "Constructing kinetics dataloader (size: {}) from {}".format(
+            "Constructing mydata dataloader (size: {}) from {}".format(
                 len(self._path_to_videos), path_to_file
             )
         )
