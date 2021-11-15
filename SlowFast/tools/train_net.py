@@ -111,10 +111,12 @@ def train_epoch(
         optimizer.zero_grad()
         if cfg.TRAIN.DATASET in ["ava"]:
             breakpoint()
-        scaler.scale(loss).backward()
+        # scaler.scale(loss).backward()
         # Unscales the gradients of optimizer's assigned params in-place
-        scaler.unscale_(optimizer)
+        # scaler.unscale_(optimizer)
         # Clip gradients if necessary
+        loss.backward()
+
         if cfg.SOLVER.CLIP_GRAD_VAL:
             torch.nn.utils.clip_grad_value_(
                 model.parameters(), cfg.SOLVER.CLIP_GRAD_VAL
