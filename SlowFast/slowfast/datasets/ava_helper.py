@@ -103,7 +103,8 @@ def load_boxes_and_labels(cfg, mode):
         ann_filenames=ann_filenames,
         ann_is_gt_box=ann_is_gt_box,
         detect_thresh=detect_thresh,
-        boxes_sample_rate=boxes_sample_rate,
+        mode=mode,
+        boxes_sample_rate=boxes_sample_rate
     )
     logger.info(
         "Finished loading annotations from: %s" % ", ".join(ann_filenames)
@@ -184,7 +185,7 @@ def get_num_boxes_used(keyframe_indices, keyframe_boxes_and_labels):
 
 
 def parse_bboxes_file(
-    ann_filenames, ann_is_gt_box, detect_thresh, boxes_sample_rate=1
+    ann_filenames, ann_is_gt_box, detect_thresh, mode, boxes_sample_rate=1
 ):
     """
     Parse AVA bounding boxes files.
@@ -232,7 +233,8 @@ def parse_bboxes_file(
                 all_boxes[video_name][frame_sec][box_key][1].append(label)
                 if label != -1:
                     count += 1
-
+    if mode == 'val':
+        breakpoint()
     for video_name in all_boxes.keys():
         for frame_sec in all_boxes[video_name].keys():
             # Save in format of a list of [box_i, box_i_labels].
