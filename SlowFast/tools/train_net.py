@@ -76,7 +76,7 @@ def train_epoch(
             for key, val in meta.items():
                 if isinstance(val, (list,)):
                     #Nested lists for metadata
-                    if key == 'metadata':
+                    if key == 'metadata' and cfg.TRAIN.dataset in ["ava"]:
                         val = val[0]
                     for i in range(len(val)):
                         val[i] = val[i].cuda(non_blocking=True)
