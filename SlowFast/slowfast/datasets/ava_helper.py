@@ -208,13 +208,13 @@ def parse_bboxes_file(
                 row = line.strip().split(",")
                 # When we use predicted boxes to train/eval, we need to
                 # ignore the boxes whose scores are below the threshold.
-                if not is_gt_box:
-                    score = float(row[7])
-                    if score < detect_thresh:
-                        continue
+                # if not is_gt_box:
+                #     score = float(row[7])
+                #     if score < detect_thresh:
+                #         continue
                 video_name, frame_sec = row[0], int(row[1])
-                if frame_sec % boxes_sample_rate != 0:
-                    continue
+                # if frame_sec % boxes_sample_rate != 0:
+                #     continue
 
                 # Box with format [x1, y1, x2, y2] with a range of [0, 1] as float.
                 box_key = ",".join(row[2:6])
