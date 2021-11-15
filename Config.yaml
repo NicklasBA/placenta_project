@@ -94,9 +94,9 @@ AVA:
   #Frames that are should not be included (not used in our case). Maybe use an empty file if nescessary
   #EXCLUSION_FILE: ""
   #Same as annotations, possibly use a collected annotations file
-  #GROUNDTRUTH_FILE: ""
+  GROUNDTRUTH_FILE: "/home/s183993/placenta_project/data/placenta/annotations/val_annotations.csv"
   #Just mother or child RBC
-  #LABEL_MAP_FILE: "action_list.pbtxt"
+  LABEL_MAP_FILE: "action_list.pbtxt"
 DETECTION:
   ENABLE: True
 MODEL:
