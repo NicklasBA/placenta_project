@@ -4,7 +4,7 @@ TRAIN:
   #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
   DATASET: ava
   #Mini-batch size
-  BATCH_SIZE: 64
+  BATCH_SIZE: 8
   #Evaluates model every EVAL_PERIOD epochs
   EVAL_PERIOD: 5
   #Saves model every CHECKPOINT_PERIOD epoch
@@ -70,7 +70,7 @@ SOLVER:
   #Base learning rate
   BASE_LR: 0.1
   #Polcies, options: "cosine", "steps_with_relative_lrs". Info in utils\lr_policy.py
-  LR_POLICY: 
+  LR_POLICY: "steps_with_relative_lrs"
   #Steps for 'steps_' policies (in epochs).
   STEPS: [0, 10, 15, 20]
   #Learning rates for 'steps_' policies.

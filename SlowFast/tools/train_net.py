@@ -75,6 +75,9 @@ def train_epoch(
             labels = labels.cuda()
             for key, val in meta.items():
                 if isinstance(val, (list,)):
+                    #Nested lists for metadata
+                    if key == 'metadata':
+                        val = val[0]
                     for i in range(len(val)):
                         val[i] = val[i].cuda(non_blocking=True)
                 else:
@@ -98,7 +101,7 @@ def train_epoch(
             loss_fun = losses.get_loss_func(cfg.MODEL.LOSS_FUNC)(
                 reduction="mean"
             )
-
+            breakpoint()
             # Compute the loss.
             loss = loss_fun(preds, labels)
 

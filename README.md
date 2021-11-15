@@ -33,6 +33,9 @@ Train a standard model:
 python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
   --cfg /home/s183993/placenta_project/Config.yaml\
   --gpu 0
+python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
+  --cfg /home/s183993/placenta_project/video_config.yaml\
+  --gpu 0
 ```
 Test a model
 ```
