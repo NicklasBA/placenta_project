@@ -233,8 +233,9 @@ def parse_bboxes_file(
                 all_boxes[video_name][frame_sec][box_key][1].append(label)
                 if label != -1:
                     count += 1
-    if mode == 'val':
-        breakpoint()
+                if mode == 'val':
+                    breakpoint()
+
     for video_name in all_boxes.keys():
         for frame_sec in all_boxes[video_name].keys():
             # Save in format of a list of [box_i, box_i_labels].
