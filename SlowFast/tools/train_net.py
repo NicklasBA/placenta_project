@@ -101,11 +101,9 @@ def train_epoch(
             loss_fun = losses.get_loss_func(cfg.MODEL.LOSS_FUNC)(
                 reduction="mean"
             )
-            try:
-                # Compute the loss.
-                loss = loss_fun(preds, labels)
-            except:
-                breakpoint()
+            breakpoint()
+            # Compute the loss.
+            loss = loss_fun(preds, labels)
 
         # check Nan Loss.
         misc.check_nan_losses(loss)
