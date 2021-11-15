@@ -241,7 +241,4 @@ def parse_bboxes_file(
             )
     print(counter)
 
-    if mode == 'val':
-        breakpoint()
-
     return all_boxes, count, unique_box_count
