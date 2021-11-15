@@ -5,6 +5,7 @@ TRAIN:
   EVAL_PERIOD: 2
   CHECKPOINT_PERIOD: 1
   AUTO_RESUME: True
+  CHECKPOINT_FILE_PATH: "/home/s183993/placenta_project/checkpoints/video/"
   # CHECKPOINT_FILE_PATH: /path/to/your/directory/imagenet50_pretrain.pyth
   CHECKPOINT_INFLATE: True
 DATA:
@@ -55,4 +56,4 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: .
+OUTPUT_DIR: "/home/s183993/placenta_project/outputs/video/"
