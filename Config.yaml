@@ -4,7 +4,7 @@ TRAIN:
   #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
   DATASET: ava
   #Mini-batch size
-  BATCH_SIZE: 64
+  BATCH_SIZE: 16
   #Evaluates model every EVAL_PERIOD epochs
   EVAL_PERIOD: 5
   #Saves model every CHECKPOINT_PERIOD epoch
