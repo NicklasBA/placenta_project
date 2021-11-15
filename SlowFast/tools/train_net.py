@@ -101,8 +101,6 @@ def train_epoch(
             loss_fun = losses.get_loss_func(cfg.MODEL.LOSS_FUNC)(
                 reduction="mean"
             )
-            if cfg.TRAIN.DATASET in ["ava"]:
-                breakpoint()
             # Compute the loss.
             loss = loss_fun(preds, labels)
 
