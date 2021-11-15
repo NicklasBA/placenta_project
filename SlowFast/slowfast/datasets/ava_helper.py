@@ -203,6 +203,8 @@ def parse_bboxes_file(
     unique_box_count = 0
     for filename, is_gt_box in zip(ann_filenames, ann_is_gt_box):
         with pathmgr.open(filename, "r") as f:
+            if mode == 'val':
+                breakpoint()
             for line in f:
                 counter += 1
                 row = line.strip().split(",")
@@ -233,8 +235,6 @@ def parse_bboxes_file(
                 all_boxes[video_name][frame_sec][box_key][1].append(label)
                 if label != -1:
                     count += 1
-                if mode == 'val':
-                    breakpoint()
 
     for video_name in all_boxes.keys():
         for frame_sec in all_boxes[video_name].keys():
