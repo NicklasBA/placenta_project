@@ -1,7 +1,7 @@
 TRAIN:
   ENABLE: True
-  DATASET: kinetics
-  BATCH_SIZE: 64
+  DATASET: mydata
+  BATCH_SIZE: 16
   EVAL_PERIOD: 10
   CHECKPOINT_PERIOD: 1
   AUTO_RESUME: True
@@ -51,26 +51,26 @@ MODEL:
   DROPOUT_RATE: 0.5
 TEST:
   ENABLE: True
-  DATASET: kinetics
-  BATCH_SIZE: 64
+  DATASET: mydata
+  BATCH_SIZE: 16
 DATA_LOADER:
   NUM_WORKERS: 8
   PIN_MEMORY: True
 NUM_GPUS: 8
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: .
+OUTPUT_DIR: "/home/s183993/placenta_project/outputs/video1/"
 TENSORBOARD:
   ENABLE: True
   LOG_DIR: # Leave empty to use cfg.OUTPUT_DIR/runs-{cfg.TRAIN.DATASET} as path.
   CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
   CONFUSION_MATRIX:
     ENABLE: True
-    SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
+    SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt"# Path to txt file contains class names separated by newline characters.
                  # Only classes in this file will be visualized in the confusion matrix.
   HISTOGRAM:
     ENABLE: True
-    TOP_K: 10   # Top-k most frequently predicted classes for each class in the dataset.
-    SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
+    TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.
+    SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt"# Path to txt file contains class names separated by newline characters.
                  # Only classes in this file will be visualized with histograms.
 
