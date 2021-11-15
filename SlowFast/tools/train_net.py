@@ -109,7 +109,7 @@ def train_epoch(
 
         # Perform the backward pass.
         optimizer.zero_grad()
-        
+
         scaler.scale(loss).backward()
         # Unscales the gradients of optimizer's assigned params in-place
         scaler.unscale_(optimizer)
