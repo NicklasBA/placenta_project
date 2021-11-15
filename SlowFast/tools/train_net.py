@@ -76,7 +76,7 @@ def train_epoch(
             for key, val in meta.items():
                 if isinstance(val, (list,)):
                     #Nested lists for metadata
-                    if key == 'metadata' and cfg.TRAIN.dataset in ["ava"]:
+                    if key == 'metadata' and cfg.TRAIN.DATASET in ["ava"]:
                         val = val[0]
                     for i in range(len(val)):
                         val[i] = val[i].cuda(non_blocking=True)
@@ -101,7 +101,7 @@ def train_epoch(
             loss_fun = losses.get_loss_func(cfg.MODEL.LOSS_FUNC)(
                 reduction="mean"
             )
-            if cfg.TRAIN.dataset in ["ava"]:
+            if cfg.TRAIN.DATASET in ["ava"]:
                 breakpoint()
             # Compute the loss.
             loss = loss_fun(preds, labels)
