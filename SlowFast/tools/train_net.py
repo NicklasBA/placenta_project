@@ -76,7 +76,7 @@ def train_epoch(
             for key, val in meta.items():
                 if isinstance(val, (list,)):
                     #Nested lists for metadata
-                    if key == 'metadata':
+                    if key == 'metadata' and cfg.TRAIN.DATASET in ["ava"]:
                         val = val[0]
                     for i in range(len(val)):
                         val[i] = val[i].cuda(non_blocking=True)
@@ -101,7 +101,8 @@ def train_epoch(
             loss_fun = losses.get_loss_func(cfg.MODEL.LOSS_FUNC)(
                 reduction="mean"
             )
-
+            if cfg.TRAIN.DATASET in ["ava"]:
+                breakpoint()
             # Compute the loss.
             loss = loss_fun(preds, labels)
 
@@ -276,7 +277,7 @@ def eval_epoch(val_loader, model, val_meter, cur_epoch, cfg, writer=None):
                     preds, labels = du.all_gather([preds, labels])
             else:
                 # Compute the errors.
-                num_topks_correct = metrics.topks_correct(preds, labels, (1, 2))
+                num_topks_correct = metrics.topks_correct(preds, labels, (1, 5))
 
                 # Combine the errors across the GPUs.
                 top1_err, top5_err = [
