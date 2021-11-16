@@ -1,6 +1,3 @@
-MULTIGRID:
-  SHORT_CYCLE: True
-  LONG_CYCLE: True
 TRAIN:
   ENABLE: True
   DATASET: mydata
