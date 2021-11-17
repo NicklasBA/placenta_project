@@ -8,28 +8,28 @@ import pickle
 import numpy as np
 import shutil
 
-
-def alter_csv(csv):
-    csv[csv.columns[-1]] = [1 if i == 1 else 2 for i in csv[csv.columns[-1]]]
-    return csv
-
-test_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\test_annotations.csv'
-train_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\train_annotations.csv'
-val_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\val_annotations.csv'
-
-test = pd.read_csv(test_path, header = None)
-train = pd.read_csv(train_path, header = None)
-val = pd.read_csv(val_path, header = None)
-
-test = alter_csv(test)
-train = alter_csv(train)
-val = alter_csv(val)
-
-test.to_csv(test_path, header = False, index = False)
-train.to_csv(train_path, header = False, index = False)
-val.to_csv(val_path, header = False, index = False)
-
-breakpoint()
+#
+# def alter_csv(csv):
+#     csv[csv.columns[-1]] = [1 if i == 1 else 2 for i in csv[csv.columns[-1]]]
+#     return csv
+#
+# test_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\test_annotations.csv'
+# train_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\train_annotations.csv'
+# val_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\val_annotations.csv'
+#
+# test = pd.read_csv(test_path, header = None)
+# train = pd.read_csv(train_path, header = None)
+# val = pd.read_csv(val_path, header = None)
+#
+# test = alter_csv(test)
+# train = alter_csv(train)
+# val = alter_csv(val)
+#
+# test.to_csv(test_path, header = False, index = False)
+# train.to_csv(train_path, header = False, index = False)
+# val.to_csv(val_path, header = False, index = False)
+#
+# breakpoint()
 
 
 #
