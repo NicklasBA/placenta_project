@@ -4,14 +4,14 @@ TRAIN:
   #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
   DATASET: ava
   #Mini-batch size
-  BATCH_SIZE: 8
+  BATCH_SIZE: 4
   #Evaluates model every EVAL_PERIOD epochs
-  EVAL_PERIOD: 5
+  EVAL_PERIOD: 2
   #Saves model every CHECKPOINT_PERIOD epoch
-  CHECKPOINT_PERIOD: 1
+  CHECKPOINT_PERIOD: 2
   #If true, resumes training from latest checkpoint in outer directory
   AUTO_RESUME: True
-  #CHECKPOINT_FILE_PATH: "/home/s183993/placenta_project/outputs/ava/"
+  #CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/"
   #Can be "caffe2" or "pytorch"
   CHECKPOINT_TYPE: caffe2
 DATA:
@@ -123,4 +123,4 @@ NUM_SHARDS: 1
 #Random number generator seed
 RNG_SEED: 0
 NUM_GPUS: 1
-OUTPUT_DIR: "/home/s183993/placenta_project/outputs/ava/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/ava/"
