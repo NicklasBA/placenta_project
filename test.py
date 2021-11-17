@@ -11,44 +11,53 @@ import shutil
 
 data_path = r'/scratch/s183993/placenta/raw_data/videos'
 
-def create_csv(path, mode):
-    if mode == 'train':
-        files = ['D128', 'D131', 'NS72','NS110','D204','NS112', 'D202']
-    elif mode == 'val':
-        files = ['NS73', 'D203']
-    else:
-        files = ['D130','NS74','NS111']
+for file in os.listdir(data_path):
+    if 'csv' in file:
+        csv = pd.read_csv(os.path.join(data_path,file), header = None, sep = " ")
+        csv[csv.columns[1]] = [1 if i == 1 else 2 for i in csv[csv.columns[2]]]
+        csv.to_csv(os.path.join(data_path, file), header = False, index = False)
 
-    doner_path = os.path.join(path, 'classD')
-    navle_path = os.path.join(path, 'classNS')
 
-    video_doner = []
-    video_navle = []
 
-    for file in files:
-        for video in os.listdir(doner_path):
-            if file in video:
-                video_doner.append(video)
-
-        for video in os.listdir(navle_path):
-            if file in video:
-                video_navle.append(video)
-    csv = pd.DataFrame()
-
-    paths = [os.path.abspath(file) for file in video_doner]
-    paths += [os.path.abspath(file) for file in video_navle]
-
-    labels = [0 for _ in range(len(video_doner))]
-    labels += [1 for _ in range(len(video_navle))]
-
-    csv['paths'] = paths
-    csv['labels'] = labels
-
-    csv.to_csv(os.path.join(path, "{}.csv".format(mode)), header = False, index = False, sep = " ")
-
-create_csv(data_path, 'train')
-create_csv(data_path, 'val')
-create_csv(data_path, 'test')
+#
+# def create_csv(path, mode):
+#     if mode == 'train':
+#         files = ['D128', 'D131', 'NS72','NS110','D204','NS112', 'D202']
+#     elif mode == 'val':
+#         files = ['NS73', 'D203']
+#     else:
+#         files = ['D130','NS74','NS111']
+#
+#     doner_path = os.path.join(path, 'classD')
+#     navle_path = os.path.join(path, 'classNS')
+#
+#     video_doner = []
+#     video_navle = []
+#
+#     for file in files:
+#         for video in os.listdir(doner_path):
+#             if file in video:
+#                 video_doner.append(video)
+#
+#         for video in os.listdir(navle_path):
+#             if file in video:
+#                 video_navle.append(video)
+#     csv = pd.DataFrame()
+#
+#     paths = [os.path.abspath(file) for file in video_doner]
+#     paths += [os.path.abspath(file) for file in video_navle]
+#
+#     labels = [0 for _ in range(len(video_doner))]
+#     labels += [1 for _ in range(len(video_navle))]
+#
+#     csv['paths'] = paths
+#     csv['labels'] = labels
+#
+#     csv.to_csv(os.path.join(path, "{}.csv".format(mode)), header = False, index = False, sep = " ")
+#
+# create_csv(data_path, 'train')
+# create_csv(data_path, 'val')
+# create_csv(data_path, 'test')
 
 
 #
