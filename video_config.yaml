@@ -57,3 +57,10 @@ NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
 OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/video/"
+TENSORBOARD:
+  ENABLE: True
+  LOG_DIR: ""# Leave empty to use cfg.OUTPUT_DIR/runs-{cfg.TRAIN.DATASET} as path.
+  CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
+  CONFUSION_MATRIX:
+    ENABLE: True
+    SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
