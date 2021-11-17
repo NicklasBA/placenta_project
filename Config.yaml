@@ -6,9 +6,9 @@ TRAIN:
   #Mini-batch size
   BATCH_SIZE: 4
   #Evaluates model every EVAL_PERIOD epochs
-  EVAL_PERIOD: 5
+  EVAL_PERIOD: 2
   #Saves model every CHECKPOINT_PERIOD epoch
-  CHECKPOINT_PERIOD: 5
+  CHECKPOINT_PERIOD: 2
   #If true, resumes training from latest checkpoint in outer directory
   AUTO_RESUME: True
   #CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/"
