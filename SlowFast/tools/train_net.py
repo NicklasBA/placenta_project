@@ -271,7 +271,7 @@ def eval_epoch(val_loader, model, val_meter, cur_epoch, cfg, writer=None):
 
         else:
             preds = model(inputs)
-            breakpoint()
+
             if cfg.DATA.MULTI_LABEL:
                 if cfg.NUM_GPUS > 1:
                     preds, labels = du.all_gather([preds, labels])
