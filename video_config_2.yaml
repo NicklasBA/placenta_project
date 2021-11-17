@@ -70,4 +70,3 @@ TENSORBOARD:
   CONFUSION_MATRIX:
     ENABLE: True
     SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
-             
