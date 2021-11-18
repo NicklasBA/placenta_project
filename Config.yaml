@@ -123,5 +123,5 @@ DATA_LOADER:
 NUM_SHARDS: 1
 #Random number generator seed
 RNG_SEED: 0
-NUM_GPUS: 1
+NUM_GPUS: 4
 OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/ava/"
