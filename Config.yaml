@@ -110,7 +110,7 @@ MODEL:
   #Activation layer for the output head. Options: "sigmoid" and "softmax"
   HEAD_ACT: sigmoid
 TEST:
-  CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/"
+  CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava_test/"
   ENABLE: True
   DATASET: ava
   BATCH_SIZE: 4
