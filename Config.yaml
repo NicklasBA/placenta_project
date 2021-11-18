@@ -113,7 +113,7 @@ TEST:
   CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/checkpoints/checkpoint_epoch_00008.pyth"
   ENABLE: True
   DATASET: ava
-  BATCH_SIZE: 4
+  BATCH_SIZE: 1
 DATA_LOADER:
   #Multi-process loading using NUM_WORKERS workers
   NUM_WORKERS: 2
@@ -123,5 +123,5 @@ DATA_LOADER:
 NUM_SHARDS: 1
 #Random number generator seed
 RNG_SEED: 0
-NUM_GPUS: 4
+NUM_GPUS: 1
 OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/ava/"
