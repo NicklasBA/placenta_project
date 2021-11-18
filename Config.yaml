@@ -1,6 +1,6 @@
 TRAIN:
   #Sets network in "Train" mode
-  ENABLE: True
+  ENABLE: False
   #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
   DATASET: ava
   #Mini-batch size
@@ -110,9 +110,10 @@ MODEL:
   #Activation layer for the output head. Options: "sigmoid" and "softmax"
   HEAD_ACT: sigmoid
 TEST:
-  ENABLE: False
+  CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/"
+  ENABLE: True
   DATASET: ava
-  BATCH_SIZE: 8
+  BATCH_SIZE: 4
 DATA_LOADER:
   #Multi-process loading using NUM_WORKERS workers
   NUM_WORKERS: 2
