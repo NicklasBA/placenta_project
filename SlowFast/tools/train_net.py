@@ -313,6 +313,10 @@ def eval_epoch(val_loader, model, val_meter, cur_epoch, cfg, writer=None):
 
     # Log epoch stats.
     val_meter.log_epoch_stats(cur_epoch)
+
+    if cur_epoch == 100:
+        breakpoint()
+
     # write to tensorboard format if available.
     if writer is not None:
         if cfg.DETECTION.ENABLE:
