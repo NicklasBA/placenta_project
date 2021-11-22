@@ -383,7 +383,7 @@ class Ava(torch.utils.data.Dataset):
         # Score is not used.
         boxes = boxes[:, :4].copy()
         ori_boxes = boxes.copy()
-        breakpoint()
+        print(boxes)
         # Load images of current clip.
         image_paths = [self._image_paths[video_idx][frame] for frame in seq]
         imgs = utils.retry_load_images(
@@ -421,7 +421,7 @@ class Ava(torch.utils.data.Dataset):
             "ori_boxes": ori_boxes,
             "metadata": metadata,
         }
-        breakpoint()
+        print(ori_boxes)
 
 
         return imgs, label_arrs, idx, extra_data
