@@ -52,7 +52,14 @@ def find_sequences(folder_path: str):
     all_anno_id = []
     new_sequences = []
     sequences = [seq for seq in sequences if len(seq)>= 10]
-    endings = [[int(image_paths[i].split(".")[0].split("_")[-1]) for i in seq] for seq in sequences]
+    try:
+        endings = [[int(image_paths[i].split(".")[0].split("_")[-1]) for i in seq] for seq in sequences]
+    except:
+        for seq in sequences:
+            for i in seq:
+                if "/" in image_paths[i].split(".")[0].split("_")[-1]:
+                    print(image_paths[i])
+        breakpoint()
 
     combine = []
     i = 0
