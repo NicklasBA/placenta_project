@@ -106,6 +106,7 @@ def load_boxes_and_labels(cfg, mode):
         mode=mode,
         boxes_sample_rate=boxes_sample_rate
     )
+
     logger.info(
         "Finished loading annotations from: %s" % ", ".join(ann_filenames)
     )
