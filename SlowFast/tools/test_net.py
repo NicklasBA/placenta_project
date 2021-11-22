@@ -71,7 +71,7 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
             preds = model(inputs, meta["boxes"])
             ori_boxes = meta["ori_boxes"]
             metadata = meta["metadata"]
-
+            breakpoint()
             preds = preds.detach().cpu() if cfg.NUM_GPUS else preds.detach()
             ori_boxes = (
                 ori_boxes.detach().cpu() if cfg.NUM_GPUS else ori_boxes.detach()
