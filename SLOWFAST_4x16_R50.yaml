@@ -1,8 +1,8 @@
 TRAIN:
   ENABLE: True
   DATASET: mydata
-  BATCH_SIZE: 16
-  EVAL_PERIOD: 10
+  BATCH_SIZE: 8
+  EVAL_PERIOD: 2
   CHECKPOINT_PERIOD: 1
   AUTO_RESUME: True
 DATA:
@@ -52,14 +52,14 @@ MODEL:
 TEST:
   ENABLE: True
   DATASET: mydata
-  BATCH_SIZE: 16
+  BATCH_SIZE: 8
 DATA_LOADER:
-  NUM_WORKERS: 8
+  NUM_WORKERS: 2
   PIN_MEMORY: True
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/video3/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_4x16_R50/"
 TENSORBOARD:
   ENABLE: True
   LOG_DIR: ""# Leave empty to use cfg.OUTPUT_DIR/runs-{cfg.TRAIN.DATASET} as path.
