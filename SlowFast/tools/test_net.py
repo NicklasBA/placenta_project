@@ -55,12 +55,6 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
             else:
                 inputs = inputs.cuda(non_blocking=True)
 
-            t1 = torch.empty((1,4))
-            t2 = torch.empty((1,4))
-            t1[0] = meta['boxes'][0][1:]
-            t2[0] = meta['ori_boxes'][0][1:]
-            meta['boxes'] = t1
-            meta['ori_boxes'] = t2
             # Transfer the data to the current GPU device.
             labels = labels.cuda()
             video_idx = video_idx.cuda()
