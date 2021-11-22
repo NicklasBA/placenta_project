@@ -121,7 +121,6 @@ def read_labelmap(labelmap_file):
                 class_id = int(line.strip().split(" ")[-1])
                 labelmap.append({"id": class_id, "name": name})
                 class_ids.add(class_id)
-    breakpoint()
     return labelmap, class_ids
 
 
@@ -165,7 +164,6 @@ def evaluate_ava(
 
     write_results(detections, "detections_%s.csv" % name)
     write_results(groundtruth, "groundtruth_%s.csv" % name)
-    breakpoint()
     results = run_evaluation(categories, groundtruth, detections, excluded_keys)
 
     logger.info("AVA eval done in %f seconds." % (time.time() - eval_start))
