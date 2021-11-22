@@ -1,6 +1,6 @@
 TRAIN:
   #Sets network in "Train" mode
-  ENABLE: False
+  ENABLE: True
   #Dataset name. Uses "build_dataset()" in build.py to load construct dataset
   DATASET: ava
   #Mini-batch size
@@ -88,17 +88,18 @@ AVA:
   FRAME_LIST_DIR: "/home/s183993/placenta_project/data/placenta/frame_lists/"
   ANNOTATION_DIR: "/home/s183993/placenta_project/data/placenta/annotations/"
   TRAIN_GT_BOX_LISTS: ["train_annotations.csv"]
-  TEST_PREDICT_BOX_LISTS: ["val_annotations_testing.csv"]
+  TEST_PREDICT_BOX_LISTS: ["val_annotations.csv"]
   TRAIN_LISTS: ["train.csv"]
-  TEST_LISTS: ["val_testing.csv"]
+  TEST_LISTS: ["val.csv"]
   #Frames that are should not be included (not used in our case). Maybe use an empty file if nescessary
   #EXCLUSION_FILE: ""
   #Same as annotations, possibly use a collected annotations file
-  GROUNDTRUTH_FILE: "/home/s183993/placenta_project/data/placenta/annotations/val_annotations_testing.csv"
+  GROUNDTRUTH_FILE: "/home/s183993/placenta_project/data/placenta/annotations/val_annotations.csv"
   #Just mother or child RBC
   LABEL_MAP_FILE: "action_list.pbtxt"
 DETECTION:
   ENABLE: True
+  ALIGNED: True
 MODEL:
   NUM_CLASSES: 2
   #Model architecure
@@ -110,8 +111,8 @@ MODEL:
   #Activation layer for the output head. Options: "sigmoid" and "softmax"
   HEAD_ACT: sigmoid
 TEST:
-  CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/checkpoints/checkpoint_epoch_00008.pyth"
-  ENABLE: True
+  #CHECKPOINT_FILE_PATH: "/scratch/s183993/placenta_project/outputs/ava/checkpoints/checkpoint_epoch_00008.pyth"
+  ENABLE: False
   DATASET: ava
   BATCH_SIZE: 1
   #NUM_ENSEMBLE_VIEWS: 1
