@@ -164,7 +164,7 @@ def evaluate_ava(
 
     write_results(detections, "detections_%s.csv" % name)
     write_results(groundtruth, "groundtruth_%s.csv" % name)
-
+    breakpoint()
     results = run_evaluation(categories, groundtruth, detections, excluded_keys)
 
     logger.info("AVA eval done in %f seconds." % (time.time() - eval_start))
