@@ -115,6 +115,7 @@ def read_labelmap(labelmap_file):
     class_id = ""
     with pathmgr.open(labelmap_file, "r") as f:
         for line in f:
+            breakpoint()
             if line.startswith("  name:"):
                 name = line.split('"')[1]
             elif line.startswith("  id:") or line.startswith("  label_id:"):
