@@ -72,7 +72,6 @@ class AVAMeter(object):
         self.categories, self.class_whitelist = read_labelmap(
             os.path.join(cfg.AVA.ANNOTATION_DIR, cfg.AVA.LABEL_MAP_FILE)
         )
-        breakpoint()
         gt_filename = os.path.join(
             cfg.AVA.ANNOTATION_DIR, cfg.AVA.GROUNDTRUTH_FILE
         )
