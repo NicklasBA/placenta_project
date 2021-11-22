@@ -114,6 +114,8 @@ TEST:
   ENABLE: True
   DATASET: ava
   BATCH_SIZE: 1
+  NUM_ENSEMBLE_VIEWS: 1
+  NUM_SPATIAL_CROPS: 2
 DATA_LOADER:
   #Multi-process loading using NUM_WORKERS workers
   NUM_WORKERS: 2
