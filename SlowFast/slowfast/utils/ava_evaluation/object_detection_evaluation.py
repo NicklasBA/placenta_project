@@ -139,11 +139,12 @@ class ObjectDetectionEvaluator(DetectionEvaluator):
         """
         super(ObjectDetectionEvaluator, self).__init__(categories)
         self._num_classes = max([cat["id"] for cat in categories])
-        if min(cat["id"] for cat in categories) < 1:
-            raise ValueError("Classes should be 1-indexed.")
+        #We use 0-indexing in our labels
+        #if min(cat["id"] for cat in categories) < 1:
+        #    raise ValueError("Classes should be 1-indexed.")
         self._matching_iou_threshold = matching_iou_threshold
         self._use_weighted_mean_ap = use_weighted_mean_ap
-        self._label_id_offset = 1
+        self._label_id_offset = 0
         self._evaluate_masks = evaluate_masks
         self._evaluation = ObjectDetectionEvaluation(
             num_groundtruth_classes=self._num_classes,
