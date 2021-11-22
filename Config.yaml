@@ -98,7 +98,7 @@ AVA:
   #Just mother or child RBC
   LABEL_MAP_FILE: "action_list.pbtxt"
 DETECTION:
-  ENABLE: True
+  ENABLE: False
 MODEL:
   NUM_CLASSES: 2
   #Model architecure
