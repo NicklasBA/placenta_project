@@ -69,9 +69,12 @@ class AVAMeter(object):
         self.excluded_keys = read_exclusions(
             os.path.join(cfg.AVA.ANNOTATION_DIR, cfg.AVA.EXCLUSION_FILE)
         )
-        self.categories, self.class_whitelist = read_labelmap(
-            os.path.join(cfg.AVA.ANNOTATION_DIR, cfg.AVA.LABEL_MAP_FILE)
-        )
+        try:
+            self.categories, self.class_whitelist = read_labelmap(
+                os.path.join(cfg.AVA.ANNOTATION_DIR, cfg.AVA.LABEL_MAP_FILE)
+            )
+        except:
+            breakpoint()
         gt_filename = os.path.join(
             cfg.AVA.ANNOTATION_DIR, cfg.AVA.GROUNDTRUTH_FILE
         )
