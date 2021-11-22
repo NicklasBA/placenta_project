@@ -54,7 +54,7 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
                     inputs[i] = inputs[i].cuda(non_blocking=True)
             else:
                 inputs = inputs.cuda(non_blocking=True)
-
+            breakpoint()
             # Transfer the data to the current GPU device.
             labels = labels.cuda()
             video_idx = video_idx.cuda()
