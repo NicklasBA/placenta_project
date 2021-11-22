@@ -12,6 +12,7 @@ DATA:
   TRAIN_CROP_SIZE: 224
   TEST_CROP_SIZE: 256
   INPUT_CHANNEL_NUM: [3, 3]
+  PATH_TO_DATA_DIR: "/scratch/s183993/placenta/raw_data/videos"
 SLOWFAST:
   ALPHA: 8
   BETA_INV: 8
