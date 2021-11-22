@@ -34,8 +34,8 @@ python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
   --cfg /home/s183993/placenta_project/Config.yaml\
   --gpu 0
 python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
-  --cfg /home/s183993/placenta_project/video_config.yaml\
-  --gpu 0
+  --cfg /home/s183993/placenta_project/video_config_3.yaml\
+  --gpu 4
 ```
 Test a model
 ```
