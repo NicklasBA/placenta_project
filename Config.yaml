@@ -98,7 +98,7 @@ AVA:
   #Just mother or child RBC
   LABEL_MAP_FILE: "action_list.pbtxt"
 DETECTION:
-  ENABLE: False
+  ENABLE: True
 MODEL:
   NUM_CLASSES: 2
   #Model architecure
@@ -114,8 +114,8 @@ TEST:
   ENABLE: True
   DATASET: ava
   BATCH_SIZE: 1
-  NUM_ENSEMBLE_VIEWS: 1
-  NUM_SPATIAL_CROPS: 2
+  #NUM_ENSEMBLE_VIEWS: 1
+  #NUM_SPATIAL_CROPS: 2
 DATA_LOADER:
   #Multi-process loading using NUM_WORKERS workers
   NUM_WORKERS: 2
