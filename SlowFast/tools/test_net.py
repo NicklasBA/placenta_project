@@ -60,6 +60,8 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
             video_idx = video_idx.cuda()
             for key, val in meta.items():
                 if isinstance(val, (list,)):
+                    if key == 'metadata' and cfg.TRAIN.DATASET in ["ava"]:
+                        val = val[0]
                     for i in range(len(val)):
                         val[i] = val[i].cuda(non_blocking=True)
                 else:
