@@ -123,8 +123,7 @@ class BlobAnalysis:
         left, center, right = self.count_in_sequence(blob_seq)
         is_valid = True
         if is_valid:
-            return {key: [v.bbox for v in val] for key, val in zip(names, blob_seq)}, \
-                   {key: [v.__hash__() for v in val] for key, val in zip(names, blob_seq)}
+            return {key: [v.bbox for v in val] for key, val in zip(names, blob_seq)}
         else:
             return None
 

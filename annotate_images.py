@@ -80,10 +80,9 @@ def find_sequences(folder_path: str):
         seq_paths = [image_paths[i] for i in seq]
         seq_blobs = analyser.get_blobs_in_files(seq_paths)
         seq_names = [image_paths[i].rsplit(os.path.sep, 1)[-1] for i in seq]
-        seq_bbox, seq_id = analyser.get_bbox_if_valid_blob_seq(seq_blobs, names=seq_names)
+        seq_bbox = analyser.get_bbox_if_valid_blob_seq(seq_blobs, names=seq_names)
         if seq_bbox:
             all_anno_seq.append(seq_bbox)
-            all_anno_id.append(seq_id)
 
     all_anno_seq_ava = []
     for idx, seq in enumerate(all_anno_seq):
