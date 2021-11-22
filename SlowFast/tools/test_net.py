@@ -79,7 +79,6 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
             metadata = (
                 metadata.detach().cpu() if cfg.NUM_GPUS else metadata.detach()
             )
-            breakpoint()
 
             if cfg.NUM_GPUS > 1:
                 preds = torch.cat(du.all_gather_unaligned(preds), dim=0)
