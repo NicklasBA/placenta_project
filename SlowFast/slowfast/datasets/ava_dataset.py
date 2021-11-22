@@ -421,7 +421,7 @@ class Ava(torch.utils.data.Dataset):
             "ori_boxes": ori_boxes,
             "metadata": metadata,
         }
-        print(ori_boxes)
+        print(" original boxes is {}".format(ori_boxes))
 
 
         return imgs, label_arrs, idx, extra_data
