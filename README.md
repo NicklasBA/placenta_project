@@ -45,3 +45,7 @@ python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
   TEST.CHECKPOINT_FILE_PATH path_to_your_checkpoint \
   TRAIN.ENABLE False \
 ```
+Annotate images
+```
+
+```
