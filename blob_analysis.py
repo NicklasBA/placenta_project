@@ -206,7 +206,13 @@ class BlobAnalysis:
         return img
 
     def sub_median_and_bin(self, image_path):
-        image = np.asarray(Image.open(image_path)).mean(axis=2)
+        try:
+            image = np.asarray(Image.open(image_path)).mean(axis=2)
+            image_read = True
+        except:
+            image = np.zeros(self.median.shape)
+            return image
+
         image = gaussian_filter(image, sigma=SIGMA)
         image = image - self.median
         # threshold = threshold_otsu(image)
