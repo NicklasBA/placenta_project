@@ -218,8 +218,11 @@ if __name__ == '__main__':
 
     processed_files = {}
     count = 1
-    csv_files = [file.split(".")[0] for file in os.listdir(args["folder"]) if '.csv' in file]
-    in_paths = [i for i in in_paths if i.split(os.sep)[-1] not in csv_files]
+    csv_files = [os.path.abspath(file).split(".")[0] for file in os.listdir(args["folder"]) if '.csv' in file]
+    len_b = len(in_paths)
+    in_paths = list(set(in_paths)-set(csv_files))
+    len_a = len(in_paths)
+    print("{} out of".format(len_b-len_a) + "{} were already created for".format(len_b))
     breakpoint()
     for path in in_paths:
         rename_files(folder_path=path)
