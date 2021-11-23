@@ -218,6 +218,7 @@ if __name__ == '__main__':
 
     processed_files = {}
     count = 1
+    print(outdir)
     csv_files = [os.path.abspath(file).split(".")[0] for file in os.listdir(outdir) if '.csv' in file]
     len_b = len(in_paths)
     in_paths = list(set(in_paths)-set(csv_files))
