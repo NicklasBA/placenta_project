@@ -218,6 +218,8 @@ if __name__ == '__main__':
 
     processed_files = {}
     count = 1
+    csv_files = [file.split(".")[0] for file in os.listdir(args["folder"]) if '.csv' in file]
+    in_paths = [i for i in in_paths if i.split(os.sep)[-1] not in csv_files]
     for path in in_paths:
         rename_files(folder_path=path)
         print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
