@@ -62,7 +62,7 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_4x16_R50/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_4x16_R50_stepwise/"
 TENSORBOARD:
   ENABLE: True
   LOG_DIR: ""# Leave empty to use cfg.OUTPUT_DIR/runs-{cfg.TRAIN.DATASET} as path.
