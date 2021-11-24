@@ -197,14 +197,15 @@ def find_csv_and_ground_path(path_to_files):
 
 def find_files(data_dir, folder):
     all_folders = glob.glob(os.path.join(data_dir,folder)+"_*")
+    old_files = os.listdir(os.path.join(data_dir, folder))
+    old_endings = [int(i.split(".")[0][-6:]) for i in old_files]
     files = []
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
 
     files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
-    old_files = os.listdir(os.path.join(data_dir, folder))
-    old_endings = [int(i.split(".")[0][-6:]) for i in old_files]
+
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
     breakpoint()
