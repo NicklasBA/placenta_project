@@ -162,10 +162,16 @@ def move_files_p2(csv_file, ground_path):
 
         paths = [os.path.join(new_path, x) for x in csv_file['FrameName']]
         old_path = [os.path.join(ground_path, x) for x in csv_file['FrameName']]
-
+        non_moved = []
         for idx, p in enumerate(paths):
-            shutil.copy(old_path[idx], p)
+            try:
+                shutil.move(old_path[idx], p)
+            except:
+                non_moved.append(old_path)
+                continue
+
     print("images for " + ground_path + " Was succesfully moved")
+    print("A total of {} images were not moved".format(len(non_moved)))
 
 def find_csv_and_ground_path(path_to_files):
 
