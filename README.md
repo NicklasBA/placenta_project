@@ -47,7 +47,7 @@ python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
 ```
 Annotate images
 ```
-TBA
+python3 -m pdb annotate_images.py /scratch/s183993/placenta/raw_data/datadump -b
 ```
 Tensorboard, connect to thinclinc.compute.dtu.dk with
 ```
