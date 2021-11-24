@@ -202,6 +202,9 @@ def find_files(data_dir, folder):
     files = []
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
+        for e in files[-1]:
+            if '020019' in e:
+                breakpoint()
 
 
     files = [i for file in files for i in file]
@@ -232,8 +235,6 @@ def find_files(data_dir, folder):
 
     all_new = []
     for ends, seq in list(zip(all_end, all_seq)):
-        if 20019 in ends:
-            breakpoint()
         if len(seq) < 5*15:
             if ends[0] > 25 and ends[-1] < 43300-25:
                 all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[0])] +
