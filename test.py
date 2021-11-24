@@ -163,7 +163,7 @@ def move_files_p2(csv_file, ground_path):
         paths = [os.path.join(new_path, x) for x in csv_file['FrameName']]
         old_path = [os.path.join(ground_path, x) for x in csv_file['FrameName']]
 
-        for idx, p in paths:
+        for idx, p in enumerate(paths):
             shutil.copy(old_path[idx], p)
     print("images for " + ground_path + " Was succesfully moved")
 
