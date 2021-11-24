@@ -218,7 +218,7 @@ def find_files(data_dir, folder):
             else:
                 i += 1
                 break
-        if len(comb) > 10:
+        if len(comb) > 20:
             all_seq.append(comb)
 
     return all_seq
