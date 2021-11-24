@@ -37,6 +37,10 @@ python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
   --cfg /home/s183993/placenta_project/video_config_3.yaml\
   --gpu 4
 ```
+Slowfast path
+```
+export PYTHONPATH=/home/s183993/placenta_project/SlowFast:$PYTHONPATH
+```
 Test a model
 ```
 python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
