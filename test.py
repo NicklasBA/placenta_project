@@ -208,7 +208,7 @@ def find_files(data_dir, folder):
 
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
-    breakpoint()
+
     files = [x for _, x in sorted(zip(endings, files))]
     endings = sorted(endings)
     all_seq = []
@@ -236,7 +236,6 @@ def find_files(data_dir, folder):
                 all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[-1]+25)])
         else:
             all_new.append(seq)
-    breakpoint()
     return all_new
 
 def save_video(paths, OUTDIR, video_name):
