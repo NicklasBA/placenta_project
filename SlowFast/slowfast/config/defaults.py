@@ -565,6 +565,8 @@ _C.SOLVER.CLIP_GRAD_L2NORM = None
 # Misc options
 # ---------------------------------------------------------------------------- #
 
+_C.TURN_OFF_SLOW = False
+
 # Number of GPUs to use (applies to both training and testing).
 _C.NUM_GPUS = 1
 
