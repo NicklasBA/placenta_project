@@ -184,6 +184,7 @@ def move_files_back(org_path, ground_path):
     for path in os.listdir(ground_path):
         if '.csv' not in path:
             if org_path in os.path.join(ground_path,path):
+                breakpoint()
                 for file in os.listdir(os.path.join(ground_path, path)):
                     src = os.path.join(os.path.join(ground_path,path), file)
                     dst = os.path.join(org_path, file)
