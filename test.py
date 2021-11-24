@@ -224,6 +224,9 @@ def find_files(data_dir, folder):
             else:
                 i += 1
                 break
+        all_seq.append(comb)
+        all_end.append(comb_end)
+
 
     all_new = []
     for ends, seq in zip(all_end, all_seq):
