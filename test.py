@@ -179,7 +179,7 @@ def find_csv_and_ground_path(path_to_files):
 
 
 
-path_to_files= r'/scratch/s183993/placenta/raw_data/data_dump'
+path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
 
 find_csv_and_ground_path(path_to_files)
 
