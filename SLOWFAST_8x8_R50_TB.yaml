@@ -61,7 +61,7 @@ NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
 TURN_OFF_SLOW: False
-OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_4x16_R50_TB/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_TB/"
 TENSORBOARD:
   ENABLE: True
   CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
