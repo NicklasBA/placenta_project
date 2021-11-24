@@ -225,12 +225,13 @@ def find_files(data_dir, folder):
             else:
                 i += 1
                 break
-        all_seq.append(comb)
-        all_end.append(comb_end)
 
+        if len(comb) > 5:
+            all_seq.append(comb)
+            all_end.append(comb_end)
 
     all_new = []
-    for ends, seq in zip(all_end, all_seq):
+    for ends, seq in list(zip(all_end, all_seq)):
         if len(seq) < 5*15:
             if ends[0] > 25 and ends[-1] < 43300-25:
                 all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[-1]+25)])
