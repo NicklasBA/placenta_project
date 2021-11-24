@@ -197,7 +197,7 @@ def find_csv_and_ground_path(path_to_files):
 
 def find_files(data_dir, folder):
     all_folders = glob.glob(os.path.join(data_dir,folder)+"_*")
-    old_files = glob.glob(os.path.join(data_dir, folder)+"*.png")
+    old_files = glob.glob(os.path.join(os.path.join(data_dir, folder),"*.png"))
     old_endings = [int(i.split(".")[0][-6:]) for i in old_files]
     files = []
     for folder in all_folders:
