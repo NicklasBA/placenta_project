@@ -197,6 +197,8 @@ def find_csv_and_ground_path(path_to_files):
 
 def find_files(data_dir, folder):
     all_folders = glob.glob(os.path.join(data_dir,folder)+"_*")
+    old_files = glob.glob(os.path.join(os.path.join(data_dir, folder),"*.png"))
+    old_endings = [int(i.split(".")[0][-6:]) for i in old_files]
     files = []
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
@@ -204,32 +206,49 @@ def find_files(data_dir, folder):
     files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
 
+    all_old = {ending:file for ending, file in zip(old_endings, old_files)}
+
     files = [x for _, x in sorted(zip(endings, files))]
     endings = sorted(endings)
-
     all_seq = []
+    all_end = []
     i = 0
     while i < len(endings) - 1:
         comb = []
+        comb_end = []
         for idx in range(i, len(endings) - 1):
             if endings[idx] + 1 == endings[idx + 1]:
                 comb.append(files[idx])
+                comb_end.append(endings[idx])
                 i += 1
             else:
                 i += 1
                 break
-        if len(comb) > 20:
-            all_seq.append(comb)
 
-    return all_seq
+        if len(comb) > 10:
+            all_seq.append(comb)
+            all_end.append(comb_end)
+
+    all_new = []
+    for ends, seq in list(zip(all_end, all_seq)):
+        if len(seq) < 5*15:
+            if ends[0] > 25 and ends[-1] < 43300-25:
+                all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[0])] +
+                               seq + [all_old[idx] for idx in range(ends[-1]+1,ends[-1]+25)])
+        else:
+            all_new.append(seq)
+    return all_new
 
 def save_video(paths, OUTDIR, video_name):
     img_array = []
     for filename in paths:
-        img = cv2.imread(filename)
-        height, width, layers = img.shape
-        size = (width, height)
-        img_array.append(img)
+        try:
+            img = cv2.imread(filename)
+            height, width, layers = img.shape
+            size = (width, height)
+            img_array.append(img)
+        except:
+            return None
     print(f"\tFound and loaded {len(img_array)} images.")
     out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
     print(f"\tWriting to {OUTDIR}{video_name}.mp4")
@@ -256,7 +275,7 @@ if __name__ == '__main__':
         print(f"maximum length was {np.mean(pcl[folder])}")
         print("Done for " + base_name)
 
-    with open(os.path.join(OUTDIR, 'lengths.pkl','wb')) as handle:
+    with open(os.path.join(OUTDIR, 'lengths.pkl'),'wb') as handle:
         pickle.dump(pcl, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
