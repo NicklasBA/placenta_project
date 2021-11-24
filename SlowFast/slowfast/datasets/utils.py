@@ -88,14 +88,25 @@ def pack_pathway_output(cfg, frames):
         frame_list = [frames]
     elif cfg.MODEL.ARCH in cfg.MODEL.MULTI_PATHWAY_ARCH:
         fast_pathway = frames
-        # Perform temporal sampling from the fast pathway.
-        slow_pathway = torch.index_select(
-            frames,
-            1,
-            torch.linspace(
-                0, frames.shape[1] - 1, frames.shape[1] // cfg.SLOWFAST.ALPHA
-            ).long(),
-        )
+        if cfg.TURN_OFF_SLOW:
+            fast_p2 = torch.zeros_like(fast_pathway)
+            # Perform temporal sampling from the fast pathway.
+            slow_pathway = torch.index_select(
+                fast_p2,
+                1,
+                torch.linspace(
+                    0, frames.shape[1] - 1, frames.shape[1] // cfg.SLOWFAST.ALPHA
+                ).long(),
+            )
+        else:
+            slow_pathway = torch.index_select(
+                frames,
+                1,
+                torch.linspace(
+                    0, frames.shape[1] - 1, frames.shape[1] // cfg.SLOWFAST.ALPHA
+                ).long(),
+            )
+
         frame_list = [slow_pathway, fast_pathway]
     else:
         raise NotImplementedError(
