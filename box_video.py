@@ -39,7 +39,7 @@ def draw_bboxes(img, bboxes,text, color=(0, 0, 255), thickness=1):
     fontColor              = (255,0,0)
     lineType               = 2
     for bbox in bboxes:
-        cv2.rectangle(img, tuple(bbox[:2]), tuple(bbox[-2:]), color, thickness)
+        #cv2.rectangle(img, tuple(bbox[:2]), tuple(bbox[-2:]), color, thickness)
         cv2.putText(image, str(text), 
         bottomLeftCornerOfText, 
         font, 
