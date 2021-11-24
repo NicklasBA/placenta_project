@@ -7,7 +7,8 @@ import sys
 import pickle
 import numpy as np
 import shutil
-
+import glob
+import cv2
 #
 # def alter_csv(csv):
 #     csv[csv.columns[-1]] = [0 for _ in range(len(csv))]
@@ -36,6 +37,12 @@ import shutil
 
 # csv = pd.read_csv(r'C:\Users\ptrkm\PycharmProjects\20180404_5_6mbar_500fps_D167.csv')
 # breakpoint()
+
+
+
+
+
+
 
 def create_csv(path, mode):
     if mode == 'train':
@@ -101,6 +108,11 @@ def correct_csv(csv_path,data_path, anno = False):
 # correct_csv(val_anno, data_path, True)
 # correct_csv(test_anno, data_path, True)
 # breakpoint()
+
+
+
+
+
 def ensure_names(names, path):
     total_there =0
     for name in names:
@@ -175,32 +187,85 @@ def move_files_p2(csv_file, ground_path):
 
 def find_csv_and_ground_path(path_to_files):
 
-    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file and 'D130' not in file]
+    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file]
     folders = [file.split(".")[0] for file in csv_files]
-
+    ground_path = []
     for idx, file in enumerate(csv_files):
-        csv_file = pd.read_csv(file)
-        ground_path = folders[idx]
-        move_files_p2(csv_file, ground_path)
+        ground_path.append(folders[idx])
 
-def move_files_back(org_path, ground_path):
-    for path in os.listdir(ground_path):
-        if '.csv' not in path:
-            if org_path in os.path.join(ground_path,path) and org_path != os.path.join(ground_path,path):
-                breakpoint()
-                for file in os.listdir(os.path.join(ground_path, path)):
-                    src = os.path.join(os.path.join(ground_path,path), file)
-                    dst = os.path.join(org_path, file)
-                    shutil.move(src, dst)
-    print("files were moved")
+    return ground_path
+
+def find_files(data_dir, folder):
+    all_folders = glob.glob(os.path.join(data_dir,folder)+"_*")
+    files = []
+    for folder in all_folders:
+        files.append(glob.glob(os.path.join(folder, "*.png")))
+
+    endings = [int(i.split(".")[0][-6:]) for i in files]
+    files = [x for _, x in sorted(zip(endings, files))]
+    endings = sorted(endings)
+
+    all_seq = []
+    while i < len(endings) - 1:
+        comb = []
+        for idx in range(i, len(endings) - 1):
+            if endings[idx] + 1 == endings[idx + 1]:
+                comb.append(files[idx])
+                i += 1
+            else:
+                i += 1
+                break
+        if len(comb) > 10:
+            all_seq.append(comb)
+
+    return all_seq
+
+def save_video(paths, OUTDIR, video_name):
+    img_array = []
+    for filename in paths:
+        img = cv2.imread(filename)
+        height, width, layers = img.shape
+        size = (width, height)
+        img_array.append(img)
+    print(f"\tFound and loaded {len(img_array)} images.")
+    out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
+    print(f"\tWriting to {OUTDIR}{video_name}.mp4")
+    for i in range(len(img_array)):
+        out.write(img_array[i])
+    out.release()
+    # print("Thank you, next")
+
+if __name__ == '__main__':
+    path_to_files = r'/scratch/s183993/placenta/raw_data/datadump/'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/'
+    folders = find_csv_and_ground_path(path_to_files)
+    pcl = {}
+    for folder in folders:
+        base_name = os.path.basename(folder)
+        all_seq = find_files(path_to_files, folder)
+        pcl[folder]['lengths'] = []
+        for idx, seq in enumerate(all_seq):
+            pcl[folder]['lengths'].append(len(seq))
+            save_video(seq,OUTDIR, base_name+f"_{idx:06}:")
+
+        print(f"minimum length was {np.min(pcl[folder]['lengths'])}")
+        print(f"maximum length was {np.max(pcl[folder]['lengths'])}")
+        print(f"maximum length was {np.mean(pcl[folder]['lengths'])}")
+        print("Done for " + base_name)
+
+    with open(os.path.join(OUTDIR, 'lengths.pkl','wb')) as handle:
+        pickle.dump(pcl, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
 #
 # org_path = r'/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130'
 # ground_path = r'/scratch/s183993/placenta/raw_data/datadump/'
 # move_files_back(org_path, ground_path)
 
-path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
-
-find_csv_and_ground_path(path_to_files)
+# path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
+#
+# find_csv_and_ground_path(path_to_files)
 
 
 
