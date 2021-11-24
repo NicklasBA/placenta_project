@@ -201,7 +201,9 @@ def find_files(data_dir, folder):
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
 
+    files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
+
     files = [x for _, x in sorted(zip(endings, files))]
     endings = sorted(endings)
 
