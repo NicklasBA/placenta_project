@@ -206,13 +206,6 @@ def find_files(data_dir, folder):
 
     files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
-    for e in endings:
-        if e == 20019:
-            breakpoint()
-
-    for e in old_endings:
-        if e == 20019:
-            breakpoint()
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
 
@@ -239,6 +232,8 @@ def find_files(data_dir, folder):
 
     all_new = []
     for ends, seq in list(zip(all_end, all_seq)):
+        if 20019 in ends:
+            breakpoint()
         if len(seq) < 5*15:
             if ends[0] > 25 and ends[-1] < 43300-25:
                 all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[0])] +
