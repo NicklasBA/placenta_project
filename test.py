@@ -152,7 +152,7 @@ def move_files(old_csv, ground_path, count, total_frame_list, total_annotations,
 
 def move_files_p2(csv_file, ground_path):
     sequences = list(pd.unique(csv_file['SequenceID']))
-
+    moved = []
     for seq in sequences:
         csv = csv_file[csv_file['SequenceID'] == seq]
         csv = csv.reset_index()
@@ -160,19 +160,22 @@ def move_files_p2(csv_file, ground_path):
         if os.path.exists(new_path) is False:
             os.mkdir(new_path)
 
+
         paths = [os.path.join(new_path, x) for x in csv['FrameName']]
         old_path = [os.path.join(ground_path, x) for x in csv['FrameName']]
-        non_moved = []
+        moved.append(len(paths))
         for idx, p in enumerate(paths):
-            shutil.move(old_path[idx], p)
+            src = old_path[idx]
+            shutil.copy(src, p)
 
+        print("Images for " + ground_path + seq + " Was moved succesfully")
 
     print("images for " + ground_path + " Was succesfully moved")
-    print("A total of {} images were not moved".format(len(non_moved)))
+    print("A total of {} images were moved".format(len(np.sum(moved))))
 
 def find_csv_and_ground_path(path_to_files):
 
-    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file and 'D130' not in file]
+    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file]
     folders = [file.split(".")[0] for file in csv_files]
 
     for idx, file in enumerate(csv_files):
@@ -190,14 +193,14 @@ def move_files_back(org_path, ground_path):
                     dst = os.path.join(org_path, file)
                     shutil.move(src, dst)
     print("files were moved")
-
-org_path = r'/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130'
-ground_path = r'/scratch/s183993/placenta/raw_data/datadump/'
-move_files_back(org_path, ground_path)
-
-# path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
 #
-# find_csv_and_ground_path(path_to_files)
+# org_path = r'/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130'
+# ground_path = r'/scratch/s183993/placenta/raw_data/datadump/'
+# move_files_back(org_path, ground_path)
+
+path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
+
+find_csv_and_ground_path(path_to_files)
 
 
 
