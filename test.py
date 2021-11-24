@@ -208,8 +208,8 @@ def find_files(data_dir, folder):
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
 
-    files = [x for _, x in sorted(zip(old_endings, old_files))]
-    old_endings = sorted(old_endings)
+    files = [x for _, x in sorted(zip(endings, files))]
+    endings = sorted(endings)
     all_seq = []
     all_end = []
     i = 0
