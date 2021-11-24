@@ -182,11 +182,12 @@ def find_csv_and_ground_path(path_to_files):
 
 def move_files_back(org_path, ground_path):
     for path in os.listdir(ground_path):
-        if org_path in os.path.join(ground_path,path):
-            for file in os.listdir(os.path.join(ground_path, path)):
-                src = os.path.join(os.path.join(ground_path,path), file)
-                dst = os.path.join(org_path, file)
-                shutil.move(src, dst)
+        if '.csv' not in path:
+            if org_path in os.path.join(ground_path,path):
+                for file in os.listdir(os.path.join(ground_path, path)):
+                    src = os.path.join(os.path.join(ground_path,path), file)
+                    dst = os.path.join(org_path, file)
+                    shutil.move(src, dst)
     print("files were moved")
 
 org_path = r'/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130'
