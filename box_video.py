@@ -21,12 +21,12 @@ from skimage.morphology import binary_closing, binary_opening
 from skimage import measure
 from scipy.ndimage import gaussian_filter
 
-path = "/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130.csv"
+path= r"C:\Users\Nicklas\OneDrive - Danmarks Tekniske Universitet\Undevisning\FetalMaternal_project\Placenta_package\20180307_5_6mbar_500fps_D130\20180307_5_6mbar_500fps_D130.csv"
 df = pd.read_csv (path)
         
 df1 = df.groupby(by=['FrameName']).agg(list)
     
-folder_path = "/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130"
+folder_path = r"C:\Users\Nicklas\OneDrive - Danmarks Tekniske Universitet\Undevisning\FetalMaternal_project\Placenta_package\20180307_5_6mbar_500fps_D130"
 
 image_paths = glob.glob(os.path.join(folder_path, df.FrameName[0]))
 #outout = (os.path.join(folder_path, 'out5.png'))
