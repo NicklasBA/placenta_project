@@ -9,32 +9,33 @@ import numpy as np
 import shutil
 
 #
-def alter_csv(csv):
-    csv[csv.columns[-1]] = [0 for _ in range(len(csv))]
-    return csv
-
-test_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\test_annotations.csv'
-train_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\train_annotations.csv'
-val_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\val_annotations.csv'
-
-
-
-train = pd.read_csv(train_path, header = None)
-val = pd.read_csv(val_path, header = None)
-
-# test = alter_csv(test)
-train = alter_csv(train)
-val = alter_csv(val)
-train.to_csv(train_path, header = False, index = False)
-val.to_csv(val_path, header = False, index = False)
+# def alter_csv(csv):
+#     csv[csv.columns[-1]] = [0 for _ in range(len(csv))]
+#     return csv
 #
-test.to_csv(test_path, header = False, index = False)
-train.to_csv(train_path, header = False, index = False)
-val.to_csv(val_path, header = False, index = False)
+# test_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\test_annotations.csv'
+# train_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\train_annotations.csv'
+# val_path = r'C:\Users\ptrkm\PycharmProjects\placenta_project\data\placenta\annotations\val_annotations.csv'
+#
+#
+#
+# train = pd.read_csv(train_path, header = None)
+# val = pd.read_csv(val_path, header = None)
+#
+# # test = alter_csv(test)
+# train = alter_csv(train)
+# val = alter_csv(val)
+# train.to_csv(train_path, header = False, index = False)
+# val.to_csv(val_path, header = False, index = False)
+# #
+# test.to_csv(test_path, header = False, index = False)
+# train.to_csv(train_path, header = False, index = False)
+# val.to_csv(val_path, header = False, index = False)
+#
+# breakpoint()
 
-breakpoint()
-
-
+# csv = pd.read_csv(r'C:\Users\ptrkm\PycharmProjects\20180404_5_6mbar_500fps_D167.csv')
+# breakpoint()
 
 def create_csv(path, mode):
     if mode == 'train':
@@ -149,45 +150,86 @@ def move_files(old_csv, ground_path, count, total_frame_list, total_annotations,
     return total_frame_list, total_annotations, count
 
 
-ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-csv_files = [file for file in os.listdir(ground_path) if '.csv' in file]
+def move_files_p2(csv_file, ground_path):
+    sequences = list(pd.unique(csv_file['SequenceID']))
 
-train = ['D128', 'D131', 'NS72','NS110','D204','NS112', 'D202']
-val = ['NS73', 'D203']
-test = ['D130','NS74','NS111']
+    for seq in sequences:
+        csv = csv_file[csv_file['SequenceID'] == seq]
+        csv = csv.reset_index()
+        new_path = ground_path + "_" + seq
+        if os.path.exists(new_path) is False:
+            os.mkdir(new_path)
 
-train_frame_list = pd.DataFrame()
-val_frame_list = pd.DataFrame()
-test_frame_list = pd.DataFrame()
-train_anno = pd.DataFrame()
-val_anno = pd.DataFrame()
-test_anno = pd.DataFrame()
-count = 0
-for csv_file in csv_files:
-    csv = pd.read_csv(os.path.join(ground_path,csv_file))
-    if csv_file.split(".")[0][-4:] in train:
-        train_frame_list, train_anno, count = move_files(csv, ground_path, count, train_frame_list, train_anno, train = True)
-    if csv_file.split(".")[0][-4:] in test:
-        test_frame_list, test_anno, count = move_files(csv, ground_path, count, test_frame_list, test_anno, test = True)
-    if csv_file.split(".")[0][-4:] in val:
-        val_frame_list, val_anno, count = move_files(csv, ground_path, count, val_frame_list, val_anno, val = True)
+        paths = [os.path.join(new_path, x) for x in csv_file['FrameName']]
+        old_path = [os.path.join(ground_path, x) for x in csv_file['FrameName']]
 
-save_path = r'/scratch/s183993/placenta/raw_data/'
+        for idx, p in paths:
+            shutil.copy(old_path[idx], p)
+    print("images for " + ground_path + " Was succesfully moved")
 
-train_frame_list.to_csv(os.path.join(save_path, 'train.csv'))
-val_frame_list.to_csv(os.path.join(save_path, 'val.csv'))
-test_frame_list.to_csv(os.path.join(save_path, 'test.csv'))
+def find_csv_and_ground_path(path_to_files):
 
-train_anno.to_csv(os.path.join(save_path, 'train_annotations.csv'))
-val_anno.to_csv(os.path.join(save_path, 'val_annotations.csv'))
-test_anno.to_csv(os.path.join(save_path, 'test_annotations.csv'))
+    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file]
+    folders = [file.split(".")[0] for file in csv_files]
+
+    for idx, file in enumerate(csv_files):
+        csv_file = pd.read_csv(file)
+        ground_path = folders[idx]
+        move_files_p2(csv_file, ground_path)
+
+
+
+path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
+
+find_csv_and_ground_path(path_to_files)
+
+
+
+
+
+
+
+
+#
+# ground_path = r'/scratch/s183993/placenta/raw_data/frames'
+# csv_files = [file for file in os.listdir(ground_path) if '.csv' in file]
+#
+# train = ['D128', 'D131', 'NS72','NS110','D204','NS112', 'D202']
+# val = ['NS73', 'D203']
+# test = ['D130','NS74','NS111']
+#
+# train_frame_list = pd.DataFrame()
+# val_frame_list = pd.DataFrame()
+# test_frame_list = pd.DataFrame()
+# train_anno = pd.DataFrame()
+# val_anno = pd.DataFrame()
+# test_anno = pd.DataFrame()
+# count = 0
+# for csv_file in csv_files:
+#     csv = pd.read_csv(os.path.join(ground_path,csv_file))
+#     if csv_file.split(".")[0][-4:] in train:
+#         train_frame_list, train_anno, count = move_files(csv, ground_path, count, train_frame_list, train_anno, train = True)
+#     if csv_file.split(".")[0][-4:] in test:
+#         test_frame_list, test_anno, count = move_files(csv, ground_path, count, test_frame_list, test_anno, test = True)
+#     if csv_file.split(".")[0][-4:] in val:
+#         val_frame_list, val_anno, count = move_files(csv, ground_path, count, val_frame_list, val_anno, val = True)
+#
+# save_path = r'/scratch/s183993/placenta/raw_data/'
+#
+# train_frame_list.to_csv(os.path.join(save_path, 'train.csv'))
+# val_frame_list.to_csv(os.path.join(save_path, 'val.csv'))
+# test_frame_list.to_csv(os.path.join(save_path, 'test.csv'))
+#
+# train_anno.to_csv(os.path.join(save_path, 'train_annotations.csv'))
+# val_anno.to_csv(os.path.join(save_path, 'val_annotations.csv'))
+# test_anno.to_csv(os.path.join(save_path, 'test_annotations.csv'))
+# #
+# #
+# #
+# # #
+# #
+# #
 #
 #
 #
 # #
-#
-#
-
-
-
-#
