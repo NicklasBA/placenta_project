@@ -207,7 +207,7 @@ def find_files(data_dir, folder):
     old_endings = [int(i.split(".")[0][-6:]) for i in old_files]
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
-
+    breakpoint()
     files = [x for _, x in sorted(zip(endings, files))]
     endings = sorted(endings)
     all_seq = []
