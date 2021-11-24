@@ -202,10 +202,6 @@ def find_files(data_dir, folder):
     files = []
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
-        for e in files[-1]:
-            if '020019' in e:
-                breakpoint()
-
 
     files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
@@ -246,10 +242,13 @@ def find_files(data_dir, folder):
 def save_video(paths, OUTDIR, video_name):
     img_array = []
     for filename in paths:
-        img = cv2.imread(filename)
-        height, width, layers = img.shape
-        size = (width, height)
-        img_array.append(img)
+        try:
+            img = cv2.imread(filename)
+            height, width, layers = img.shape
+            size = (width, height)
+            img_array.append(img)
+        except:
+            return None
     print(f"\tFound and loaded {len(img_array)} images.")
     out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
     print(f"\tWriting to {OUTDIR}{video_name}.mp4")
