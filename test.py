@@ -203,9 +203,16 @@ def find_files(data_dir, folder):
     for folder in all_folders:
         files.append(glob.glob(os.path.join(folder, "*.png")))
 
+
     files = [i for file in files for i in file]
     endings = [int(i.split(".")[0][-6:]) for i in files]
+    for e in endings:
+        if e == 20019:
+            breakpoint()
 
+    for e in old_endings:
+        if e == 20019:
+            breakpoint()
 
     all_old = {ending:file for ending, file in zip(old_endings, old_files)}
 
