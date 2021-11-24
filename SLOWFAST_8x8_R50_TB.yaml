@@ -69,4 +69,4 @@ TENSORBOARD:
     MODEL_WEIGHTS: True # Set to True to visualize model weights.
     ACTIVATIONS: True # Set to True to visualize feature maps.
     INPUT_VIDEO: True # Set to True to visualize the input video(s) for the corresponding feature maps.
-    LAYER_LIST: [layer1, layer2, layer3] # List of layer names to visualize weights and activations for.
+    LAYER_LIST:[layer1, layer2] # List of layer names to visualize weights and activations for.
