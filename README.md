@@ -47,5 +47,17 @@ python /home/s183993/placenta_project/SlowFast/tools/run_net.py \
 ```
 Annotate images
 ```
-
+python3 -m pdb annotate_images.py /scratch/s183993/placenta/raw_data/datadump -b
 ```
+Tensorboard, connect to thinclinc.compute.dtu.dk with
+```
+ssh -L 16006:127.0.0.1:6007 s183993@thinlinc.compute.dtu.dk
+```
+Then onto Hyperion or oceanus with 
+```
+ssh -L 6007:127.0.0.1:6006 oceanus.compute.dtu.dk
+```
+Now serve the tensorboard by calling in the mkenv envoriment.
+```
+tensorboard --port=6006 --logdir /scratch/s183993/placenta_project/outputs/
+
