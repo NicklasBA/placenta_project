@@ -49,7 +49,7 @@ Annotate images
 ```
 TBA
 ```
-Tensorboard, connect to compute with e
+Tensorboard, connect to thinclinc.compute.dtu.dk with
 ```
 ssh -L 16006:127.0.0.1:6007 s183993@thinlinc.compute.dtu.dk
 ```
@@ -57,7 +57,7 @@ Then onto Hyperion or oceanus with
 ```
 ssh -L 6007:127.0.0.1:6006 oceanus.compute.dtu.dk
 ```
-Now serve the tensorboard by calling 
+Now serve the tensorboard by calling in the mkenv envoriment.
 ```
 tensorboard --port=6006 --logdir /scratch/s183993/placenta_project/outputs/
 
