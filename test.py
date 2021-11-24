@@ -171,11 +171,11 @@ def move_files_p2(csv_file, ground_path):
         print("Images for " + ground_path + seq + " Was moved succesfully")
 
     print("images for " + ground_path + " Was succesfully moved")
-    print("A total of {} images were moved".format(len(np.sum(moved))))
+    print("A total of {} images were moved".format(np.sum(moved)))
 
 def find_csv_and_ground_path(path_to_files):
 
-    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file]
+    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file and 'D130' not in file]
     folders = [file.split(".")[0] for file in csv_files]
 
     for idx, file in enumerate(csv_files):
