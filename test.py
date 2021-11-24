@@ -246,14 +246,14 @@ if __name__ == '__main__':
     for folder in folders:
         base_name = os.path.basename(folder)
         all_seq = find_files(path_to_files, folder)
-        pcl[folder]['lengths'] = []
+        pcl[folder] = []
         for idx, seq in enumerate(all_seq):
             pcl[folder]['lengths'].append(len(seq))
             save_video(seq,OUTDIR, base_name+f"_{idx:06}:")
 
-        print(f"minimum length was {np.min(pcl[folder]['lengths'])}")
-        print(f"maximum length was {np.max(pcl[folder]['lengths'])}")
-        print(f"maximum length was {np.mean(pcl[folder]['lengths'])}")
+        print(f"minimum length was {np.min(pcl[folder])}")
+        print(f"maximum length was {np.max(pcl[folder])}")
+        print(f"maximum length was {np.mean(pcl[folder])}")
         print("Done for " + base_name)
 
     with open(os.path.join(OUTDIR, 'lengths.pkl','wb')) as handle:
