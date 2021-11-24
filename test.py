@@ -232,7 +232,7 @@ def find_files(data_dir, folder):
                 all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[-1]+25)])
         else:
             all_new.append(seq)
-
+    breakpoint()
     return all_new
 
 def save_video(paths, OUTDIR, video_name):
