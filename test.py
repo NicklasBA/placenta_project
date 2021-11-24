@@ -160,22 +160,19 @@ def move_files_p2(csv_file, ground_path):
         if os.path.exists(new_path) is False:
             os.mkdir(new_path)
 
-        paths = [os.path.join(new_path, x) for x in csv_file['FrameName']]
-        old_path = [os.path.join(ground_path, x) for x in csv_file['FrameName']]
+        paths = [os.path.join(new_path, x) for x in csv['FrameName']]
+        old_path = [os.path.join(ground_path, x) for x in csv['FrameName']]
         non_moved = []
         for idx, p in enumerate(paths):
-            try:
-                shutil.move(old_path[idx], p)
-            except:
-                non_moved.append(old_path)
-                continue
+            shutil.move(old_path[idx], p)
+
 
     print("images for " + ground_path + " Was succesfully moved")
     print("A total of {} images were not moved".format(len(non_moved)))
 
 def find_csv_and_ground_path(path_to_files):
 
-    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file]
+    csv_files = [os.path.join(path_to_files, file) for file in os.listdir(path_to_files) if 'csv' in file and 'D130' not in file]
     folders = [file.split(".")[0] for file in csv_files]
 
     for idx, file in enumerate(csv_files):
@@ -183,11 +180,22 @@ def find_csv_and_ground_path(path_to_files):
         ground_path = folders[idx]
         move_files_p2(csv_file, ground_path)
 
+def move_files_back(org_path, ground_path):
+    for path in os.listdir(ground_path):
+        if org_path in os.path.join(ground_path,path):
+            for file in os.listdir(os.path.join(ground_path, path)):
+                src = os.path.join(os.path.join(ground_path,path), file)
+                dst = os.path.join(org_path, file)
+                shutil.move(src, dst)
+    print("files were moved")
 
+org_path = r'/scratch/s183993/placenta/raw_data/datadump/20180307_5_6mbar_500fps_D130'
+ground_path = r'/scratch/s183993/placenta/raw_data/datadump/'
+move_files_back(org_path, ground_path)
 
-path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
-
-find_csv_and_ground_path(path_to_files)
+# path_to_files= r'/scratch/s183993/placenta/raw_data/datadump/'
+#
+# find_csv_and_ground_path(path_to_files)
 
 
 
