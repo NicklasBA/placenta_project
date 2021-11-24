@@ -208,6 +208,7 @@ def find_files(data_dir, folder):
     endings = sorted(endings)
 
     all_seq = []
+    i = 0
     while i < len(endings) - 1:
         comb = []
         for idx in range(i, len(endings) - 1):
