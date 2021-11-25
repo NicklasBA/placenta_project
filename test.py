@@ -9,6 +9,7 @@ import numpy as np
 import shutil
 import glob
 import cv2
+from sklearn.model_selection import StratifiedShuffleSplit
 #
 # def alter_csv(csv):
 #     csv[csv.columns[-1]] = [0 for _ in range(len(csv))]
@@ -232,9 +233,9 @@ def find_files(data_dir, folder):
     all_new = []
     for ends, seq in list(zip(all_end, all_seq)):
         if len(seq) < 5*15:
-            if ends[0] > 25 and ends[-1] < 43300-25:
-                all_new.append([all_old[idx] for idx in range(ends[0]-25, ends[0])] +
-                               seq + [all_old[idx] for idx in range(ends[-1]+1,ends[-1]+25)])
+            if ends[0] > 35 and ends[-1] < 43300-35:
+                all_new.append([all_old[idx] for idx in range(ends[0]-35, ends[0])] +
+                               seq + [all_old[idx] for idx in range(ends[-1]+1,ends[-1]+35)])
         else:
             all_new.append(seq)
     return all_new
@@ -256,6 +257,51 @@ def save_video(paths, OUTDIR, video_name):
         out.write(img_array[i])
     out.release()
     # print("Thank you, next")
+
+
+
+
+def make_five_splits(path_to_files, ground_path):
+
+    doners = [i for i in os.listdir(path_to_files) if 'NS' not in i]
+    kids = [i for i in os.listdir(path_to_files) if 'NS' in i]
+    labels = [0 for _ in doners]
+    labels += [1 for _ in kids]
+    all_files = doners + kids
+    ss = StratifiedShuffleSplit(n_splits=4)
+    test = []
+    for train, test in ss.split(all_files, y):
+        test = [all_files[i] for i in test]
+        test_labels = [labels[i] for i in test]
+        train = [all_files[i] for i in test]
+        train_labels = [labels[i] for i in test]
+        break
+
+    test_csv = pd.DataFrame()
+    test['Paths'] = test
+    test['labels']= test_labels
+
+    test_csv.to_csv(os.path.join(ground_path, "test.csv"), header = False, index = False)
+
+    ss = StratifiedShuffleSplit(n_splits=5)
+    for idx, (train_index, val_index) in enumerate(ss.split(train, train_labels)):
+        train_c = [train[i] for i in train_index]
+        train_c_lab = [train_labels[i] for  i in train_index]
+        val_c = [train[i] for i in train_index]
+        val_c_lab = [train_labels[i] for i in train_index]
+
+        train = pd.DataFrame()
+        val = pd.DataFrame()
+        train['Paths'] = train_c
+        train['labels'] = train_c_lab
+        val['Paths'] = val_c
+        val['labels'] = val_c_lab
+
+        train.to_csv(os.path.join(ground_path, f"train_{idx}.csv"), index = False, header = None)
+        val.to_csv(os.path.join(ground_path, f"val_{idx}.csv"), index = False, header = None)
+
+
+
 
 if __name__ == '__main__':
     path_to_files = r'/scratch/s183993/placenta/raw_data/datadump/'
