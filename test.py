@@ -233,9 +233,9 @@ def find_files(data_dir, folder):
     all_new = []
     for ends, seq in list(zip(all_end, all_seq)):
         if len(seq) < 5*15:
-            if ends[0] > 35 and ends[-1] < 43300-35:
+            if ends[0] > 35 and ends[-1] < 43300-55:
                 all_new.append([all_old[idx] for idx in range(ends[0]-35, ends[0])] +
-                               seq + [all_old[idx] for idx in range(ends[-1]+1,ends[-1]+35)])
+                               seq + [all_old[idx] for idx in range(ends[-1]+1,ends[-1]+55)])
         else:
             all_new.append(seq)
     return all_new
