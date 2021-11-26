@@ -119,7 +119,7 @@ def collect_path_dict(ground_path):
     all_folders = []
     for file in os.listdir(ground_path):
         if len(file) >= 33 and os.path.isdir(os.path.join(ground_path,file)):
-            all_folders.append(os.path.join(ground_path))
+            all_folders.append(os.path.join(ground_path,file))
 
 
     path_to_im = {}
