@@ -67,9 +67,9 @@ def add_mask(image, bbox):
     area = get_area(bbox)
     new_box = []
 
-    if bbox[0] < bbox[2]:
-        topy = bbox[0]
-        bottomy = bbox[2]
+    if bbox[0] > bbox[2]:
+        topy = bbox[2]
+        bottomy = bbox[0]
     else:
         topy = bbox[0]
         bottomy = bbox[2]
@@ -83,8 +83,6 @@ def add_mask(image, bbox):
 
     mask[topy:bottomy,leftx:rightx,:] = 1
     print("mask area",np.sum(mask[:,:,0]))
-    if np.sum(mask[:,:,0]) == 0:
-        breakpoint()
     print("area", area)
     return mask
 
@@ -185,8 +183,6 @@ if __name__ == '__main__':
 
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
         save_video(paths, OUTDIR, name, path_to_im, bb_dict)
-        if idx % 4 ==0:
-            breakpoint()
         print("Succesfully printed for " + name)
 
 
