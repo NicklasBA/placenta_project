@@ -69,9 +69,7 @@ def add_mask(image, bbox):
     bbox[3] += PADDED_PIXELS
     bbox[2] += PADDED_PIXELS
 
-    mask[bbox[0]:bbox[3],bbox[1]:bbox[4],:] = 1
-
-
+    mask[bbox[0]:bbox[2],bbox[1]:bbox[3],:] = 1
     return mask
 
 def combine_image_and_bbox(image, all_bbox):
@@ -164,7 +162,7 @@ if __name__ == '__main__':
     path_to_im, all_folders = collect_path_dict(ground_path)
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
-    breakpoint()
+
     for paths, name in list(zip(path_list, video_names)):
         save_video(paths, OUTDIR, name, path_to_im, bb_dict)
         print("Succesfully printed for " + name)
