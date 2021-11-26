@@ -84,10 +84,10 @@ def add_mask(image, bbox):
     assert leftx < rightx
 
     mask[leftx:rightx,topy:bottomy,:] = 1
-    print("mask area",np.sum(mask[:,:,0]))
+
     if np.sum(mask[:,:,0]) ==0:
         breakpoint()
-    print("area", area)
+
     return mask
 
 
