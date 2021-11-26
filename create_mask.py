@@ -70,6 +70,7 @@ def add_mask(image, bbox):
     bbox[2] += PADDED_PIXELS
 
     mask[bbox[0]:bbox[2],bbox[1]:bbox[3],:] = 1
+    print(np.sum(mask[:,:,0]))
     return mask
 
 def combine_image_and_bbox(image, all_bbox):
