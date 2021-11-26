@@ -158,6 +158,8 @@ if __name__ == '__main__':
 
     bb_dict = {}
     for path in paths_to_csv:
+        temp = collect_frames(path)
+        breakpoint()
         bb_dict.update(collect_frames(path))
 
     path_to_im, all_folders = collect_path_dict(ground_path)
