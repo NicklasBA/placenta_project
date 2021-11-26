@@ -84,7 +84,7 @@ def combine_image_and_bbox(image, all_bbox):
 
     mask = np.zeros_like(image)
     for bbox in all_bbox:
-        mask += add_mask(image, bbox, noise)
+        mask += add_mask(image, bbox)
 
     new_image = image * mask
 
@@ -116,7 +116,7 @@ def collect_frames(path_to_frame):
 
 def collect_path_dict(ground_path):
 
-    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) > 28]
+    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) > 28 and os.path.isdir(file)]
 
     path_to_im = {}
     for folder in all_folders:
