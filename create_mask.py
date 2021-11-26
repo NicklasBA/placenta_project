@@ -116,7 +116,7 @@ def collect_frames(path_to_frame):
 
 def collect_path_dict(ground_path):
 
-    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) > 28
+    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) >= 80
                    and os.path.isdir(os.path.join(ground_path, file))]
 
     path_to_im = {}
@@ -139,7 +139,6 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
         img_array.append(img)
 
     # print(f"\tFound and loaded {len(img_array)} images.")
-    breakpoint()
     out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
     # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
     for i in range(len(img_array)):
