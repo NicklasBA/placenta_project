@@ -66,12 +66,22 @@ def add_mask(image, bbox):
     mask = np.zeros_like(image)
     area = get_area(bbox)
     new_box = []
-    new_box.append(bbox[0] - PADDED_PIXELS)
-    new_box.append(bbox[1] - PADDED_PIXELS)
-    new_box.append(bbox[3] + PADDED_PIXELS)
-    new_box.append(bbox[2] + PADDED_PIXELS)
 
-    mask[new_box[0]:new_box[2],new_box[1]:new_box[3],:] = 1
+    if bbox[0] < bbox[2]:
+        topy = bbox[0]
+        bottomy = bbox[2]
+    else:
+        topy = bbox[0]
+        bottomy = bbox[2]
+    if bbox[1] < bbox[3]:
+        leftx = bbox[1]
+        rightx = bbox[3]
+    else:
+        leftx = bbox[3]
+        rightx = bbox[1]
+
+
+    mask[topy:bottomy,leftx:rightx,:] = 1
     print("mask area",np.sum(mask[:,:,0]))
     print("area", area)
     return mask
