@@ -64,7 +64,7 @@ def rotate_im(image, angle = 10):
 
 def add_mask(image, bbox):
     mask = np.zeros_like(image)
-
+    area = get_area(bbox)
     new_box = []
     new_box.append(bbox[0] - PADDED_PIXELS)
     new_box.append(bbox[1] - PADDED_PIXELS)
@@ -72,7 +72,8 @@ def add_mask(image, bbox):
     new_box.append(bbox[2] + PADDED_PIXELS)
 
     mask[new_box[0]:new_box[2],new_box[1]:new_box[3],:] = 1
-    print(np.sum(mask[:,:,0]))
+    print("mask area",np.sum(mask[:,:,0]))
+    print("area", area)
     return mask
 
 
