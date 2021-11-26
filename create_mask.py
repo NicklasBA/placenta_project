@@ -92,7 +92,7 @@ def combine_image_and_bbox(image, all_bbox):
 
 def find_frames(path_to_csv):
 
-    frames = glob.glob(path_to_csv, "*.csv")
+    frames = glob.glob(path_to_csv + "*.csv")
     return frames
 
 
@@ -158,7 +158,7 @@ if __name__ == '__main__':
         bb_dict.update(collect_frames(path))
 
     path_to_im, all_folders = collect_path_dict(ground_path)
-    path_list = [glob.glob(os.path.join(folder,""), "*.png") for folder in all_folders]
+    path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
     for paths, name in list(zip(path_list, video_names)):
