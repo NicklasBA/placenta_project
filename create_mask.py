@@ -130,6 +130,7 @@ def collect_path_dict(ground_path):
 
 def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
     img_array = []
+    breakpoint()
     for filename in paths:
         try:
             img = cv2.imread(filename)
