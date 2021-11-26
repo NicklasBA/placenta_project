@@ -118,7 +118,6 @@ def collect_path_dict(ground_path):
 
     all_folders = []
     for file in os.listdir(ground_path):
-        breakpoint()
         if len(file) >= 33 and os.path.isdir(os.path.join(ground_path,file)):
             all_folders.append(os.path.join(ground_path))
 
@@ -126,6 +125,7 @@ def collect_path_dict(ground_path):
     path_to_im = {}
     for folder in all_folders:
         files = glob.glob(folder + "*.png")
+        breakpoint()
         for file in files:
             path_to_im[os.path.join(folder, file)] = file
 
