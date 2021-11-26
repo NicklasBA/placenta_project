@@ -60,7 +60,7 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_2/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_blackened/"
 TENSORBOARD:
   ENABLE: True
   LOG_DIR: "" # Leave empty to use cfg.OUTPUT_DIR/runs-{cfg.TRAIN.DATASET} as path.
@@ -68,4 +68,4 @@ TENSORBOARD:
   CONFUSION_MATRIX:
     ENABLE: True
     SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
-TURN_OFF_SLOW: True
+TURN_OFF_SLOW: False
