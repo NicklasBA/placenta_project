@@ -64,6 +64,7 @@ def rotate_im(image, angle = 10):
 
 def add_mask(image, bbox):
     mask = np.zeros_like(image)
+    n,m,_ = image.shape
     area = get_area(bbox)
     new_box = []
 
@@ -82,6 +83,11 @@ def add_mask(image, bbox):
 
     assert topy < bottomy
     assert leftx < rightx
+
+    leftx = np.max(0, leftx-PADDED_PIXELS)
+    rightx = np.min(n, rightx+PADDED_PIXELS)
+    topy = np.max(0, topy-PADDED_PIXELS)
+    bottomy = np.min(m, bottomy + PADDED_PIXELS)
 
     mask[leftx:rightx,topy:bottomy,:] = 1
 
