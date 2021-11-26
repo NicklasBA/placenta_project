@@ -150,7 +150,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened/'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
