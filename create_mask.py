@@ -64,14 +64,20 @@ def rotate_im(image, angle = 10):
 
 def add_mask(image, bbox):
     mask = np.zeros_like(image)
-    bbox[0] -= PADDED_PIXELS
-    bbox[1] -= PADDED_PIXELS
-    bbox[3] += PADDED_PIXELS
-    bbox[2] += PADDED_PIXELS
 
-    mask[bbox[0]:bbox[2],bbox[1]:bbox[3],:] = 1
+    new_box = []
+    new_box.append(bbox[0] - PADDED_PIXELS)
+    new_box.append(bbox[1] - PADDED_PIXELS)
+    new_box.append(bbox[3] + PADDED_PIXELS)
+    new_box.append(bbox[2] + PADDED_PIXELS)
+
+    mask[new_box[0]:new_box[2],new_box[1]:new_box[3],:] = 1
     print(np.sum(mask[:,:,0]))
     return mask
+
+
+def get_area(bbox):
+    return (bbox[2]-bbox[0])*(bbox[3]-bbox[1])
 
 def combine_image_and_bbox(image, all_bbox):
     """
