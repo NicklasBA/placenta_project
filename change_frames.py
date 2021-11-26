@@ -12,6 +12,7 @@ def change_csv(csv):
     diag = list(csv[csv.columns[1]])
     new_files = []
     new_diag = []
+    breakpoint()
     for diag,  file in zip(diag, files):
         if os.path.exists(file):
             new_files.append(file)
@@ -20,7 +21,7 @@ def change_csv(csv):
     new_csv = pd.DataFrame()
     new_csv['path'] = new_files
     new_csv['diag'] = new_diag
-
+    breakpoint()
     return new_csv
 
 def save_csv(csv,save_path):
