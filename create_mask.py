@@ -138,9 +138,9 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             img_array.append(img)
         except:
             return None
-    print(f"\tFound and loaded {len(img_array)} images.")
+    # print(f"\tFound and loaded {len(img_array)} images.")
     out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
-    print(f"\tWriting to {OUTDIR}{video_name}.mp4")
+    # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
     for i in range(len(img_array)):
         out.write(img_array[i])
     out.release()
@@ -150,10 +150,11 @@ if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
     OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened'
-    path_to_csv = "???"
+    path_to_csv = ground_path
+    paths_to_csv = find_frames(path_to_csv)
 
     bb_dict = {}
-    for path in path_to_csv:
+    for path in paths_to_csv:
         bb_dict.update(collect_frames(path))
 
     path_to_im, all_folders = collect_path_dict(ground_path)
@@ -162,5 +163,6 @@ if __name__ == '__main__':
 
     for paths, name in list(zip(path_list, video_names)):
         save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+        print("Succesfully printed for " + name)
 
 
