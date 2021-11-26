@@ -116,12 +116,12 @@ def collect_frames(path_to_frame):
 
 def collect_path_dict(ground_path):
 
-    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) > 28 and os.path.isdir(file)]
+    all_folders = [os.path.join(ground_path,file) for file in os.listdir(ground_path) if len(file) > 28
+                   and os.path.isdir(os.path.join(ground_path, file))]
 
     path_to_im = {}
     for folder in all_folders:
         files = glob.glob(folder + "*.png")
-        breakpoint()
         for file in files:
             path_to_im[os.path.join(folder, file)] = file
 
