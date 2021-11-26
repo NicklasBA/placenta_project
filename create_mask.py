@@ -164,8 +164,10 @@ if __name__ == '__main__':
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
-    for paths, name in list(zip(path_list, video_names)):
+    for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
         save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+        if idx % 4 ==0:
+            breakpoint()
         print("Succesfully printed for " + name)
 
 
