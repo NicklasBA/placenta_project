@@ -84,10 +84,10 @@ def add_mask(image, bbox):
     assert topy < bottomy
     assert leftx < rightx
 
-    leftx = np.max(0, leftx-PADDED_PIXELS)
-    rightx = np.min(n, rightx+PADDED_PIXELS)
-    topy = np.max(0, topy-PADDED_PIXELS)
-    bottomy = np.min(m, bottomy + PADDED_PIXELS)
+    leftx = np.max([0, leftx-PADDED_PIXELS])
+    rightx = np.min([n, rightx+PADDED_PIXELS])
+    topy = np.max([0, topy-PADDED_PIXELS])
+    bottomy = np.min([m, bottomy + PADDED_PIXELS])
 
     mask[leftx:rightx,topy:bottomy,:] = 1
 
