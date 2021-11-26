@@ -126,7 +126,7 @@ def collect_path_dict(ground_path):
     for folder in all_folders:
         files = glob.glob(os.path.join(folder,"") + "*.png")
         for file in files:
-            path_to_im[os.path.join(folder, file)] = file
+            path_to_im[os.path.join(folder, file)] = os.path.basename(file)
 
     return path_to_im, all_folders
 
