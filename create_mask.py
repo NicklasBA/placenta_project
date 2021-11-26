@@ -92,7 +92,7 @@ def combine_image_and_bbox(image, all_bbox):
 
 def find_frames(path_to_csv):
 
-    frames = glob.glob(path_to_csv + "*.csv")
+    frames = glob.glob(os.path.join(path_to_csv,"") + "*.csv")
     return frames
 
 
