@@ -120,7 +120,7 @@ def combine_image_and_bbox(image, all_bbox):
     temp = image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:]
     row, col = get_padding(coordinates, sizes)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-
+    breakpoint()
     return temp
 
 def get_padding(coordinates, sizes):
@@ -171,7 +171,7 @@ def collect_frames(path_to_frame):
     for frame in frames:
         temp = csv[csv['FrameName'] == frame]
         bbox = [list(i) for i in temp[["x1", "y1", "x2", "y2"]].values]
-        bb_dict[frame] = bbox
+        bb_dict[frame] = [bbox[0]]
 
     return bb_dict
 
