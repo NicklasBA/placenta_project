@@ -10,8 +10,8 @@ from PIL import Image
 import cv2
 import glob
 
-PADDED_PIXELS = 20
-
+PADDED_PIXELS = 45
+IMAGE_SIZE = (250, 250)
 
 def rotate_im(image, angle = 10):
     """Rotate the image.
@@ -62,11 +62,9 @@ def rotate_im(image, angle = 10):
     #    image = cv2.resize(image, (w,h))
     return image
 
-def add_mask(image, bbox):
-    mask = np.zeros_like(image)
-    n,m,_ = image.shape
-    area = get_area(bbox)
-    new_box = []
+def add_mask(sizes, bbox):
+    mask = np.zeros(sizes)
+    n,m = sizes[0], sizes[1]
 
     if bbox[0] > bbox[2]:
         topy = bbox[2]
@@ -84,17 +82,26 @@ def add_mask(image, bbox):
     assert topy < bottomy
     assert leftx < rightx
 
-    leftx = np.max([0, leftx-PADDED_PIXELS])
-    rightx = np.min([n, rightx+PADDED_PIXELS])
-    topy = np.max([0, topy-PADDED_PIXELS])
-    bottomy = np.min([m, bottomy + PADDED_PIXELS])
+    coordinates = (leftx, rightx, topy, bottomy)
+    center = centroid(coordinates)
 
+    leftx = np.max([0, center[0]-PADDED_PIXELS])
+    rightx = np.min([n, center[0]+PADDED_PIXELS])
+    topy = np.max([0, center[1]-PADDED_PIXELS])
+    bottomy = np.min([m, center[1] + PADDED_PIXELS])
+
+    coordinates = (leftx, rightx, topy, bottomy)
     mask[leftx:rightx,topy:bottomy,:] = 1
 
     if np.sum(mask[:,:,0]) ==0:
         breakpoint()
 
-    return mask
+    return mask, coordinates
+
+def centroid(bbox):
+    row = (bbox[0]+bbox[1])//2
+    column = (bbox[2]+bbox[3])//2
+    return [row, column]
 
 
 def get_area(bbox):
@@ -102,19 +109,47 @@ def get_area(bbox):
 
 def combine_image_and_bbox(image, all_bbox):
     """
-
     :param image: np.ndarray of image
     :param all_bbox: list of all bounding boxes
     :return: the masked image
     """
-
-    mask = np.zeros_like(image)
+    sizes = image.shape
     for bbox in all_bbox:
-        mask += add_mask(image, bbox)
+        mask, coordinates = add_mask(sizes, bbox)
 
-    new_image = image * mask
+    temp = image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:]
+    row, col = get_padding(coordinates, sizes)
+    temp = np.pad(temp, (row, col), mode='constant')
 
-    return new_image
+    return temp
+
+def get_padding(coordinates, sizes):
+    ty = coordinates[0]
+    by = coordinates[1]
+    lx = coordinates[2]
+    rx = coordinates[3]
+    row = [0,0]
+    col = [0,0]
+    if abs(ty -by) == 100 and abs(lx - rx) == 100:
+        return row, col
+    else:
+        if ty == 0:
+            row[0] = abs(100-by)
+        if lx == 0:
+            col[0] = abs(100-rx)
+        if by == sizes[0]:
+            row[1] = abs(100-abs(ty-by))
+        if rx == sizes[1]:
+            col[1] = abs(100-abs(lx-rx))
+
+    return row, col
+
+
+def new_array(coordinates):
+    n = abs(coordinates[0]-coordinates[1])
+    m = abs(coordinates[2]-coordinates[3])
+    return np.zeros((n,m,3))
+
 
 def find_frames(path_to_csv):
 
@@ -180,7 +215,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened/'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_p2/'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
