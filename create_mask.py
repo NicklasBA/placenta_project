@@ -203,11 +203,11 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
     else:
         for filename in paths:
             img = cv2.imread(filename)
-            height, width, layers = img.shape
-            size = (width, height)
+
             img_n = combine_image_and_bbox(img, bb_dict[path_to_im[filename]])
+            height, width, layers = img_n.shape
+            size = (width, height)
             img_array.append(img_n)
-        breakpoint()
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
         # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
