@@ -14,6 +14,13 @@ import Mask_RCNN.mrcnn.model as modellib
 from Mask_RCNN.mrcnn import visualize
 from Mask_RCNN.mrcnn.model import log
 
+"""
+Er begyndt ud fra train_shapes.py, men opdagede balloon.py allerede har gjort det 
+meste af arbejdet for os, så man kunne evt starte fra den i stedet.
+Funktionerne load_image, load_mask, image reference og load_balloon (måske load_rbc) skal bare ændres, og 
+så skal der sættes et par hyperparametre
+"""
+
 
 
 class PlacentaConfig(Config):
