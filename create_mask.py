@@ -191,6 +191,10 @@ def collect_path_dict(ground_path):
 
     return path_to_im, all_folders
 
+def save_files(outdir, img_array):
+    for idx, arr in enumerate(img_array):
+        img = Image.fromarray(arr)
+        img.save(os.path.join(outdir, str(idx)+".png"))
 
 def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
     img_array = []
@@ -203,7 +207,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             size = (width, height)
             img_n = combine_image_and_bbox(img, bb_dict[path_to_im[filename]])
             img_array.append(img_n)
-
+        breakpoint()
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
         # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
