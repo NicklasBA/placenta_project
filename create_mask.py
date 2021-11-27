@@ -120,7 +120,7 @@ def combine_image_and_bbox(image, all_bbox):
     temp = image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:]
     row, col = get_padding(coordinates, sizes)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-    breakpoint()
+
     return temp
 
 def get_padding(coordinates, sizes):
