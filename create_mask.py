@@ -10,7 +10,7 @@ from PIL import Image
 import cv2
 import glob
 
-PADDED_PIXELS = 45
+PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
 
 def rotate_im(image, angle = 10):
