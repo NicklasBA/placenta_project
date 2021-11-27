@@ -117,7 +117,7 @@ def combine_image_and_bbox(image, all_bbox):
     for bbox in all_bbox:
         mask, coordinates = add_mask(sizes, bbox)
 
-    temp = image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:]
+    temp = np.copy(image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:])
     row, col = get_padding(coordinates, sizes)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
 
@@ -201,8 +201,8 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             img = cv2.imread(filename)
             height, width, layers = img.shape
             size = (width, height)
-            img = combine_image_and_bbox(img, bb_dict[path_to_im[filename]])
-            img_array.append(img)
+            img_n = combine_image_and_bbox(img, bb_dict[path_to_im[filename]])
+            img_array.append(img_n)
 
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
