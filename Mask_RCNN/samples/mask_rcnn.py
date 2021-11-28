@@ -141,7 +141,7 @@ class PlacentaDataset(utils.Dataset):
         for i, bbox in enumerate(info['bbox']):
             mask[:, :, i] += self.fill_bbox(bbox, shape = (info['height'], info['width']))
 
-        class_ids = [1 for _ in range(info['count'])]
+        class_ids = np.array([1 for _ in range(info['count'])])
         """
         Quite certain that we dont need the stuff below, ours is far more simple
         """
