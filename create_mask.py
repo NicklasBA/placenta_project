@@ -62,6 +62,26 @@ def rotate_im(image, angle = 10):
     #    image = cv2.resize(image, (w,h))
     return image
 
+def get_bbox(bbox):
+    if bbox[0] > bbox[2]:
+        topy = bbox[2]
+        bottomy = bbox[0]
+    else:
+        topy = bbox[0]
+        bottomy = bbox[2]
+    if bbox[1] < bbox[3]:
+        leftx = bbox[1]
+        rightx = bbox[3]
+    else:
+        leftx = bbox[3]
+        rightx = bbox[1]
+
+    assert topy < bottomy
+    assert leftx < rightx
+
+    coordinates = (leftx, rightx, topy, bottomy)
+    return coordinates
+
 def add_mask(sizes, bbox):
     mask = np.zeros(sizes)
     n,m = sizes[0], sizes[1]
@@ -106,6 +126,15 @@ def centroid(bbox):
 
 def get_area(bbox):
     return (bbox[2]-bbox[0])*(bbox[3]-bbox[1])
+
+def combine_image_and_bbox_into_rcnn_struct(image, all_bbox):
+    sizes = image.shape
+
+    new_all = []
+    for bbox in all_bbox:
+        new_all.append(get_bbox(bbox))
+
+    return sizes, new_all
 
 def combine_image_and_bbox(image, all_bbox):
     """
@@ -216,6 +245,27 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
         out.release()
         # print("Thank you, next")
 
+def save_structure(paths,path_to_im, bb_dict, collected_dict):
+    if len(paths) < 20:
+        return None
+    else:
+        mode_num = np.random.choice([1,2], prob = (0.8,0.2))
+        if mode_num == 1:
+            mode = 'train'
+        else:
+            mode = 'val'
+
+        for filename in paths:
+            collected_dict[mode][filename] = {}
+            img = cv2.imread(filename)
+            sizes, bbox = combine_image_and_bbox_into_rcnn_struct(img, bb_dict[path_to_im[filename]])
+            collected_dict[mode][filename]['height'] = sizes[0]
+            collected_dict[mode][filename]['width'] = sizes[1]
+            collected_dict[mode][filename]['bbox'] = bbox
+
+        return collected_dict
+
+
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
@@ -232,8 +282,15 @@ if __name__ == '__main__':
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
+    collected_dict = {'train': {}, "val": {}}
+
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-        save_video(paths, OUTDIR, name, path_to_im, bb_dict)
-        print("Succesfully printed for " + name)
+        collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+
+    #
+    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
+    #     save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+    #     print("Succesfully printed for " + name)
+
 
 

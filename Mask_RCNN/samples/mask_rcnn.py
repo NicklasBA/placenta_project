@@ -13,6 +13,7 @@ from Mask_RCNN.mrcnn import utils
 import Mask_RCNN.mrcnn.model as modellib
 from Mask_RCNN.mrcnn import visualize
 from Mask_RCNN.mrcnn.model import log
+import pickle
 
 """
 Er begyndt ud fra train_shapes.py, men opdagede balloon.py allerede har gjort det 
@@ -78,6 +79,32 @@ class PlacentaDataset(utils.Dataset):
     Overrides the Mask R-CNN implementation of dataset to include
     the format present for the placenta dataset
     """
+    def load_rbc(self, dataset_dir, subset):
+        """Load a subset of the Balloon dataset.
+                dataset_dir: Root directory of the dataset.
+                subset: Subset to load: train, val or train
+                """
+        assert subset in ["train", "val", "test"]
+        self.add_class("rbc", 1, "rbc")
+        # Possible that the first rbc needs to be changed into proper source IDK :)
+
+        annotations = pickle.load(open(os.path.join(dataset_dir, subset+".pkl"),'rb'))
+
+        for file in annotations:
+            image_path = file
+            width = file['width']
+            height = file['height']
+            bbox = file['masks']
+
+            self.add_image(
+                "balloon",
+                image_id=image_path,  # use file name as a unique image id
+                path=image_path,
+                width=width, height=height,
+                bbox=bbox,
+                count=len(bbox)
+
+            )
 
     def load_image(self, filename):
         """
@@ -89,28 +116,48 @@ class PlacentaDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the shapes data of the image."""
         info = self.image_info[image_id]
-        if info["source"] == "shapes":
-            return info["shapes"]
+        if info["source"] == "rbc":
+            return info["path"]
         else:
             super(self.__class__).image_reference(self, image_id)
+
+
+    def fill_bbox(self, bbox, shape):
+        m = np.zeros((shape[0],shape[1]))
+        y1 = bbox[0]
+        y2 = bbox[2]
+        x1 = bbox[1]
+        x2 = bbox[3]
+        assert y1 < y2
+        assert x1 < x2
+        m[y1:y2, x1:x2] = 1
+        return m
 
     def load_mask(self, image_id):
         """Generate instance masks for shapes of the given image ID.
         """
         info = self.image_info[image_id]
-        shapes = info['shapes']
-        count = len(shapes)
-        mask = np.zeros([info['height'], info['width'], count], dtype=np.uint8)
-        for i, (shape, _, dims) in enumerate(info['shapes']):
-            mask[:, :, i:i+1] = self.draw_shape(mask[:, :, i:i+1].copy(),
-                                                shape, dims, 1)
-        # Handle occlusions
-        occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8)
-        for i in range(count-2, -1, -1):
-            mask[:, :, i] = mask[:, :, i] * occlusion
-            occlusion = np.logical_and(occlusion, np.logical_not(mask[:, :, i]))
-        # Map class names to class IDs.
-        class_ids = np.array([self.class_names.index(s[0]) for s in shapes])
+        mask = np.zeros([info['height'], info['width'], info['count']], dtype = np.uint8)
+        for i, bbox in enumerate(info['bbox']):
+            mask[:, :, i] += self.fill_bbox(bbox, shape = (info['height'], info['width']))
+
+        class_ids = [1 for _ in range(info['count'])]
+        """
+        Quite certain that we dont need the stuff below, ours is far more simple
+        """
+        # shapes = info['shapes']
+        # count = len(shapes)
+        # mask = np.zeros([info['height'], info['width'], count], dtype=np.uint8)
+        # for i, (shape, _, dims) in enumerate(info['shapes']):
+        #     mask[:, :, i:i+1] = self.draw_shape(mask[:, :, i:i+1].copy(),
+        #                                         shape, dims, 1)
+        # # Handle occlusions
+        # occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8)
+        # for i in range(count-2, -1, -1):
+        #     mask[:, :, i] = mask[:, :, i] * occlusion
+        #     occlusion = np.logical_and(occlusion, np.logical_not(mask[:, :, i]))
+        # # Map class names to class IDs.
+        # class_ids = np.array([self.class_names.index(s[0]) for s in shapes])
         return mask.astype(np.bool), class_ids.astype(np.int32)
 
 
