@@ -14,7 +14,7 @@ def change_csv(csv_path, new_path):
     csv.to_csv(csv_path, header = False, index = False)
 
 
-new_path = r'/scratch/s183993/placenta/raw_data/videos_blackened_noice'
+new_path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox'
 csv_files = [os.path.join(new_path,i) for i in os.listdir(new_path) if ".csv" in i]
 for c in csv_files:
     change_csv(c, new_path)
