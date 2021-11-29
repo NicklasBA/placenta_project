@@ -356,7 +356,8 @@ if __name__ == '__main__':
 
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
         new_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
-        collected_dict.update(new_dict)
+        if new_dict is not None:
+            collected_dict.update(new_dict)
 
     with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
         pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
