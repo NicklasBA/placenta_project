@@ -18,7 +18,6 @@ Usage: import the module (see Jupyter notebooks for examples), or run from
 
     # Train a new model starting from ImageNet weights
     python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=imagenet
-
 """
 
 import os
@@ -83,10 +82,7 @@ class PlacentaConfig(Config):
 
     # Reduce training ROIs per image because the images are small and have
     # few objects. Aim to allow ROI sampling to pick 33% positive ROIs.
-    TRAIN_ROIS_PER_IMAGE = 32
-
-    # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    #TRAIN_ROIS_PER_IMAGE = 32
 
 ############################################################
 #  Dataset
