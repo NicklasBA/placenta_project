@@ -85,10 +85,12 @@ class PlacentaDataset(utils.Dataset):
                 subset: Subset to load: train, val or train
                 """
         assert subset in ["train", "val", "test"]
+        # Test actually not implemented, as we are only interested in val performance
         self.add_class("rbc", 1, "rbc")
         # Possible that the first rbc needs to be changed into proper source IDK :)
 
-        annotations = pickle.load(open(os.path.join(dataset_dir, subset+".pkl"),'rb'))
+        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
+        annotations = annotations[subset]
 
         for file in annotations:
             image_path = file
@@ -120,7 +122,6 @@ class PlacentaDataset(utils.Dataset):
             return info["path"]
         else:
             super(self.__class__).image_reference(self, image_id)
-
 
     def fill_bbox(self, bbox, shape):
         m = np.zeros((shape[0],shape[1]))
