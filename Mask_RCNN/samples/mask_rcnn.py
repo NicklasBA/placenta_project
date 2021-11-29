@@ -81,6 +81,8 @@ class PlacentaConfig(Config):
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
 
+    RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
+
     # Reduce training ROIs per image because the images are small and have
     # few objects. Aim to allow ROI sampling to pick 33% positive ROIs.
     #TRAIN_ROIS_PER_IMAGE = 32
