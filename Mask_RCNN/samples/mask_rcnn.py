@@ -72,8 +72,8 @@ class PlacentaConfig(Config):
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
     #Must be devisibile by 2, 6 or mores times, hence we use default for now
-    #IMAGE_MIN_DIM = 150
-    #IMAGE_MAX_DIM = 800
+    IMAGE_MIN_DIM = 256
+    IMAGE_MAX_DIM = 1024
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 2  # Background + D + NS
@@ -112,7 +112,6 @@ class PlacentaDataset(utils.Dataset):
             width = file['width']
             height = file['height']
             bbox = file['masks']
-            breakpoint()
             self.add_image(
                 "balloon",
                 image_id=image_path,  # use file name as a unique image id
