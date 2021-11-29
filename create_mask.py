@@ -12,6 +12,7 @@ import glob
 
 PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
+NOICE_STD = 7
 
 def rotate_im(image, angle = 10):
     """Rotate the image.
@@ -62,6 +63,26 @@ def rotate_im(image, angle = 10):
     #    image = cv2.resize(image, (w,h))
     return image
 
+def get_bbox(bbox):
+    if bbox[0] > bbox[2]:
+        topy = bbox[2]
+        bottomy = bbox[0]
+    else:
+        topy = bbox[0]
+        bottomy = bbox[2]
+    if bbox[1] < bbox[3]:
+        leftx = bbox[1]
+        rightx = bbox[3]
+    else:
+        leftx = bbox[3]
+        rightx = bbox[1]
+
+    assert topy < bottomy
+    assert leftx < rightx
+
+    coordinates = (leftx, rightx, topy, bottomy)
+    return coordinates
+
 def add_mask(sizes, bbox):
     mask = np.zeros(sizes)
     n,m = sizes[0], sizes[1]
@@ -82,8 +103,8 @@ def add_mask(sizes, bbox):
     assert topy < bottomy
     assert leftx < rightx
 
-    coordinates = (leftx, rightx, topy, bottomy)
-    center = centroid(coordinates)
+    coordinates_inner = (leftx, rightx, topy, bottomy)
+    center = centroid(coordinates_inner)
 
     leftx = np.max([0, center[0]-PADDED_PIXELS])
     rightx = np.min([n, center[0]+PADDED_PIXELS])
@@ -96,7 +117,7 @@ def add_mask(sizes, bbox):
     if np.sum(mask[:,:,0]) ==0:
         breakpoint()
 
-    return mask, coordinates
+    return mask, coordinates, coordinates_inner
 
 def centroid(bbox):
     row = (bbox[0]+bbox[1])//2
@@ -107,6 +128,15 @@ def centroid(bbox):
 def get_area(bbox):
     return (bbox[2]-bbox[0])*(bbox[3]-bbox[1])
 
+def combine_image_and_bbox_into_rcnn_struct(image, all_bbox):
+    sizes = image.shape
+
+    new_all = []
+    for bbox in all_bbox:
+        new_all.append(get_bbox(bbox))
+
+    return sizes, new_all
+
 def combine_image_and_bbox(image, all_bbox):
     """
     :param image: np.ndarray of image
@@ -115,12 +145,12 @@ def combine_image_and_bbox(image, all_bbox):
     """
     sizes = image.shape
     for bbox in all_bbox:
-        mask, coordinates = add_mask(sizes, bbox)
+        mask, coordinates, coordinates_inner = add_mask(sizes, bbox)
 
     temp = np.copy(image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:])
     row, col = get_padding(coordinates, sizes)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-
+    temp = add_noise(temp, coordinates, coordinates_inner)
     return temp
 
 def get_padding(coordinates, sizes):
@@ -143,6 +173,28 @@ def get_padding(coordinates, sizes):
             col[1] = abs(100-abs(lx-rx))
 
     return row, col
+
+def add_noise(img, coordinates, coordinates_inner):
+    dty = abs(coordinates[0]-coordinates_inner[0])
+    dby = abs(coordinates[2]-coordinates_inner[2])
+    dlx = abs(coordinates[1]-coordinates_inner[1])
+    drx = abs(coordinates[3]-coordinates_inner[3])
+
+    mask = np.ones_like(img)
+    # topleft
+    mask[0:dty-1,0:dlx-1] = 0
+    # bottom left
+    mask[dby+1:,0:dlx-1] = 0
+    # topright
+    mask[0:dty-1, drx+1:] = 0
+    #bottom right
+    mask[dby+1:drx+1:] = 0
+    breakpoint()
+    noice = np.random.normal(0, NOICE_STD, img.shape)
+    img = img.astype(np.int32) + noice*mask
+    img[img < 0] = 0
+
+    return img.astype(np.uint8)
 
 
 def new_array(coordinates):
@@ -216,10 +268,31 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
         out.release()
         # print("Thank you, next")
 
+def save_structure(paths,path_to_im, bb_dict, collected_dict):
+    if len(paths) < 20:
+        return None
+    else:
+        mode_num = np.random.choice([1,2], prob = (0.8,0.2))
+        if mode_num == 1:
+            mode = 'train'
+        else:
+            mode = 'val'
+
+        for filename in paths:
+            collected_dict[mode][filename] = {}
+            img = cv2.imread(filename)
+            sizes, bbox = combine_image_and_bbox_into_rcnn_struct(img, bb_dict[path_to_im[filename]])
+            collected_dict[mode][filename]['height'] = sizes[0]
+            collected_dict[mode][filename]['width'] = sizes[1]
+            collected_dict[mode][filename]['bbox'] = bbox
+
+        return collected_dict
+
+
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_p2/'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_noice_p1/'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
@@ -232,8 +305,15 @@ if __name__ == '__main__':
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
+    # collected_dict = {'train': {}, "val": {}}
+    #
+    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
+    #     collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+
+
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
         save_video(paths, OUTDIR, name, path_to_im, bb_dict)
         print("Succesfully printed for " + name)
+
 
 
