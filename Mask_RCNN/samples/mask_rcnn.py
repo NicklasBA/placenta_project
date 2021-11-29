@@ -35,9 +35,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mrcnn.config import Config
 from mrcnn import utils
-import Mask_RCNN.mrcnn.model as modellib
-from Mask_RCNN.mrcnn import visualize
-from Mask_RCNN.mrcnn.model import log
+import mrcnn.model as modellib
+from mrcnn import visualize
+from mrcnn.model import log
 import pickle
 
 # Root directory of the project
