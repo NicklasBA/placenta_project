@@ -337,7 +337,7 @@ if __name__ == '__main__':
     collected_dict = {'train': {}, "val": {}}
 
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-        collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+        collected_dict.update(save_structure(paths, path_to_im, bb_dict,collected_dict))
 
     with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
         pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
