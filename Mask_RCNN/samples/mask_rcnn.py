@@ -33,11 +33,11 @@ import json
 import cv2
 import matplotlib
 import matplotlib.pyplot as plt
-from Mask_RCNN.mrcnn.config import Config
-from Mask_RCNN.mrcnn import utils
-import Mask_RCNN.mrcnn.model as modellib
-from Mask_RCNN.mrcnn import visualize
-from Mask_RCNN.mrcnn.model import log
+from mrcnn.config import Config
+from mrcnn import utils
+import mrcnn.model as modellib
+from mrcnn import visualize
+from mrcnn.model import log
 import pickle
 
 # Root directory of the project
@@ -71,8 +71,9 @@ class PlacentaConfig(Config):
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
-    IMAGE_MIN_DIM = 150
-    IMAGE_MAX_DIM = 800
+    #Must be devisibile by 2, 6 or mores times, hence we use default for now
+    #IMAGE_MIN_DIM = 150
+    #IMAGE_MAX_DIM = 800
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 2  # Background + D + NS

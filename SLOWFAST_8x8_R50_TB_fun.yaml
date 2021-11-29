@@ -62,12 +62,17 @@ NUM_SHARDS: 1
 RNG_SEED: 0
 TURN_OFF_SLOW: False
 OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_TB_fun/"
+TURN_OFF_SLOW: False
 TENSORBOARD:
   ENABLE: True
   CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
   CONFUSION_MATRIX:
     ENABLE: True
     SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
+  HISTOGRAM:
+    ENABLE: True
+    SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
+    TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.    
   MODEL_VIS:
     ENABLE: True
     MODEL_WEIGHTS: True # Set to True to visualize model weights.
