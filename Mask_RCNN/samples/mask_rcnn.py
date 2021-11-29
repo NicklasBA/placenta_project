@@ -122,11 +122,11 @@ class PlacentaDataset(utils.Dataset):
 
             )
 
-    def load_image(self, filename):
+    def load_image(self, image_id):
         """
         Loads image
         """
-        image = cv2.imread(filename)
+        image = cv2.imread(image_id)
         return image
 
     def image_reference(self, image_id):
