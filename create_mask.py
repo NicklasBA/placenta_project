@@ -151,12 +151,37 @@ def combine_image_and_bbox(image, all_bbox):
         mask, coordinates, coordinates_inner = add_mask(sizes, bbox)
 
     temp = np.copy(image[coordinates_inner[0]:coordinates_inner[1], coordinates_inner[2]:coordinates_inner[3],:])
-    row, col = get_padding(coordinates, sizes)
-    breakpoint()
+    # row, col = get_padding(coordinates, sizes)
+    row, col = get_padding_p2(temp.shape)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-    breakpoint()
     # temp = add_noise(temp, coordinates, coordinates_inner)
     return temp
+
+def get_padding_p2(sizes):
+    y = sizes[0]
+    x = sizes[1]
+    row = [0,0]
+    col = [0,0]
+    if y == PADDING and x == PADDING:
+        return row, col
+    else:
+        if y < PADDING:
+            diff = PADDING-y
+            if diff % 2 == 0:
+                row[0] = diff/2
+                row[1] = diff/2
+            else:
+                row[0] = diff//2 + 1
+                row[1] = diff//2
+        if x < PADDING:
+            diff = PADDING-x
+            if diff % 2 == 0:
+                col[0] = diff/2
+                col[1] = diff/2
+            else:
+                col[0] = diff//2 +1
+                col[1] = diff//2
+        return row, col
 
 def get_padding(coordinates, sizes):
     ty = coordinates[0]
