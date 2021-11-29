@@ -12,7 +12,7 @@ import glob
 
 PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
-NOICE_STD = 7
+NOICE_STD = 9
 
 def rotate_im(image, angle = 10):
     """Rotate the image.
