@@ -191,7 +191,7 @@ def add_noise(img, coordinates, coordinates_inner):
     mask[dby+1:drx+1:] = 0
 
     noice = np.random.normal(0, NOICE_STD, img.shape)
-    img += noice*mask
+    img = img.astype(np.int32) + noice*mask
     img[img < 0] = 0
     return img.astype(np.uint8)
 
