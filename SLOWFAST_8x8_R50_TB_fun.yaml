@@ -69,6 +69,10 @@ TENSORBOARD:
   CONFUSION_MATRIX:
     ENABLE: True
     SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
+  HISTOGRAM:
+    ENABLE: True
+    SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
+    TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.    
   MODEL_VIS:
     ENABLE: True
     MODEL_WEIGHTS: True # Set to True to visualize model weights.
@@ -78,9 +82,3 @@ TENSORBOARD:
     GRAD_CAM:
       ENABLE: True
       LAYER_LIST: ['s5/pathway1_res2', 's5/pathway0_res2'] # List of CNN layers to use for Grad-CAM visual
-    HISTOGRAM:
-      ENABLE: True
-      TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.
-      SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
-                 # Only classes in this file will be visualized with histograms.
-      
