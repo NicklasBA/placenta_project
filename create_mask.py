@@ -176,19 +176,19 @@ def get_padding(coordinates, sizes):
 
 def add_noise(img, coordinates, coordinates_inner):
     dty = abs(coordinates[0]-coordinates_inner[0])
-    dby = abs(coordinates[2]-coordinates_inner[2]) + abs(coordinates[0]-coordinates_inner[2])
+    dby = abs(coordinates[2]-coordinates_inner[2])
     dlx = abs(coordinates[1]-coordinates_inner[1])
-    drx = abs(coordinates[3]-coordinates_inner[3]) + abs(coordinates[1]-coordinates_inner[3])
+    drx = abs(coordinates[3]-coordinates_inner[3])
 
-    mask = np.ones_like(img)
-    # topleft
-    mask[0:dty-1,0:dlx-1] = 0
-    # bottom left
-    mask[dby+1:,0:dlx-1] = 0
-    # topright
-    mask[0:dty-1, drx+1:] = 0
-    #bottom right
-    mask[dby+1:drx+1:] = 0
+    mask = np.zeros_like(img)
+    # top
+    mask[0:dty-1,:] = 1
+    # left
+    mask[:,0:dlx-1] = 1
+    # bottom
+    mask[-(dby-1):,:] = 1
+    # right
+    mask[:,-(drx-1):] = 1
     noice = np.random.normal(0, NOICE_STD, img.shape)
     img = img.astype(np.int32) + noice*mask
     img[img < 0] = 0
