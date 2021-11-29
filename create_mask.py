@@ -325,14 +325,32 @@ if __name__ == '__main__':
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
-    bb_dict = {}
-    for path in paths_to_csv:
-        temp = collect_frames(path)
-        bb_dict.update(collect_frames(path))
+    if os.path.exists('r/scratch/s183993/placenta/raw_data/bb_dict.pkl') is False:
+        bb_dict = {}
+        for path in paths_to_csv:
+            temp = collect_frames(path)
+            bb_dict.update(collect_frames(path))
 
-    path_to_im, all_folders = collect_path_dict(ground_path)
+        with open('r/scratch/s183993/placenta/raw_data/bb_dict.pkl','wb') as handle:
+            pickle.dump(bb_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    else:
+        bb_dict = pickle.load(open('r/scratch/s183993/placenta/raw_data/bb_dict.pkl','rb'))
+
+    if os.path.exists('r/scratch/s183993/placenta/raw_data/path_to_im.pkl') is False:
+        path_to_im, all_folders = collect_path_dict(ground_path)
+        pcl = {'path_to_im':path_to_im, 'all_folders':all_folders}
+        with open('r/scratch/s183993/placenta/raw_data/path_to_im.pkl','wb') as handle:
+            pickle.dump(pcl, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    else:
+        pcl = pickle.load(open('r/scratch/s183993/placenta/raw_data/path_to_im.pkl','rb'))
+        path_to_im = pcl['path_to_im']
+        all_folders = pcl['all_folders']
+
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
+
 
     collected_dict = {'train': {}, "val": {}}
 
