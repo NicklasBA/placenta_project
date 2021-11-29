@@ -62,6 +62,7 @@ NUM_SHARDS: 1
 RNG_SEED: 0
 TURN_OFF_SLOW: False
 OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_TB_fun/"
+TURN_OFF_SLOW: False
 TENSORBOARD:
   ENABLE: True
   CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
@@ -77,3 +78,9 @@ TENSORBOARD:
     GRAD_CAM:
       ENABLE: True
       LAYER_LIST: ['s5/pathway1_res2', 's5/pathway0_res2'] # List of CNN layers to use for Grad-CAM visual
+    HISTOGRAM:
+      ENABLE: True
+      TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.
+      SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
+                 # Only classes in this file will be visualized with histograms.
+      
