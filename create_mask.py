@@ -13,6 +13,9 @@ import glob
 PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
 NOICE_STD = 9
+PADDING = 50
+
+
 
 def rotate_im(image, angle = 10):
     """Rotate the image.
@@ -147,10 +150,10 @@ def combine_image_and_bbox(image, all_bbox):
     for bbox in all_bbox:
         mask, coordinates, coordinates_inner = add_mask(sizes, bbox)
 
-    temp = np.copy(image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:])
+    temp = np.copy(image[coordinates_inner[0]:coordinates_inner[1], coordinates_inner[2]:coordinates_inner[3],:])
     row, col = get_padding(coordinates, sizes)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-    temp = add_noise(temp, coordinates, coordinates_inner)
+    # temp = add_noise(temp, coordinates, coordinates_inner)
     return temp
 
 def get_padding(coordinates, sizes):
@@ -160,17 +163,17 @@ def get_padding(coordinates, sizes):
     rx = coordinates[3]
     row = [0,0]
     col = [0,0]
-    if abs(ty -by) == 100 and abs(lx - rx) == 100:
+    if abs(ty -by) == PADDING and abs(lx - rx) == PADDING:
         return row, col
     else:
         if ty == 0:
-            row[0] = abs(100-by)
+            row[0] = abs(PADDING-by)
         if lx == 0:
-            col[0] = abs(100-rx)
+            col[0] = abs(PADDING-rx)
         if by == sizes[0]:
-            row[1] = abs(100-abs(ty-by))
+            row[1] = abs(PADDING-abs(ty-by))
         if rx == sizes[1]:
-            col[1] = abs(100-abs(lx-rx))
+            col[1] = abs(PADDING-abs(lx-rx))
 
     return row, col
 
@@ -291,7 +294,7 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_noice_p1/'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_bbox'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
