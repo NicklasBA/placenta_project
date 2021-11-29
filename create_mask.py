@@ -334,15 +334,19 @@ if __name__ == '__main__':
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
-    # collected_dict = {'train': {}, "val": {}}
-    #
-    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-    #     collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
-
+    collected_dict = {'train': {}, "val": {}}
 
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-        save_video(paths, OUTDIR, name, path_to_im, bb_dict)
-        print("Succesfully printed for " + name)
+        collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+
+    with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
+        pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    print("Saved to pickle")
+
+    #
+    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
+    #     save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+    #     print("Succesfully printed for " + name)
 
 
 
