@@ -112,7 +112,7 @@ class PlacentaDataset(utils.Dataset):
             width = file['width']
             height = file['height']
             bbox = file['masks']
-
+            breakpoint()
             self.add_image(
                 "balloon",
                 image_id=image_path,  # use file name as a unique image id
@@ -128,7 +128,6 @@ class PlacentaDataset(utils.Dataset):
         Loads image
         """
         image = cv2.imread(image_id)
-        print("Type of image: ", type(image))
         return image
 
     def image_reference(self, image_id):
