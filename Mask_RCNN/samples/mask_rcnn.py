@@ -112,7 +112,7 @@ class PlacentaDataset(utils.Dataset):
             width = file['width']
             height = file['height']
             bbox = file['masks']
-
+            breakpoint()
             self.add_image(
                 "balloon",
                 image_id=image_path,  # use file name as a unique image id
