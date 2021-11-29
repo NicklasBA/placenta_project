@@ -33,8 +33,8 @@ import json
 import cv2
 import matplotlib
 import matplotlib.pyplot as plt
-from Mask_RCNN.mrcnn.config import Config
-from Mask_RCNN.mrcnn import utils
+from mrcnn.config import Config
+from mrcnn import utils
 import Mask_RCNN.mrcnn.model as modellib
 from Mask_RCNN.mrcnn import visualize
 from Mask_RCNN.mrcnn.model import log
