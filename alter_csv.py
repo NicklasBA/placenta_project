@@ -4,19 +4,19 @@ import os
 import pickle
 import shutil
 import numpy as np
+import sys
 
 
-
-def change_csv(csv_path):
+def change_csv(csv_path, new_path):
 
     csv = pd.read_csv(csv_path, header = None)
-
-    labels = [0 if 'D' in i else 1 for i in csv[csv.columns[0]]]
-    csv.insert(6, 'label', labels)
+    csv[csv.columns[0]] = [os.path.join(new_path, os.path.basename(p)) for p in csv[csv.columns[0]]]
     csv.to_csv(csv_path, header = False, index = False)
 
-csv_path = '/home/s183993/placenta_project/data/placenta/annotations/train_annotations.csv'
-change_csv(csv_path)
-csv_path = '/home/s183993/placenta_project/data/placenta/annotations/val_annotations.csv'
-change_csv(csv_path)
-csv_path = '/home/s183993/placenta_project/data/placenta/annotations/test_annotations.csv'
+
+new_path = r'/scratch/s183993/placenta/raw_data/videos_blackened_noice'
+csv_files = [os.path.join(new_path,i) for i in os.listdir(new_path) if ".csv" in i]
+for c in csv_files:
+    change_csv(c, new_path)
+
+print("Alteration succesfull")
