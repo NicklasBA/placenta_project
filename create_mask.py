@@ -301,7 +301,7 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
     if len(paths) < 20:
         return None
     else:
-        mode_num = np.random.choice([1,2], prob = (0.8,0.2))
+        mode_num = np.random.choice([1,2], p = (0.8,0.2))
         if mode_num == 1:
             mode = 'train'
         else:
