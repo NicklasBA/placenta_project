@@ -13,6 +13,9 @@ import glob
 PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
 NOICE_STD = 9
+PADDING = 50
+
+
 
 def rotate_im(image, angle = 10):
     """Rotate the image.
@@ -147,11 +150,38 @@ def combine_image_and_bbox(image, all_bbox):
     for bbox in all_bbox:
         mask, coordinates, coordinates_inner = add_mask(sizes, bbox)
 
-    temp = np.copy(image[coordinates[0]:coordinates[1], coordinates[2]:coordinates[3],:])
-    row, col = get_padding(coordinates, sizes)
+    temp = np.copy(image[coordinates_inner[0]:coordinates_inner[1], coordinates_inner[2]:coordinates_inner[3],:])
+    # row, col = get_padding(coordinates, sizes)
+    row, col = get_padding_p2(temp.shape)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
-    temp = add_noise(temp, coordinates, coordinates_inner)
+    # temp = add_noise(temp, coordinates, coordinates_inner)
     return temp
+
+def get_padding_p2(sizes):
+    y = sizes[0]
+    x = sizes[1]
+    row = [0,0]
+    col = [0,0]
+    if y == PADDING and x == PADDING:
+        return row, col
+    else:
+        if y < PADDING:
+            diff = PADDING-y
+            if diff % 2 == 0:
+                row[0] = int(diff/2)
+                row[1] = int(diff/2)
+            else:
+                row[0] = int(diff//2) + 1
+                row[1] = int(diff//2)
+        if x < PADDING:
+            diff = PADDING-x
+            if diff % 2 == 0:
+                col[0] = int(diff/2)
+                col[1] = int(diff/2)
+            else:
+                col[0] = int(diff//2) +1
+                col[1] = int(diff//2)
+        return row, col
 
 def get_padding(coordinates, sizes):
     ty = coordinates[0]
@@ -160,17 +190,17 @@ def get_padding(coordinates, sizes):
     rx = coordinates[3]
     row = [0,0]
     col = [0,0]
-    if abs(ty -by) == 100 and abs(lx - rx) == 100:
+    if abs(ty -by) == PADDING and abs(lx - rx) == PADDING:
         return row, col
     else:
         if ty == 0:
-            row[0] = abs(100-by)
+            row[0] = abs(PADDING-by)
         if lx == 0:
-            col[0] = abs(100-rx)
+            col[0] = abs(PADDING-rx)
         if by == sizes[0]:
-            row[1] = abs(100-abs(ty-by))
+            row[1] = abs(PADDING-abs(ty-by))
         if rx == sizes[1]:
-            col[1] = abs(100-abs(lx-rx))
+            col[1] = abs(PADDING-abs(lx-rx))
 
     return row, col
 
@@ -271,7 +301,7 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
     if len(paths) < 20:
         return None
     else:
-        mode_num = np.random.choice([1,2], prob = (0.8,0.2))
+        mode_num = np.random.choice([1,2], p = (0.8,0.2))
         if mode_num == 1:
             mode = 'train'
         else:
@@ -291,28 +321,52 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_noice_p1/'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_bbox/'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
-    bb_dict = {}
-    for path in paths_to_csv:
-        temp = collect_frames(path)
-        bb_dict.update(collect_frames(path))
+    if os.path.exists(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl') is False:
+        bb_dict = {}
+        for path in paths_to_csv:
+            temp = collect_frames(path)
+            bb_dict.update(collect_frames(path))
 
-    path_to_im, all_folders = collect_path_dict(ground_path)
+        with open(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl','wb') as handle:
+            pickle.dump(bb_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    else:
+        bb_dict = pickle.load(open(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl','rb'))
+
+    if os.path.exists(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl') is False:
+        path_to_im, all_folders = collect_path_dict(ground_path)
+        pcl = {'path_to_im':path_to_im, 'all_folders':all_folders}
+        with open(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl','wb') as handle:
+            pickle.dump(pcl, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    else:
+        pcl = pickle.load(open(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl','rb'))
+        path_to_im = pcl['path_to_im']
+        all_folders = pcl['all_folders']
+
     path_list = [glob.glob(os.path.join(folder,"") + "*.png") for folder in all_folders]
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
-    # collected_dict = {'train': {}, "val": {}}
-    #
-    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-    #     collected_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
 
+    collected_dict = {'train': {}, "val": {}}
 
     for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-        save_video(paths, OUTDIR, name, path_to_im, bb_dict)
-        print("Succesfully printed for " + name)
+        new_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+        if new_dict is not None:
+            collected_dict.update(new_dict)
+
+    with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
+        pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    print("Saved to pickle")
+
+    #
+    # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
+    #     save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+    #     print("Succesfully printed for " + name)
 
 
 
