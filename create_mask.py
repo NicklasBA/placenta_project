@@ -153,6 +153,7 @@ def combine_image_and_bbox(image, all_bbox):
     temp = np.copy(image[coordinates_inner[0]:coordinates_inner[1], coordinates_inner[2]:coordinates_inner[3],:])
     # row, col = get_padding(coordinates, sizes)
     row, col = get_padding_p2(temp.shape)
+    breakpoint()
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
     # temp = add_noise(temp, coordinates, coordinates_inner)
     return temp
