@@ -106,7 +106,7 @@ class PlacentaDataset(utils.Dataset):
         self.add_class("rbc", 1, "rbc")
         # Possible that the first rbc needs to be changed into proper source IDK :)
 
-        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
+        annotations = pickle.load(dataset_dir)
         annotations = annotations[subset]
 
         for file in annotations:
