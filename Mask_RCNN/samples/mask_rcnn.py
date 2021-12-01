@@ -134,7 +134,7 @@ class PlacentaDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the shapes data of the image."""
         info = self.image_info[image_id]
-        if info["source"] == "rbc":
+        if info["source"] == "placenta":
             return info["path"]
         else:
             super(self.__class__).image_reference(self, image_id)
