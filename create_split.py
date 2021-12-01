@@ -1,4 +1,3 @@
-
 import os
 import pandas as pd
 import shutil
@@ -15,7 +14,7 @@ def create_split(path):
     val = []
     val_lab = []
 
-    test_lab =[]
+    test_lab = []
     test = []
 
     for file in files:
@@ -56,7 +55,6 @@ def create_split(path):
     num_ns = np.sum(test_lab)
     print(f"{num_ns} out of {len(test)} was NS in test")
 
-
     return train_pd, val_pd, test_pd
 
 
@@ -65,13 +63,12 @@ def insert_into_frame(frame, names, lab):
     frame['labels'] = lab
     return frame
 
-if __name__ == '__main__':
-    path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full'
 
+if __name__ == '__main__':
+    path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox'
 
     t, v, te = create_split(path)
 
     t.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = False,index = False, sep = " ")
     v.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = False,index = False, sep = " ")
-    te.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header=False, index= False,
-                 sep=" ")
+    te.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header=False, index= False, sep=" ")
