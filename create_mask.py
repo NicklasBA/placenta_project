@@ -291,7 +291,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             img_array.append(img_n)
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.avi', cv2.VideoWriter_fourcc(*'HFYU'), 15, size)
-        # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
+        print(f"\tWriting to {OUTDIR}{video_name}.avi")
         for i in range(len(img_array)):
             out.write(img_array[i])
         out.release()
