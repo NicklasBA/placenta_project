@@ -108,7 +108,7 @@ class PlacentaDataset(utils.Dataset):
 
         annotations = pickle.load(dataset_dir)
         annotations = annotations[subset]
-
+        breakpoint()
         for file in annotations:
             image_path = file
             width = file['width']
