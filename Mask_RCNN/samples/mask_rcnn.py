@@ -78,7 +78,7 @@ class PlacentaConfig(Config):
     NUM_CLASSES = 2
 
     # Number of training steps per epoch
-    STEPS_PER_EPOCH = 100
+    STEPS_PER_EPOCH = 1000
 
     RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
