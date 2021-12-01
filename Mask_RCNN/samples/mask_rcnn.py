@@ -75,7 +75,7 @@ class PlacentaConfig(Config):
     IMAGE_MAX_DIM = 1024
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 2  # Background + D + NS
+    NUM_CLASSES = 2
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
