@@ -120,6 +120,7 @@ class PlacentaDataset(utils.Dataset):
                 bbox=bbox,
                 count=len(bbox)
             )
+        
 
     def load_image(self, image_id):
         """
@@ -131,6 +132,7 @@ class PlacentaDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the shapes data of the image."""
         info = self.image_info[image_id]
+        breakpoint()
         if info["source"] == "rbc":
             return info["path"]
         else:
