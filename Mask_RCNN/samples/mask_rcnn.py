@@ -112,7 +112,7 @@ class PlacentaDataset(utils.Dataset):
             image_path = file
             width = annotations[file]['width']
             height = annotations[file]['height']
-            bbox = annotations[file]['masks']
+            bbox = annotations[file]['bbox']
             self.add_image(
                 "placenta",
                 image_id=image_path,  # use file name as a unique image id
