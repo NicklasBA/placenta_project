@@ -48,6 +48,14 @@ def create_split(path):
     val_pd = insert_into_frame(val_pd, val, val_lab)
     test_pd = insert_into_frame(test_pd, test, test_lab)
 
+    num_ns = np.sum(train_lab)
+    print(f"{num_ns} out of {len(train)} was NS in train")
+    num_ns = np.sum(val_lab)
+    print(f"{num_ns} out of {len(val)} was NS in val ")
+    num_ns = np.sum(test_lab)
+    print(f"{num_ns} out of {len(test)} was NS in test")
+
+
     return train_pd, val_pd, test_pd
 
 
