@@ -125,8 +125,6 @@ class PlacentaDataset(utils.Dataset):
         """
         Loads image
         """
-        print("Image id: ", image_id)
-        time.sleep(5)
         image = cv2.imread(image_id)
         return image
 
