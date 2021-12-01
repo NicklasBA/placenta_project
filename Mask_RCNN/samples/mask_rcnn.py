@@ -110,10 +110,9 @@ class PlacentaDataset(utils.Dataset):
         annotations = annotations[subset]
         for file in annotations:
             image_path = file
-            breakpoint()
-            width = file['width']
-            height = file['height']
-            bbox = file['masks']
+            width = annotations[file]['width']
+            height = annotations[file]['height']
+            bbox = annotations[file]['masks']
             self.add_image(
                 "placenta",
                 image_id=image_path,  # use file name as a unique image id
