@@ -291,7 +291,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             img_array.append(img_n)
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.avi', cv2.VideoWriter_fourcc(*'HFYU'), 15, size)
-        # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
+        print(f"\tWriting to {OUTDIR}{video_name}.avi")
         for i in range(len(img_array)):
             out.write(img_array[i])
         out.release()
@@ -321,7 +321,11 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/datadump'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_org_bbox_full/'
+
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full/'
+    if os.path.exists(OUTDIR) is False:
+        os.mkdir(OUTDIR)
+
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
