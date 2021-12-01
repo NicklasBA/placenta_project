@@ -503,15 +503,17 @@ def resize_mask(mask, scale, padding, crop=None):
     """
     # Suppress warning from scipy 0.13.0, the output shape of zoom() is
     # calculated with round() instead of int()
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        mask = scipy.ndimage.zoom(mask, zoom=[scale, scale, 1], order=0)
+        mask = scipy.ndimage.zoom(mask.astype(np.uint8), zoom=[scale, scale, 1], order=0)
     if crop is not None:
         y, x, h, w = crop
         mask = mask[y:y + h, x:x + w]
     else:
-        mask = np.pad(mask, padding, mode='constant', constant_values=0)
-    return mask
+        mask = np.pad(mask.astype(np.uint8), padding, mode='constant', constant_values=0)
+
+    return mask.astype(bool)
 
 
 def minimize_mask(bbox, mask, mini_shape):
