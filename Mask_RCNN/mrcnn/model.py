@@ -2356,6 +2356,8 @@ class MaskRCNN(object):
         # Work-around for Windows: Keras fails on Windows when using
         # multiprocessing workers. See discussion here:
         # https://github.com/matterport/Mask_RCNN/issues/13#issuecomment-353124009
+        #Bypassing multiprocessing as this causes type exception errors
+        os.name = 'nt'
         if os.name == 'nt':
             workers = 0
         else:
