@@ -60,9 +60,9 @@ def insert_into_frame(frame, names, lab):
 if __name__ == '__main__':
     path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full'
 
-    t_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = False, sep = " ")
-    val_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = False, sep = " ")
-    test_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header = False, sep = " ")
+    t_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = None, names = ['names','labels'], sep = " ")
+    val_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = None, names = ['names','labels'],sep = " ")
+    test_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header = None, names = ['names','labels'],sep = " ")
 
 
 
