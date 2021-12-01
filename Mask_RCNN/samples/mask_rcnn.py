@@ -39,6 +39,7 @@ import mrcnn.model as modellib
 from mrcnn import visualize
 from mrcnn.model import log
 import pickle
+os.environ["CUDA_VISIBLE_DEVICES"]="NUMBER"
 
 # Root directory of the project
 ROOT_DIR = r'/home/s183993/placenta_project/Mask_RCNN/'
@@ -206,7 +207,13 @@ if __name__ == '__main__':
                         default=DEFAULT_LOGS_DIR,
                         metavar="/path/to/logs/",
                         help='Logs and checkpoints directory (default=logs/)')
+    parser.add_argument("--gpu",
+                        help="GPU to run on",
+                        default=0,
+                        type=int)
     args = parser.parse_args()
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 
     # Validate arguments
     if args.command == "train":
@@ -267,3 +274,4 @@ if __name__ == '__main__':
     else:
         print("'{}' is not recognized. "
               "Use 'train' or 'splash'".format(args.command))
+
