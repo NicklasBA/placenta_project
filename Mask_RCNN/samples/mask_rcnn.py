@@ -128,10 +128,7 @@ class PlacentaDataset(utils.Dataset):
         """
         info = self.image_info[image_id]
         path = info['path']
-        image = cv2.imread(path)
-        print("Type: ", type(image))
-        print("Image path: ", path)
-        time.sleep(1)
+        image = skimage.io.imread(path)
         return image
 
     def image_reference(self, image_id):
