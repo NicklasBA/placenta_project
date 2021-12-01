@@ -75,7 +75,7 @@ class PlacentaConfig(Config):
     IMAGE_MAX_DIM = 1024
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 2  # Background + D + NS
+    NUM_CLASSES = 2
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
@@ -102,7 +102,7 @@ class PlacentaDataset(utils.Dataset):
                 """
         assert subset in ["train", "val", "test"]
         # Test actually not implemented, as we are only interested in val performance
-        self.add_class("rbc", 1, "rbc")
+        self.add_class("placenta", 1, "placenta")
         # Possible that the first rbc needs to be changed into proper source IDK :)
 
         annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
@@ -134,7 +134,7 @@ class PlacentaDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the shapes data of the image."""
         info = self.image_info[image_id]
-        if info["source"] == "rbc":
+        if info["source"] == "placenta":
             return info["path"]
         else:
             super(self.__class__).image_reference(self, image_id)
@@ -160,7 +160,7 @@ class PlacentaDataset(utils.Dataset):
             mask[:, :, i] += self.fill_bbox(bbox, shape = (info['height'], info['width']))
 
         class_ids = np.array([1 for _ in range(info['count'])])
-        return mask.astype(np.bool), class_ids.astype(np.int32)
+        return mask.astype(bool), class_ids.astype(np.int32)
 
 
 def train(model):
