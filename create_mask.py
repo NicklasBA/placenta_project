@@ -321,7 +321,11 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
 if __name__ == '__main__':
 
     ground_path = r'/scratch/s183993/placenta/raw_data/datadump'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_org_bbox_full/'
+
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full/'
+    if os.path.exists(OUTDIR) is False:
+        os.mkdir(OUTDIR)
+
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
