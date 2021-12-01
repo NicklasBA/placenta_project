@@ -20,7 +20,6 @@ def create_split(path):
     for file in files:
         mode = np.random.choice([1, 2, 3], p=(0.7, 0.2, 0.1))
         if 'NS' in file:
-
             if mode == 1:
                 train.append(os.path.join(path, file))
                 train_lab.append(1)
@@ -39,7 +38,7 @@ def create_split(path):
                 val_lab.append(0)
             else:
                 test.append(os.path.join(path,file))
-                train_lab.append(0)
+                test_lab.append(0)
 
     train_pd = pd.DataFrame()
     val_pd = pd.DataFrame()
