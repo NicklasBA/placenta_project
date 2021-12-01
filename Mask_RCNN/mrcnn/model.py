@@ -12,7 +12,7 @@ import datetime
 import re
 import math
 from collections import OrderedDict
-import multiprocessing
+#import multiprocessing
 import numpy as np
 import tensorflow as tf
 import tensorflow.keras as keras
@@ -2357,11 +2357,11 @@ class MaskRCNN(object):
         # multiprocessing workers. See discussion here:
         # https://github.com/matterport/Mask_RCNN/issues/13#issuecomment-353124009
 
-        if os.name == 'nt':
-            workers = 0
-        else:
-            workers = multiprocessing.cpu_count()
-        # Bypassing multiprocessing as this causes type exception errors
+        # if os.name == 'nt':
+        #     workers = 0
+        # else:
+        #     workers = multiprocessing.cpu_count()
+        # # Bypassing multiprocessing as this causes type exception errors
         workers = 0
         self.keras_model.fit(
             train_generator,
@@ -2373,7 +2373,8 @@ class MaskRCNN(object):
             validation_steps=self.config.VALIDATION_STEPS,
             max_queue_size=100,
             workers=workers,
-            use_multiprocessing=workers > 1,
+            use_multiprocessing = False
+            # use_multiprocessing=workers > 1,
         )
         self.epoch = max(self.epoch, epochs)
 
