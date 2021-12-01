@@ -160,7 +160,7 @@ class PlacentaDataset(utils.Dataset):
             mask[:, :, i] += self.fill_bbox(bbox, shape = (info['height'], info['width']))
 
         class_ids = np.array([1 for _ in range(info['count'])])
-        return mask.astype(np.bool), class_ids.astype(np.int32)
+        return mask.astype(bool), class_ids.astype(np.int32)
 
 
 def train(model):

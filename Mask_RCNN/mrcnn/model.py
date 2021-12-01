@@ -2788,7 +2788,6 @@ def parse_image_meta_graph(meta):
     window = meta[:, 7:11]  # (y1, x1, y2, x2) window of image in in pixels
     scale = meta[:, 11]
     active_class_ids = meta[:, 12:]
-    breakpoint()
     return {
         "image_id": image_id,
         "original_image_shape": original_image_shape,
