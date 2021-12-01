@@ -128,7 +128,7 @@ class PlacentaDataset(utils.Dataset):
         """
         Loads image
         """
-        breakpoint()
+        print("Image id: ", image_id)
         image = cv2.imread(image_id)
         return image
 
