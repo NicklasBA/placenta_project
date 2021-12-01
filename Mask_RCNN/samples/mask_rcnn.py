@@ -120,19 +120,20 @@ class PlacentaDataset(utils.Dataset):
                 bbox=bbox,
                 count=len(bbox)
             )
+        breakpoint()
         
 
     def load_image(self, image_id):
         """
         Loads image
         """
+
         image = cv2.imread(image_id)
         return image
 
     def image_reference(self, image_id):
         """Return the shapes data of the image."""
         info = self.image_info[image_id]
-        breakpoint()
         if info["source"] == "rbc":
             return info["path"]
         else:
