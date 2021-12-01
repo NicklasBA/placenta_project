@@ -131,6 +131,7 @@ class PlacentaDataset(utils.Dataset):
         image = cv2.imread(path)
         print("Type: ", type(image))
         print("Image path: ", path)
+        time.sleep(1)
         return image
 
     def image_reference(self, image_id):
