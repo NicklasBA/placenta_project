@@ -67,19 +67,10 @@ def insert_into_frame(frame, names, lab):
 if __name__ == '__main__':
     path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full'
 
-    t_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = None, names = ['names','labels'], sep = " ")
-    val_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = None, names = ['names','labels'],sep = " ")
-    test_org = pd.read_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header = None, names = ['names','labels'],sep = " ")
-
-
 
     t, v, te = create_split(path)
 
-    t_org = pd.concat((t_org, t), axis = 0)
-    val_org = pd.concat((val_org, v), axis =0)
-    test_org = pd.concat((test_org, te), axis = 0)
-
-    t_org.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = False,index = False, sep = " ")
-    val_org.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = False,index = False, sep = " ")
-    test_org.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header=False, index= False,
+    t.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = False,index = False, sep = " ")
+    v.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = False,index = False, sep = " ")
+    te.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header=False, index= False,
                  sep=" ")
