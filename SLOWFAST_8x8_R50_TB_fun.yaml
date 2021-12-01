@@ -72,7 +72,7 @@ TENSORBOARD:
   HISTOGRAM:
     ENABLE: True
     SUBSET_PATH: # Path to txt file contains class names separated by newline characters.
-    TOP_K: 2   # Top-k most frequently predicted classes for each class in the dataset.    
+    TOPK: 2   # Top-k most frequently predicted classes for each class in the dataset.    
   MODEL_VIS:
     ENABLE: True
     MODEL_WEIGHTS: True # Set to True to visualize model weights.
