@@ -145,7 +145,10 @@ class PlacentaDataset(utils.Dataset):
         y2 = bbox[2]
         x1 = bbox[1]
         x2 = bbox[3]
-        assert y1 < y2
+        try:
+            assert y1 < y2
+        except:
+            breakpoint()
         assert x1 < x2
         m[y1:y2, x1:x2] = 1
         return m
