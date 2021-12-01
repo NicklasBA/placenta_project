@@ -7,6 +7,7 @@ import random
 
 def create_split(path):
     files = os.listdir(path)
+    files = [file for file in files if '.avi' in file or '.mp4' in file]
     random.shuffle(files)
     train = []
     train_lab = []
