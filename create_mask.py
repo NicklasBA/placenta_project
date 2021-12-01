@@ -290,7 +290,7 @@ def save_video(paths, OUTDIR, video_name, path_to_im, bb_dict):
             size = (width, height)
             img_array.append(img_n)
         # print(f"\tFound and loaded {len(img_array)} images.")
-        out = cv2.VideoWriter(f'{OUTDIR}{video_name}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 15, size)
+        out = cv2.VideoWriter(f'{OUTDIR}{video_name}.avi', cv2.VideoWriter_fourcc(*'HFYU'), 15, size)
         # print(f"\tWriting to {OUTDIR}{video_name}.mp4")
         for i in range(len(img_array)):
             out.write(img_array[i])
@@ -320,31 +320,31 @@ def save_structure(paths,path_to_im, bb_dict, collected_dict):
 
 if __name__ == '__main__':
 
-    ground_path = r'/scratch/s183993/placenta/raw_data/frames'
-    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_bbox/'
+    ground_path = r'/scratch/s183993/placenta/raw_data/datadump'
+    OUTDIR = r'/scratch/s183993/placenta/raw_data/videos/videos_blackened_bbox_full/'
     path_to_csv = ground_path
     paths_to_csv = find_frames(path_to_csv)
 
-    if os.path.exists(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl') is False:
+    if os.path.exists(r'/scratch/s183993/placenta/raw_data/bb_dict_full.pkl') is False:
         bb_dict = {}
         for path in paths_to_csv:
             temp = collect_frames(path)
             bb_dict.update(collect_frames(path))
 
-        with open(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl','wb') as handle:
+        with open(r'/scratch/s183993/placenta/raw_data/bb_dict_full.pkl','wb') as handle:
             pickle.dump(bb_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     else:
-        bb_dict = pickle.load(open(r'/scratch/s183993/placenta/raw_data/bb_dict.pkl','rb'))
+        bb_dict = pickle.load(open(r'/scratch/s183993/placenta/raw_data/bb_dict_full.pkl','rb'))
 
-    if os.path.exists(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl') is False:
+    if os.path.exists(r'/scratch/s183993/placenta/raw_data/path_to_im_full.pkl') is False:
         path_to_im, all_folders = collect_path_dict(ground_path)
         pcl = {'path_to_im':path_to_im, 'all_folders':all_folders}
-        with open(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl','wb') as handle:
+        with open(r'/scratch/s183993/placenta/raw_data/path_to_im_full.pkl','wb') as handle:
             pickle.dump(pcl, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     else:
-        pcl = pickle.load(open(r'/scratch/s183993/placenta/raw_data/path_to_im.pkl','rb'))
+        pcl = pickle.load(open(r'/scratch/s183993/placenta/raw_data/path_to_im_full.pkl','rb'))
         path_to_im = pcl['path_to_im']
         all_folders = pcl['all_folders']
 
@@ -352,21 +352,21 @@ if __name__ == '__main__':
     video_names = [folder.split(os.sep)[-1] for folder in all_folders]
 
 
-    collected_dict = {'train': {}, "val": {}}
-
-    for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-        new_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
-        if new_dict is not None:
-            collected_dict.update(new_dict)
-
-    with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
-        pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    print("Saved to pickle")
-
+    # collected_dict = {'train': {}, "val": {}}
     #
     # for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
-    #     save_video(paths, OUTDIR, name, path_to_im, bb_dict)
-    #     print("Succesfully printed for " + name)
+    #     new_dict = save_structure(paths, path_to_im, bb_dict,collected_dict)
+    #     if new_dict is not None:
+    #         collected_dict.update(new_dict)
+    #
+    # with open(r'/home/s183993/placenta_project/Mask_RCNN/mask_rcnn.pkl', 'wb') as handle:
+    #     pickle.dump(collected_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # print("Saved to pickle")
+
+
+    for idx, (paths, name) in enumerate(list(zip(path_list, video_names))):
+        save_video(paths, OUTDIR, name, path_to_im, bb_dict)
+        print("Succesfully printed for " + name)
 
 
 
