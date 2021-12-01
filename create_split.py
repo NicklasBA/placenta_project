@@ -4,10 +4,11 @@ import pandas as pd
 import shutil
 import numpy as np
 import pickle
+import random
 
 def create_split(path):
     files = os.listdir(path)
-
+    random.shuffle(files)
     train = []
     train_lab = []
 
