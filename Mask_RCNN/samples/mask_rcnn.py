@@ -148,7 +148,8 @@ class PlacentaDataset(utils.Dataset):
         # assert y1 < y2
         # assert x1 < x2
         m[y1:y2, x1:x2] = 1
-        return m
+        return m.astype(np.uint8)
+
 
     def load_mask(self, image_id):
         """Generate instance masks for shapes of the given image ID.
