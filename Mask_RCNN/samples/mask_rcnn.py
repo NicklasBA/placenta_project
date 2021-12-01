@@ -39,8 +39,6 @@ import mrcnn.model as modellib
 from mrcnn import visualize
 from mrcnn.model import log
 import pickle
-os.environ["CUDA_VISIBLE_DEVICES"]="NUMBER"
-
 # Root directory of the project
 ROOT_DIR = r'/home/s183993/placenta_project/Mask_RCNN/'
 
@@ -121,7 +119,6 @@ class PlacentaDataset(utils.Dataset):
                 width=width, height=height,
                 bbox=bbox,
                 count=len(bbox)
-
             )
 
     def load_image(self, image_id):
