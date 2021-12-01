@@ -108,14 +108,14 @@ class PlacentaDataset(utils.Dataset):
 
         annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
         annotations = annotations[subset]
-        breakpoint()
         for file in annotations:
             image_path = file
+            breakpoint()
             width = file['width']
             height = file['height']
             bbox = file['masks']
             self.add_image(
-                "balloon",
+                "placenta",
                 image_id=image_path,  # use file name as a unique image id
                 path=image_path,
                 width=width, height=height,
