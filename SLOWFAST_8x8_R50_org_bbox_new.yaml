@@ -60,5 +60,5 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_org_bbox/"
+OUTPUT_DIR: "/scratch/s183993/placenta_project/outputs/SLOWFAST_8x8_R50_org_bbox_new/"
 TURN_OFF_SLOW: False
