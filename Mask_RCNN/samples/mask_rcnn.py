@@ -11,13 +11,13 @@ Usage: import the module (see Jupyter notebooks for examples), or run from
        the command line as such:
 
     # Train a new model starting from pre-trained COCO weights
-    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco
+    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco --gpu 0
 
     # Resume training a model that you had trained earlier
-    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=last
+    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=last --gpu 0
 
     # Train a new model starting from ImageNet weights
-    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=imagenet
+    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=imagenet --gpu 0
 """
 
 import os
@@ -74,11 +74,18 @@ class PlacentaConfig(Config):
     IMAGE_MIN_DIM = 256
     IMAGE_MAX_DIM = 1024
 
+
+
     # Number of classes (including background)
     NUM_CLASSES = 2
 
-    # Number of training steps per epoch
-    STEPS_PER_EPOCH = 1000
+    #High value to decrease training time
+    STEPS_PER_EPOCH = 10000
+
+    # Number of validation steps to run at the end of every training epoch.
+    # A bigger number improves accuracy of validation stats, but slows
+    # down the training.
+    VALIDATION_STEPS = 50
 
     RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
@@ -179,10 +186,11 @@ def train(model):
     # Since we're using a very small dataset, and starting from
     # COCO trained weights, we don't need to train too long. Also,
     # no need to train all layers, just the heads should do it.
+    # Low amount of epochs, as networks fits the data in little time
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=30,
+                epochs=10,
                 layers='heads')
 
 ############################################################
