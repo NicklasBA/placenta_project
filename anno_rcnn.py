@@ -15,11 +15,11 @@ def combine_eval_files_and_folders(path_to_eval_files, path_to_folders):
     """
 
     eval_files = glob.glob(os.path.join(path_to_eval_files, "*.pkl"))
-    folders = [file for file in glob.glob(os.path.join(path_to_folders,"")) if os.path.isdir(file)]
+    all_folders = glob.glob(os.path.join(path_to_folders,"*",""))
 
     combination = []
-    for folder in folders:
-        name = folder.split("_")[-1]
+    for folder in all_folders:
+        name = os.path.normpath(folder.rsplit("_", 1)[-1])
         for file in eval_files:
             if name in file:
                 combination.append((folder, file))
