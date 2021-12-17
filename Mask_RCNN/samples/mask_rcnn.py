@@ -13,6 +13,8 @@ Usage: import the module (see Jupyter notebooks for examples), or run from
     # Train a new model starting from pre-trained COCO weights
     python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco --gpu 0
 
+    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco --gpu 0
+
     # Resume training a model that you had trained earlier
     python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=last --gpu 0
 
@@ -193,6 +195,58 @@ def train(model):
                 epochs=10,
                 layers='heads')
 
+# def detect_and_color_splash(model, image_path=None, video_path=None):
+#     assert image_path or video_path
+#
+#     # Image or video?
+#     if image_path:
+#         # Run model detection and generate the color splash effect
+#         print("Running on {}".format(args.image))
+#         # Read image
+#         image = skimage.io.imread(args.image)
+#         # Detect objects
+#         r = model.detect([image], verbose=1)[0]
+#         # Color splash
+#         splash = color_splash(image, r['masks'])
+#         # Save output
+#         file_name = "splash_{:%Y%m%dT%H%M%S}.png".format(datetime.datetime.now())
+#         skimage.io.imsave(file_name, splash)
+#     elif video_path:
+#         import cv2
+#         # Video capture
+#         vcapture = cv2.VideoCapture(video_path)
+#         width = int(vcapture.get(cv2.CAP_PROP_FRAME_WIDTH))
+#         height = int(vcapture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+#         fps = vcapture.get(cv2.CAP_PROP_FPS)
+#
+#         # Define codec and create video writer
+#         file_name = "splash_{:%Y%m%dT%H%M%S}.avi".format(datetime.datetime.now())
+#         vwriter = cv2.VideoWriter(file_name,
+#                                   cv2.VideoWriter_fourcc(*'MJPG'),
+#                                   fps, (width, height))
+#
+#         count = 0
+#         success = True
+#         while success:
+#             print("frame: ", count)
+#             # Read next image
+#             success, image = vcapture.read()
+#             if success:
+#                 # OpenCV returns images as BGR, convert to RGB
+#                 image = image[..., ::-1]
+#                 # Detect objects
+#                 r = model.detect([image], verbose=0)[0]
+#                 # Color splash
+#                 splash = color_splash(image, r['masks'])
+#                 # RGB -> BGR to save image to video
+#                 splash = splash[..., ::-1]
+#                 # Add image to video writer
+#                 vwriter.write(splash)
+#                 count += 1
+#         vwriter.release()
+#     print("Saved to ", file_name)
+
+
 ############################################################
 #  Training
 ############################################################
@@ -281,6 +335,6 @@ if __name__ == '__main__':
     if args.command == "train":
         train(model)
     else:
-        print("'{}' is not recognized. "
-              "Use 'train' or 'splash'".format(args.command))
+        model = modellib.MaskRCNN(mode="inference", config=config,
+                                  model_dir=args.logs)
 
