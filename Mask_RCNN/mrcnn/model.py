@@ -2527,6 +2527,7 @@ class MaskRCNN(object):
             self.keras_model.predict([molded_images, image_metas, anchors], verbose=0)
         # Process detections
         results = []
+        breakpoint()
         for i, image in enumerate(images):
             final_rois, final_class_ids, final_scores, final_masks =\
                 self.unmold_detections(detections[i], mrcnn_mask[i],
