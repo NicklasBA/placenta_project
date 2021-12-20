@@ -222,7 +222,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
         images = [list(i) for i in np.split(images[:diff], int(len(images)//batch_size))]
         images += last_ims
     else:
-        images = [list(i) for i in np.split(images, int(len(images)//batch_size))]
+        images = [list(i) for i in np.split(np.array(images), int(len(images)//batch_size))]
 
     for i, img_list in enumerate(images):
         results = model.detect(img_list, verbose=1)
