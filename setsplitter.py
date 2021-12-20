@@ -10,7 +10,7 @@ import pandas as pd
 
 
 print( "Creating videos from images")
-FILES="/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/*"
+FILES="scratch/s183993/placenta/raw_data/Placenta_package/*_6mbar_500fps_*_*.mp4"
 # OUTDIR = "/home/s183993/placenta_project/outputs"
 paths = glob.glob(FILES)
 df = pd.DataFrame({"paths":paths})
