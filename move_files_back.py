@@ -61,6 +61,14 @@ def ensure_moved(parentdir):
     print(f"There were {len(folders_with_something_left)} folders for which the files were not moved")
     print(f"These were {folders_with_something_left}")
 
+def count(parentdir):
+
+    folders = [os.path.join(parentdir, i) for i in os.listdir(parentdir)]
+
+    for i in folders:
+        files = os.listdir(i)
+        if len(files) > 4e4:
+            print(f"found {len(files)} in {i}")
 
 if __name__ == '__main__':
     parentdir = r'/scratch/s183993/placenta/raw_data/frames'
@@ -68,6 +76,7 @@ if __name__ == '__main__':
     folder_dict = find_root_folders(parentdir)
     move_back(folder_dict)
     ensure_moved(parentdir)
+    count(parentdir)
 
 
 
