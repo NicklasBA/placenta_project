@@ -225,7 +225,10 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
         images = [list(i) for i in np.split(np.array(images), int(len(images)//batch_size))]
 
     for i, img_list in enumerate(images):
-        results = model.detect(img_list, verbose=1)
+        try:
+            results = model.detect(img_list, verbose=1)
+        except:
+            breakpoint()
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]['rois']
 
