@@ -15,7 +15,6 @@ FILES='/scratch/s183993/placenta/raw_data/Placenta_package/*_6mbar_500fps_*_*'
 paths = glob.glob(FILES)
 breakpoint()
 df = pd.DataFrame({"paths":paths})
-df.paths.str.find()
 df['DonorType'] = df.paths.str.slice(-9,-5)
 df['DonorCode'] = df.paths.str.slice(-14,-9)
 df['Num'] = df.paths.str.slice(-8,-5)
