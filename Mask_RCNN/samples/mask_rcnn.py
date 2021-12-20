@@ -42,6 +42,7 @@ import pickle
 import glob
 # Root directory of the project
 ROOT_DIR = r'/home/s183993/placenta_project/Mask_RCNN/'
+NEW_DIR = r'/home/s183993/mask_rcnn'
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -351,6 +352,8 @@ if __name__ == '__main__':
     else:
         model.load_weights(weights_path, by_name=True)
     # Train or evaluate
+
+    print(args.command)
     if args.command == "train":
         train(model)
     elif args.command == 'eval':
