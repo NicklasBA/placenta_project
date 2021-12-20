@@ -2493,54 +2493,56 @@ class MaskRCNN(object):
         scores: [N] float probability scores for the class IDs
         masks: [H, W, N] instance binary masks
         """
-        assert self.mode == "inference", "Create model in inference mode."
-        assert len(
-            images) == self.config.BATCH_SIZE, "len(images) must be equal to BATCH_SIZE"
+        # assert self.mode == "inference", "Create model in inference mode."
+        # assert len(
+        #     images) == self.config.BATCH_SIZE, "len(images) must be equal to BATCH_SIZE"
+        #
+        # assert len(images) == 2
+        # if verbose:
+        #     log("Processing {} images".format(len(images)))
+        #     for image in images:
+        #         log("image", image)
+        #
+        # # Mold inputs to format expected by the neural network
+        # molded_images, image_metas, windows = self.mold_inputs(images)
+        #
+        # # Validate image sizes
+        # # All images in a batch MUST be of the same size
+        # image_shape = molded_images[0].shape
+        # for g in molded_images[1:]:
+        #     assert g.shape == image_shape,\
+        #         "After resizing, all images must have the same size. Check IMAGE_RESIZE_MODE and image sizes."
+        #
+        # # Anchors
+        # anchors = self.get_anchors(image_shape)
+        # # Duplicate across the batch dimension because Keras requires it
+        # # TODO: can this be optimized to avoid duplicating the anchors?
+        # anchors = np.broadcast_to(anchors, (self.config.BATCH_SIZE,) + anchors.shape)
+        #
+        # if verbose:
+        #     log("molded_images", molded_images)
+        #     log("image_metas", image_metas)
+        #     log("anchors", anchors)
+        # # Run object detection
+        # detections, _, _, mrcnn_mask, _, _, _ =\
+        #     self.keras_model.predict([molded_images, image_metas, anchors], verbose=0)
+        # # Process detections
+        # results = []
+        # print("blabla")
+        # breakpoint()
+        # for i, image in enumerate(images):
+        #     final_rois, final_class_ids, final_scores, final_masks =\
+        #         self.unmold_detections(detections[i], mrcnn_mask[i],
+        #                                image.shape, molded_images[i].shape,
+        #                                windows[i])
+        #     results.append({
+        #         "rois": final_rois,
+        #         "class_ids": final_class_ids,
+        #         "scores": final_scores,
+        #         "masks": final_masks,
+        #     })
+        results = "hej med dig"
 
-        assert len(images)== 2
-        if verbose:
-            log("Processing {} images".format(len(images)))
-            for image in images:
-                log("image", image)
-
-        # Mold inputs to format expected by the neural network
-        molded_images, image_metas, windows = self.mold_inputs(images)
-
-        # Validate image sizes
-        # All images in a batch MUST be of the same size
-        image_shape = molded_images[0].shape
-        for g in molded_images[1:]:
-            assert g.shape == image_shape,\
-                "After resizing, all images must have the same size. Check IMAGE_RESIZE_MODE and image sizes."
-
-        # Anchors
-        anchors = self.get_anchors(image_shape)
-        # Duplicate across the batch dimension because Keras requires it
-        # TODO: can this be optimized to avoid duplicating the anchors?
-        anchors = np.broadcast_to(anchors, (self.config.BATCH_SIZE,) + anchors.shape)
-
-        if verbose:
-            log("molded_images", molded_images)
-            log("image_metas", image_metas)
-            log("anchors", anchors)
-        # Run object detection
-        detections, _, _, mrcnn_mask, _, _, _ =\
-            self.keras_model.predict([molded_images, image_metas, anchors], verbose=0)
-        # Process detections
-        results = []
-        print("blabla")
-        breakpoint()
-        for i, image in enumerate(images):
-            final_rois, final_class_ids, final_scores, final_masks =\
-                self.unmold_detections(detections[i], mrcnn_mask[i],
-                                       image.shape, molded_images[i].shape,
-                                       windows[i])
-            results.append({
-                "rois": final_rois,
-                "class_ids": final_class_ids,
-                "scores": final_scores,
-                "masks": final_masks,
-            })
         return results
 
     def detect_molded(self, molded_images, image_metas, verbose=0):
