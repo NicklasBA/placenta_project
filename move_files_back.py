@@ -43,12 +43,31 @@ def move_back(folder_dict):
         print("Succesfully moved all files for " + key)
 
 
+def ensure_moved(parentdir):
+
+    folders = [os.path.join(parentdir, i) for i in os.listdir(parentdir)]
+    mean_len = np.mean([len(i) for i in folders])
+
+    folders_with_something_left = []
+
+    for folder in folders:
+        if len(folder)< mean_len:
+            print(f"Original folder containing {len(os.listdir(folder))}")
+        elif len(folder) > mean_len:
+            files = os.listdir(folder)
+            if len(files) > 0:
+                folders_with_something_left.append(folder)
+
+    print(f"There were {len(folders_with_something_left)} folders for which the files were not moved")
+    print(f"These were {folders_with_something_left}")
+
 
 if __name__ == '__main__':
     parentdir = r'/scratch/s183993/placenta/raw_data/frames'
-
-    folder_dict = find_root_folders(parentdir)
-    move_back(folder_dict)
+    #
+    # folder_dict = find_root_folders(parentdir)
+    # move_back(folder_dict)
+    ensure_moved(parentdir)
 
 
 
