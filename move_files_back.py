@@ -84,7 +84,7 @@ def erase(parentdir):
 
 
 if __name__ == '__main__':
-    parentdir = r'/scratch/s183993/placenta/raw_data/frames'
+    parentdir = r'/scratch/s183993/placenta/raw_data/datadump/'
     #
     folder_dict = find_root_folders(parentdir)
     move_back(folder_dict)
