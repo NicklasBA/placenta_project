@@ -10,9 +10,8 @@ import pandas as pd
 
 
 print( "Creating videos from images")
-FILES="/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/*_6mbar_500fps_*_*.mp4"
-OUTDIR = "/home/s183993/placenta_project/outputs"
-SLEEPTIME = 5
+FILES="/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/*"
+# OUTDIR = "/home/s183993/placenta_project/outputs"
 paths = glob.glob(FILES)
 df = pd.DataFrame({"paths":paths})
 df['DonorType'] = df.paths.str.slice(28,29)
@@ -24,5 +23,5 @@ num_d = sum(df.DonorType == 'D')
 num_NS = sum(df.DonorType == 'N')
 df2 = df2.groupby(df.DonorCode).count()
 df3 = df3.groupby(df.DonorCode).count()
-df2.to_csv("D.csv", path=OUTDIR)
-df3.to_csv("NS.csv", path=OUTDIR)
+df2.to_csv("D.csv")
+df3.to_csv("NS.csv")
