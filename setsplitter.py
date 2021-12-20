@@ -16,9 +16,9 @@ FILES='/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full/*_6mbar
 paths = glob.glob(FILES)
 breakpoint()
 df = pd.DataFrame({"paths":paths})
-df['DonorType'] = df.paths.str.slice(-9,-8)
+df['DonorType'] = df.paths.str.slice(-13,-12)
 df['DonorCode'] = df.paths.str.slice(-14,-9)
-df['Num'] = df.paths.str.slice(-8,-5)
+df['Num'] = df.paths.str.slice(-8,-4)
 df2 = df[df.DonorType == "D"]
 df3 = df[df.DonorType == "S"]
 num_d = sum(df.DonorType == 'D')
