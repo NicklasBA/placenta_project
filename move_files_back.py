@@ -76,7 +76,7 @@ def erase(parentdir):
 
     for i in folders:
         files = os.listdir(i)
-        if len(files) < 4e4:
+        if len(files) < 3e4:
             os.rmdir(i)
             print(f"Removed {i}")
 
