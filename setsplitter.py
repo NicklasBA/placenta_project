@@ -5,9 +5,7 @@ Created on Mon Nov 29 20:22:32 2021
 @author: Nicklas
 """
 
-import cv2
 import glob
-from time import sleep
 import pandas as pd
 
 
