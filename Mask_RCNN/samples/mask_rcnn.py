@@ -225,10 +225,9 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
         images = [list(i) for i in np.split(np.array(images), int(len(images)//batch_size))]
 
     for i, img_list in enumerate(images):
-        try:
-            results = model.detect(img_list, verbose=1)
-        except:
-            breakpoint()
+        im_list = [cv2.imread(i) for i in img_list]
+        results = model.detect(im_list, verbose=1)
+
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]['rois']
 
