@@ -9,7 +9,7 @@ import glob
 
 def find_root_folders(parentdir):
 
-    all_folders = [i for i in os.listdir(parentdir) if os.path.isdir(i)]
+    all_folders = [i for i in os.listdir(parentdir)]
     mean_length = np.mean([len(i) for i in all_folders])
 
     old_folders = []
