@@ -13,17 +13,17 @@ print( "Creating videos from images")
 FILES='/scratch/s183993/placenta/raw_data/Placenta_package/*_6mbar_500fps_*_*'
 # OUTDIR = "/home/s183993/placenta_project/outputs"
 paths = glob.glob(FILES)
-breakpoint()
+#breakpoint()
 df = pd.DataFrame({"paths":paths})
 df['DonorType'] = df.paths.str.slice(-9,-8)
 df['DonorCode'] = df.paths.str.slice(-14,-9)
 df['Num'] = df.paths.str.slice(-8,-5)
 df2 = df[df.DonorType == "D"]
-df3 = df[df.DonorType == "N"]
+df3 = df[df.DonorType == "S"]
 num_d = sum(df.DonorType == 'D')
-num_NS = sum(df.DonorType == 'N')
+num_NS = sum(df.DonorType == 'S')
 df2 = df2.groupby(df.DonorCode).count()
 df3 = df3.groupby(df.DonorCode).count()
-breakpoint()
+#breakpoint()
 df2.to_csv("D.csv")
 df3.to_csv("NS.csv")
