@@ -230,6 +230,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
 
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]['rois']
+            breakpoint()
 
         print(f"Calculated {i+1} batches out of {len(images)}")
 
