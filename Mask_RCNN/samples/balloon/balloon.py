@@ -229,7 +229,7 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
         # Read image
         image = skimage.io.imread(args.image)
         # Detect objects
-        r = model.detect([image], verbose=1)[0]
+        res = model.detect([image], verbose=1)[0]
         breakpoint()
         # Color splash
         splash = color_splash(image, r['masks'])
@@ -358,7 +358,9 @@ if __name__ == '__main__':
             "mrcnn_class_logits", "mrcnn_bbox_fc",
             "mrcnn_bbox", "mrcnn_mask"])
     else:
-        model.load_weights(weights_path, by_name=True)
+        model.load_weights(weights_path, by_name=True,exclude=[
+            "mrcnn_class_logits", "mrcnn_bbox_fc",
+            "mrcnn_bbox", "mrcnn_mask"])
 
     # Train or evaluate
     if args.command == "train":
