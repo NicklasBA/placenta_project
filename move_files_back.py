@@ -90,7 +90,7 @@ if __name__ == '__main__':
     move_back(folder_dict)
     ensure_moved(parentdir)
     count(parentdir)
-    # erase(parentdir)
+    erase(parentdir)
 
 
 
