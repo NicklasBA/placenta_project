@@ -15,9 +15,9 @@ def find_root_folders(parentdir):
     old_folders = []
     new_folders = []
     for folder in all_folders:
-        if len(folder) < mean_length:
+        if len(folder) in [27,28, 29, 30, 31]:
             old_folders.append(folder)
-        elif len(folder) > mean_length:
+        else:
             new_folders.append(folder)
 
     folder_dict = {}
@@ -51,9 +51,9 @@ def ensure_moved(parentdir):
     folders_with_something_left = []
 
     for folder in folders:
-        if len(folder)< mean_len:
+        if len(folder) in [27,28,29,30,31]:
             print(f"Original folder containing {len(os.listdir(folder))}")
-        elif len(folder) > mean_len:
+        else:
             files = os.listdir(folder)
             if len(files) > 0:
                 folders_with_something_left.append(folder)
@@ -65,8 +65,8 @@ def ensure_moved(parentdir):
 if __name__ == '__main__':
     parentdir = r'/scratch/s183993/placenta/raw_data/frames'
     #
-    # folder_dict = find_root_folders(parentdir)
-    # move_back(folder_dict)
+    folder_dict = find_root_folders(parentdir)
+    move_back(folder_dict)
     ensure_moved(parentdir)
 
 
