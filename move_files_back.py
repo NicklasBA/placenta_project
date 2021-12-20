@@ -70,6 +70,19 @@ def count(parentdir):
         if len(files) > 4e4:
             print(f"found {len(files)} in {i}")
 
+
+def erase(parentdir):
+    folders = [os.path.join(parentdir, i) for i in os.listdir(parentdir)]
+
+    for i in folders:
+        files = os.listdir(i)
+        if len(files) < 4e4:
+            os.rmdir(i)
+            print(f"Removed {i}")
+
+
+
+
 if __name__ == '__main__':
     parentdir = r'/scratch/s183993/placenta/raw_data/frames'
     #
@@ -77,6 +90,7 @@ if __name__ == '__main__':
     move_back(folder_dict)
     ensure_moved(parentdir)
     count(parentdir)
+    erase(parentdir)
 
 
 
