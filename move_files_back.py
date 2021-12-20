@@ -25,7 +25,7 @@ def find_root_folders(parentdir):
         folder_dict[os.path.join(parentdir,folder)] = []
         for fold in new_folders:
             if folder in fold:
-                folder_dict[folder].append(os.path.join(parentdir, fold))
+                folder_dict[os.path.join(parentdir,folder)].append(os.path.join(parentdir, fold))
 
     return folder_dict
 
