@@ -2498,7 +2498,7 @@ class MaskRCNN(object):
         assert len(
             images) == self.config.BATCH_SIZE, "len(images) must be equal to BATCH_SIZE"
 
-        assert len(images) == 2
+
         if verbose:
             log("Processing {} images".format(len(images)))
             for image in images:
