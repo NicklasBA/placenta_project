@@ -13,8 +13,6 @@ Usage: import the module (see Jupyter notebooks for examples), or run from
     # Train a new model starting from pre-trained COCO weights
     python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco --gpu 0
 
-    python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=coco --gpu 0
-
     # Resume training a model that you had trained earlier
     python3 mask_rcnn.py train --dataset=/path/to/dataset --weights=last --gpu 0
 
@@ -41,8 +39,10 @@ import mrcnn.model as modellib
 from mrcnn import visualize
 from mrcnn.model import log
 import pickle
+import glob
 # Root directory of the project
 ROOT_DIR = r'/home/s183993/placenta_project/Mask_RCNN/'
+NEW_DIR = r'/home/s183993/mask_rcnn'
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -195,61 +195,74 @@ def train(model):
                 epochs=10,
                 layers='heads')
 
-# def detect_and_color_splash(model, image_path=None, video_path=None):
-#     assert image_path or video_path
-#
-#     # Image or video?
-#     if image_path:
-#         # Run model detection and generate the color splash effect
-#         print("Running on {}".format(args.image))
-#         # Read image
-#         image = skimage.io.imread(args.image)
-#         # Detect objects
-#         r = model.detect([image], verbose=1)[0]
-#         # Color splash
-#         splash = color_splash(image, r['masks'])
-#         # Save output
-#         file_name = "splash_{:%Y%m%dT%H%M%S}.png".format(datetime.datetime.now())
-#         skimage.io.imsave(file_name, splash)
-#     elif video_path:
-#         import cv2
-#         # Video capture
-#         vcapture = cv2.VideoCapture(video_path)
-#         width = int(vcapture.get(cv2.CAP_PROP_FRAME_WIDTH))
-#         height = int(vcapture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-#         fps = vcapture.get(cv2.CAP_PROP_FPS)
-#
-#         # Define codec and create video writer
-#         file_name = "splash_{:%Y%m%dT%H%M%S}.avi".format(datetime.datetime.now())
-#         vwriter = cv2.VideoWriter(file_name,
-#                                   cv2.VideoWriter_fourcc(*'MJPG'),
-#                                   fps, (width, height))
-#
-#         count = 0
-#         success = True
-#         while success:
-#             print("frame: ", count)
-#             # Read next image
-#             success, image = vcapture.read()
-#             if success:
-#                 # OpenCV returns images as BGR, convert to RGB
-#                 image = image[..., ::-1]
-#                 # Detect objects
-#                 r = model.detect([image], verbose=0)[0]
-#                 # Color splash
-#                 splash = color_splash(image, r['masks'])
-#                 # RGB -> BGR to save image to video
-#                 splash = splash[..., ::-1]
-#                 # Add image to video writer
-#                 vwriter.write(splash)
-#                 count += 1
-#         vwriter.release()
-#     print("Saved to ", file_name)
-
-
 ############################################################
 #  Training
 ############################################################
+
+############################################################
+#  Evaluation
+############################################################
+
+
+def evaluate_folder(model, folder, outdir, batch_size = 4):
+    """
+    :param model: rcnn model trained on RBC
+    :param outdir: directory to put evaluation files
+    :param folder: Path to the folder containing images to be evaluated on
+    :return: (dict) contiaining image files and bounding boxes of the form
+    eval = {"path/to/im/": {"bbox": [list of bbox],"count": len([list_of_bbox])}}
+    """
+
+    images = glob.glob(os.path.join(folder, "*.png"))
+    collected = {im: {} for im in images}
+    diff = len(images) % batch_size
+
+    if diff != 0:
+        last_ims = [images[-diff:]]
+        images = [list(i) for i in np.split(images[:diff], int(len(images)//batch_size))]
+        images += last_ims
+    else:
+        images = [list(i) for i in np.split(np.array(images), int(len(images)//batch_size))]
+
+    for i, img_list in enumerate(images):
+        im_list = [skimage.io.imread(i) for i in img_list]
+        results = model.detect(im_list, verbose=1)
+
+        for idx, res in enumerate(results):
+            collected[img_list[idx]] = results[idx]['rois']
+            if np.sum(results[idx]['rois']) > 0:
+                breakpoint()
+
+
+
+        print(f"Calculated {i+1} batches out of {len(images)}")
+
+    print("Evaluated on all images and printing to " + outdir)
+    name = folder.split(os.sep)[-1]
+    with open(os.path.join(outdir, name), 'wb') as handle:
+        pickle.dump(collected, handle, pickle.HIGHEST_PROTOCOL)
+
+    return collected
+
+def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 4):
+    """
+
+    :param model: rcnn model to evaluate with
+    :param dir: directory containing folders with images to evaluate on
+    :param outdir: directory in which to put output files
+    :param batch_size: batch size for evaluation in the network
+    :return: saves evaluations dicts as pickle files for each folder in dir
+    """
+    folders = [os.path.join(dir, i) for i in os.listdir(dir) if os.path.isdir(os.path.join(dir, i))]
+
+    for idx, folder in enumerate(folders):
+        start = time.time()
+        print(f"evaluating on {folder}")
+        evaluate_folder(model, folder, outdir, batch_size)
+        end = time.time()
+        print(f"Evaluation on folder {idx + 1} out of {len(folders)} took {(end - start)/60} minutes")
+
+    print("Finished all evaluation")
 
 if __name__ == '__main__':
     import argparse
@@ -263,6 +276,19 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', required=False,
                         metavar="/path/to/dataset/",
                         help='Directory of the dataset')
+    parser.add_argument('--eval_dir', required=False,
+                        metavar="/path/to/folders/",
+                        help = "Directory containing folders with images to be evaluated on")
+    parser.add_argument('--eval_folder', required=False,
+                        metavar="/path/to/images",
+                        help = "Path to images to be evaluated on")
+    parser.add_argument('--outdir', required=False,
+                        metavar="/path/to/outdir",
+                        help = "path to put evaluation files in")
+    parser.add_argument('--batch_size', required=False,
+                        metavar="N", type = int, help = "batch size to be used")
+
+
     parser.add_argument('--weights', required=True,
                         metavar="/path/to/weights.h5",
                         help="Path to weights .h5 file or 'coco'")
@@ -332,9 +358,20 @@ if __name__ == '__main__':
     else:
         model.load_weights(weights_path, by_name=True)
     # Train or evaluate
+
+    print(args.command)
     if args.command == "train":
         train(model)
-    else:
-        model = modellib.MaskRCNN(mode="inference", config=config,
-                                  model_dir=args.logs)
+    elif args.command == 'eval':
+        assert args.outdir
+        if args.eval_dir:
+            if args.batch_size:
+                evaluate_all_folders_in_dir(model, args.eval_dir,args.outdir, args.batch_size)
+            else:
+                evaluate_all_folders_in_dir(model, args.eval_dir, args.outdir)
+        elif args.eval_folder:
+            if args.batch_size:
+                evaluate_folder(model, args.eval_dir,args.outdir, args.batch_size)
+            else:
+                evaluate_folder(model, args.eval_dir, args.outdir)
 

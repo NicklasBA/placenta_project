@@ -1,8 +1,4 @@
-
-import numpy as np
-import pandas as  pd
 import cv2
-import pickle
 import glob
 import os
 import create_mask as cm
@@ -180,6 +176,3 @@ def inside(bbox1, bbox2):
         return True
     else:
         return False
-
-
-
