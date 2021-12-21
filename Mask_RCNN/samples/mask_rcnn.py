@@ -82,7 +82,7 @@ class PlacentaConfig(Config):
     NUM_CLASSES = 2
 
     #High value to decrease training time
-    STEPS_PER_EPOCH = 2000
+    STEPS_PER_EPOCH = 5000
 
     # Number of validation steps to run at the end of every training epoch.
     # A bigger number improves accuracy of validation stats, but slows
@@ -114,7 +114,7 @@ class PlacentaDataset(utils.Dataset):
         self.add_class("placenta", 1, "placenta")
         # Possible that the first rbc needs to be changed into proper source IDK :)
 
-        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
+        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn_p2.pkl"),'rb'))
         annotations = annotations[subset]
         for file in annotations:
             image_path = file
