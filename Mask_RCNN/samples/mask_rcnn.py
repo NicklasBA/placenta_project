@@ -82,7 +82,7 @@ class PlacentaConfig(Config):
     NUM_CLASSES = 2
 
     #High value to decrease training time
-    STEPS_PER_EPOCH = 10000
+    STEPS_PER_EPOCH = 2000
 
     # Number of validation steps to run at the end of every training epoch.
     # A bigger number improves accuracy of validation stats, but slows
