@@ -41,11 +41,11 @@ def run_through_pkl(pcl, path_pcl):
     for key in pcl.keys():
         new_pcl[key] = {}
         npcl = pcl[key]
-        for key, val in npcl.items():
-            ground_path = extract_ground_path(key)
+        for key_under, val in npcl.items():
+            ground_path = extract_ground_path(key_under)
             present = ensure_present(ground_path, path_pcl)
             if present:
-                new_pcl[ground_path] = val
+                new_pcl[key][ground_path] = val
             else:
                 non_present += 1
 
