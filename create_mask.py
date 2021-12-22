@@ -9,6 +9,7 @@ import pickle
 from PIL import Image
 import cv2
 import glob
+import matplotlib.pyplot as plt
 
 PADDED_PIXELS = 50
 IMAGE_SIZE = (250, 250)
@@ -110,15 +111,16 @@ def add_mask(sizes, bbox):
     center = centroid(coordinates_inner)
 
     leftx = np.max([0, center[0]-PADDED_PIXELS])
-    rightx = np.min([n, center[0]+PADDED_PIXELS])
+    rightx = np.min([m, center[0]+PADDED_PIXELS])
     topy = np.max([0, center[1]-PADDED_PIXELS])
-    bottomy = np.min([m, center[1] + PADDED_PIXELS])
+    bottomy = np.min([n, center[1] + PADDED_PIXELS])
 
     coordinates = (leftx, rightx, topy, bottomy)
-    mask[leftx:rightx,topy:bottomy,:] = 1
+    mask[topy:bottomy,leftx:rightx,:] = 1
 
     if np.sum(mask[:,:,0]) ==0:
         breakpoint()
+
 
     return mask, coordinates, coordinates_inner
 
@@ -147,10 +149,9 @@ def combine_image_and_bbox(image, all_bbox):
     :return: the masked image
     """
     sizes = image.shape
-    for bbox in all_bbox:
-        mask, coordinates, coordinates_inner = add_mask(sizes, bbox)
+    mask, coordinates, coordinates_inner = add_mask(sizes, all_bbox)
 
-    temp = np.copy(image[coordinates_inner[0]:coordinates_inner[1], coordinates_inner[2]:coordinates_inner[3],:])
+    temp = np.copy(image[coordinates_inner[2]:coordinates_inner[3], coordinates_inner[0]:coordinates_inner[1],:])
     # row, col = get_padding(coordinates, sizes)
     row, col = get_padding_p2(temp.shape)
     temp = np.pad(temp, (row, col,[0,0]), mode='constant')
