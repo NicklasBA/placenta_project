@@ -243,6 +243,7 @@ if __name__ == '__main__':
         for idx, folder in enumerate(folders):
             if os.path.isdir(save_paths[idx]) is False:
                 os.mkdir(save_paths[idx])
+            print("Evaluating on " + folder)
             finds_seqs(folder_path=folder, OUTDIR=save_paths[idx])
 
             print(f"Created {len(os.listdir(save_paths[idx]))} videos from {len(os.listdir(folder))} files")
