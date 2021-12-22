@@ -68,7 +68,7 @@ class PlacentaConfig(Config):
 
     # We use a GPU with 12GB memory, which can fit two images.
     # Adjust down if you use a smaller GPU.
-    IMAGES_PER_GPU = 4
+    IMAGES_PER_GPU = 2
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
@@ -82,7 +82,7 @@ class PlacentaConfig(Config):
     NUM_CLASSES = 2
 
     #High value to decrease training time
-    STEPS_PER_EPOCH = 2000
+    STEPS_PER_EPOCH = 5000
 
     # Number of validation steps to run at the end of every training epoch.
     # A bigger number improves accuracy of validation stats, but slows
@@ -114,7 +114,7 @@ class PlacentaDataset(utils.Dataset):
         self.add_class("placenta", 1, "placenta")
         # Possible that the first rbc needs to be changed into proper source IDK :)
 
-        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn.pkl"),'rb'))
+        annotations = pickle.load(open(os.path.join(dataset_dir, "mask_rcnn_p2.pkl"),'rb'))
         annotations = annotations[subset]
         for file in annotations:
             image_path = file
@@ -189,11 +189,12 @@ def train(model):
     # COCO trained weights, we don't need to train too long. Also,
     # no need to train all layers, just the heads should do it.
     # Low amount of epochs, as networks fits the data in little time
-    print("Training network heads")
+
+    print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=10,
-                layers='heads')
+                epochs=5,
+                layers='all')
 
 
 ############################################################
