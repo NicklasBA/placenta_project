@@ -206,15 +206,7 @@ if __name__ == '__main__':
 
 
     parser = argparse.ArgumentParser(description='Find sequences and annotate folders containing the image files')
-    parser.add_argument('folder', required=False, help='Folder containing images to be annotated')
     parser.add_argument('--parentdir', required=False)
-    parser.add_argument('-b', '--batch',
-                        help='Look at all subfolders of the provided folder (only one child deep)',
-                        action='store_true',
-                        required=False)
-    parser.add_argument('-outdir',
-                        help='Output folder for annotation files (Default: Parent of input)',
-                        required=False)
     args = vars(parser.parse_args())
 
     # Little input checking
@@ -240,17 +232,18 @@ if __name__ == '__main__':
     # else:
     #     in_paths = [args["folder"]]
     #     outdir = os.path.join(args["folder"].rsplit(os.path.sep, 1)[0], "")
+    outdir = r'/scratch/s183993/placenta/raw_data/new_videos'
+
 
     if args["parentdir"]:
         pdir = args["parentdir"]
         folders = [os.path.join(pdir, i) for i in os.listdir(pdir)]
+        save_paths = [os.path.join(outdir,i) for i in os.listdir(pdir)]
 
-        for folder in folders:
-            old_files = len(os.listdir(args["output"]))
-            finds_seqs(folder_path=folder, OUTDIR=args["output"])
-            new_files = len(os.listdir(args["output"]))
+        for idx, folder in enumerate(folders):
+            finds_seqs(folder_path=folder, OUTDIR=save_paths[idx])
 
-            print(f"Created {new_files-old_files} videos from {len(os.listdir(folder))} files")
+            print(f"Created {len(os.listdir(save_paths[idx]))} videos from {len(os.listdir(folder))} files")
 
 
     # processed_files = {}
