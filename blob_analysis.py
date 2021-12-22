@@ -96,6 +96,7 @@ class BlobAnalysis:
             img = self.open_and_close(img)
             blobs = self.find_blobs(img)
             blob_list.append(blobs)
+
         return blob_list
 
     def ava_coordinate_change(self, path, bbox):
@@ -154,6 +155,8 @@ class BlobAnalysis:
 
             blobs = [blob for blob in blob_features if blob.area >= self.min_blob_size]
             blobs = self.check_rotated(blobs)
+            if len(blobs) == 0:
+                return None
             return blobs
         else:
             return None

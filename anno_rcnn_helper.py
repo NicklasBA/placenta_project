@@ -18,19 +18,19 @@ def save_video(paths, bboxs, OUTDIR, video_name):
     :return: None but saves a video with video_name
     """
     img_array = []
-    if len(paths) < 20:
+    if len(paths) < 35:
         return None
     else:
         for bbox, filename in list(zip(bboxs, paths)):
             img = cv2.imread(filename)
-
             img_n = cm.combine_image_and_bbox(img, bbox)
+
             height, width, layers = img_n.shape
             size = (width, height)
             img_array.append(img_n)
         # print(f"\tFound and loaded {len(img_array)} images.")
         out = cv2.VideoWriter(f'{OUTDIR}{video_name}.avi', cv2.VideoWriter_fourcc(*'HFYU'), 15, size)
-        print(f"\tWriting to {OUTDIR}{video_name}.avi")
+        # print(f"\tWriting to {OUTDIR}{video_name}.avi")
         for i in range(len(img_array)):
             out.write(img_array[i])
         out.release()
@@ -45,10 +45,11 @@ def run_through_folder(folder, evals, OUTDIR):
     :param OUTDIR: Path to were videos should be put
     :return:
     """
-    collected, hashes, hash_to_file = create_identifiers_for_folder(folder, evals)
+    collected, hashes, hash_to_file,overwritten = create_identifiers_for_folder(folder, evals)
 
-    for h in hashes:
+    for h in hashes[1:]:
         files = hash_to_file[h]
+        print(len(files))
         files, endings = extract_files_and_endings(files)
         bboxs = []
         for file in files:
@@ -57,8 +58,26 @@ def run_through_folder(folder, evals, OUTDIR):
                     bboxs.append(bbox.bbox)
 
         assert len(files) == len(bboxs)
+
         video_name = str(h)
         save_video(files,bboxs, OUTDIR, video_name)
+
+def create_identifiers_p2(folder, evals, hash_to_files):
+
+    files = glob.glob(os.path.join(folder, '*.png'))
+    files, endings = extract_files_and_endings(files)
+
+    collected = {}
+    for key, val in evals.items():
+        if len(val["bbox"])>0:
+            collected[key] = [BoundingBox(i) for i in val["bbox"]]
+        else:
+            collected[key] = []
+
+    for has, val in hash_to_files.items():
+        fil, end = extract_files_and_endings(val)
+
+
 
 
 def create_identifiers_for_folder(folder, evals):
@@ -77,46 +96,56 @@ def create_identifiers_for_folder(folder, evals):
 
     collected = {}
     hash_to_file = {}
+    overwritten = {}
     all_hashes = [-1]
 
-
     for key, val in evals.items():
-        collected[key] = [BoundingBox(i) for i in val["bbox"]]
-
+        if len(val["bbox"])>0:
+            collected[key] = [BoundingBox(i) for i in val["bbox"]]
+        else:
+            collected[key] = []
+    delay = None
     for idx, file in enumerate(files):
         bboxes = collected[file]
-        subs = []
-        new_hashes = []
-        for i in range(len(bboxes)):
-            if collected[file][i].identifier is None:
-                nh = all_hashes[-1] + i + 1
-                new_hashes.append(nh)
-                collected[file][i].identifier = nh
-                subs.append(i)
+        if len(bboxes) > 0:
+            subs = []
+            new_hashes = []
+            for i in range(len(bboxes)):
+                if collected[file][i].identifier is None:
+                    nh = all_hashes[-1] + i + 1
+                    new_hashes.append(nh)
+                    collected[file][i].identifier = nh
+                    subs.append(i)
 
-        for nh in new_hashes:
-            hash_to_file[nh] = []
-            hash_to_file[nh].append(file)
+            for nh in new_hashes:
+                hash_to_file[nh] = []
+                hash_to_file[nh].append(file)
 
-        all_hashes += new_hashes
-        bboxes = [bboxes[i] for i in subs]
+            all_hashes += new_hashes
+            bboxes = [bboxes[i] for i in subs]
 
-        for i, f in enumerate(files[idx+1:]):
-            new_bboxes = collected[f]
+            for i, f in enumerate(files[idx+1:]):
+                new_bboxes = collected[f]
+                if len(new_bboxes) == 0:
+                    break
 
-            subset = []
-            for j in range(len(bboxes)):
-                index = identify_bbox(bboxes[j],new_bboxes)
-                if index != -1:
-                    collected[f][index].identifier = collected[file][j].identifier
-                    hash_to_file[collected[f][index].identifier].append(f)
-                    subset.append(index)
+                subset = []
+                for j in range(len(bboxes)):
+                    index = identify_bbox(bboxes[j],new_bboxes)
+                    if index != -1:
+                        if collected[f][index].identifier is not None:
+                            print(f"A bounding box is being overwritten in {f} ")
+                            overwritten[f] = collected[f]
 
-            bboxes = [new_bboxes[i] for i in subset]
-            if len(bboxes) == 0:
-                break
+                        collected[f][index].identifier = collected[file][j].identifier
+                        hash_to_file[collected[f][index].identifier].append(f)
+                        subset.append(index)
 
-    return collected, all_hashes, hash_to_file
+                bboxes = [new_bboxes[i] for i in subset]
+                if len(bboxes) == 0:
+                    break
+
+    return collected, all_hashes, hash_to_file, overwritten
 
 def extract_files_and_endings(files):
     """
@@ -143,7 +172,7 @@ def identify_bbox(cbox, new_boxes):
     """
 
     for idx, nbox in enumerate(new_boxes):
-        ins = inside(cbox, new_boxes)
+        ins = inside(cbox, nbox)
         if ins:
             return idx
 
@@ -154,11 +183,13 @@ def center(bbox):
     :param bbox: (list or tuple) of bbox coordinates on the form (y1, x1, y2, x2)
     :return: center coordinates of bbox (y_c, x_c)
     """
+    try:
+        assert bbox.bbox[0] < bbox.bbox[2] and bbox.bbox[1] < bbox.bbox[3]
+    except:
+        breakpoint()
 
-    assert bbox[0] < bbox[2] and bbox[1] < bbox[3]
-
-    row_c = int((bbox[0] + bbox[2])//2)
-    col_c = int((bbox[1] + bbox[3])//2)
+    row_c = int((bbox.bbox[0] + bbox.bbox[2])//2)
+    col_c = int((bbox.bbox[1] + bbox.bbox[3])//2)
 
     return (row_c, col_c)
 
@@ -172,7 +203,7 @@ def inside(bbox1, bbox2):
 
     c2 = center(bbox2)
 
-    if bbox1[0] <= c2[0] <= bbox1[2] and bbox1[1] <= c2[1] <= bbox1[3]:
+    if bbox1.bbox[0] <= c2[0] <= bbox1.bbox[2] and bbox1.bbox[1] <= c2[1] <= bbox1.bbox[3]:
         return True
     else:
         return False

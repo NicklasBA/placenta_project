@@ -4,7 +4,7 @@ import sys
 from blob_analysis import BlobAnalysis
 import argparse
 import pandas as pd
-
+import anno_rcnn_helper as ah
 import matplotlib.pyplot as plt
 
 CATEGORY_D = 0
@@ -22,12 +22,33 @@ def rename_files(folder_path):
 
     print("File names were changed")
 
+def finds_seqs(folder_path, OUTDIR: str):
+    analyser = BlobAnalysis(folder_path)
+    image_paths = glob.glob(os.path.join(folder_path, "*.png"))
+    print(f"A total of {len(image_paths)} images to process.")
+    print("Finding blobs...")
+    anno_dict = {}
+    for img in image_paths:
+        anno_dict[img] = {}
+        blobs = analyser.get_blobs_in_files(img)
+        if blobs[0] is not None:
+            anno_dict[img]['bbox'] = [blob[0].bbox for blob in blobs]
+            anno_dict[img]['count'] = len(blobs)
+        else:
+            anno_dict[img]["bbox"] = []
+            anno_dict[img]["count"] = 0
+
+
+    ah.run_through_folder(folder_path, anno_dict, OUTDIR=OUTDIR)
+
+
+
 def find_sequences(folder_path: str):
     analyser = BlobAnalysis(folder_path)
     image_paths = glob.glob(os.path.join(folder_path, "*.png"))
     print(f"A total of {len(image_paths)} images to process.")
     print("Finding blobs...")
-    blobs = analyser.get_blobs_in_files(image_paths)
+
 
     print("Finding sequences...")
     _, c, _ = analyser.count_in_sequence(blobs)
@@ -94,7 +115,7 @@ def find_sequences(folder_path: str):
 
     all_anno_seq = ensure_continuity(all_anno_seq)
     all_anno_seq_ava = ensure_continuity(all_anno_seq_ava)
-
+    breakpoint()
     return all_anno_seq, sequences, all_anno_seq_ava
 
 def ensure_continuity(all_anno_seq):
@@ -182,56 +203,72 @@ def create(folder_path):
 
 if __name__ == '__main__':
     # Stupid simple argument parser
+
+
     parser = argparse.ArgumentParser(description='Find sequences and annotate folders containing the image files')
-    parser.add_argument('folder', help='Folder containing images to be annotated')
+    parser.add_argument('folder', required=False, help='Folder containing images to be annotated')
+    parser.add_argument('--parentdir', required=False)
     parser.add_argument('-b', '--batch',
                         help='Look at all subfolders of the provided folder (only one child deep)',
                         action='store_true',
                         required=False)
-    parser.add_argument('-o', '--output',
+    parser.add_argument('-outdir',
                         help='Output folder for annotation files (Default: Parent of input)',
                         required=False)
     args = vars(parser.parse_args())
 
     # Little input checking
-    if not os.path.isdir(args["folder"]):
-        raise NotADirectoryError(f"Input path {args['folder']} is not a directory")
+    # if not os.path.isdir(args["folder"]):
+    #     raise NotADirectoryError(f"Input path {args['folder']} is not a directory")
 
-    if args["output"]:
-        if not os.path.isdir(args["output"]):
-            raise NotADirectoryError(f"Output path {args['folder']} is not a directory")
+    # if args["output"]:
+    #     if not os.path.isdir(args["output"]):
+    #         raise NotADirectoryError(f"Output path {args['folder']} is not a directory")
+    #
 
     # Get all folders to process if it is a batch job
-    if args["batch"]:
-        in_paths = glob.glob(os.path.join(args["folder"], "*", ""))
-        new_folders = []
-        for i in reversed(range(len(in_paths))):
-            sub_folders = glob.glob(os.path.join(in_paths[i], "*", ""))
-            if sub_folders:
-                in_paths.pop(i)
-            new_folders += sub_folders
-        in_paths += new_folders
-        outdir = os.path.join(args["folder"], "")
-    else:
-        in_paths = [args["folder"]]
-        outdir = os.path.join(args["folder"].rsplit(os.path.sep, 1)[0], "")
+    # if args["batch"]:
+    #     in_paths = glob.glob(os.path.join(args["folder"], "*", ""))
+    #     new_folders = []
+    #     for i in reversed(range(len(in_paths))):
+    #         sub_folders = glob.glob(os.path.join(in_paths[i], "*", ""))
+    #         if sub_folders:
+    #             in_paths.pop(i)
+    #         new_folders += sub_folders
+    #     in_paths += new_folders
+    #     outdir = os.path.join(args["folder"], "")
+    # else:
+    #     in_paths = [args["folder"]]
+    #     outdir = os.path.join(args["folder"].rsplit(os.path.sep, 1)[0], "")
 
-    processed_files = {}
-    count = 1
-    print(outdir)
-    csv_files = [os.path.join(outdir, file).split(".")[0] + "/" for file in os.listdir(outdir) if '.csv' in file]
-    len_b = len(in_paths)
-    in_paths = list(set(in_paths)-set(csv_files))
-    len_a = len(in_paths)
-    print("{} out of".format(len_b-len_a) + "{} were already created for".format(len_b))
-    breakpoint()
-    for path in in_paths:
-        rename_files(folder_path=path)
-        print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
-        processed_files[path] = create_annotations(path)
-        processed_files[path].to_csv(outdir+os.path.basename(os.path.abspath(path))+".csv")
-        print(f"Saved {outdir+os.path.basename(os.path.abspath(path))+'.csv'}")
-        count += 1
+    if args["parentdir"]:
+        pdir = args["parentdir"]
+        folders = [os.path.join(pdir, i) for i in os.listdir(pdir)]
 
-    print(f"Created {len(processed_files)} csv files. Wrote to {outdir}")
+        for folder in folders:
+            old_files = len(os.listdir(args["output"]))
+            finds_seqs(folder_path=folder, OUTDIR=args["output"])
+            new_files = len(os.listdir(args["output"]))
+
+            print(f"Created {new_files-old_files} videos from {len(os.listdir(folder))} files")
+
+
+    # processed_files = {}
+    # count = 1
+    # print(outdir)
+    # csv_files = [os.path.join(outdir, file).split(".")[0] + "/" for file in os.listdir(outdir) if '.csv' in file]
+    # len_b = len(in_paths)
+    # in_paths = list(set(in_paths)-set(csv_files))
+    # len_a = len(in_paths)
+    # print("{} out of".format(len_b-len_a) + "{} were already created for".format(len_b))
+    # breakpoint()
+    # for path in in_paths:
+    #     rename_files(folder_path=path)
+    #     print(f"Starting analysis for {os.path.basename(os.path.abspath(path))} ({count}/{len(in_paths)})")
+    #     processed_files[path] = create_annotations(path)
+    #     processed_files[path].to_csv(outdir+os.path.basename(os.path.abspath(path))+".csv")
+    #     print(f"Saved {outdir+os.path.basename(os.path.abspath(path))+'.csv'}")
+    #     count += 1
+    #
+    # print(f"Created {len(processed_files)} csv files. Wrote to {outdir}")
     
