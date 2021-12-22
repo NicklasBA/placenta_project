@@ -49,18 +49,18 @@ def run_through_folder(folder, evals, OUTDIR):
 
     for h in hashes[1:]:
         files = hash_to_file[h]
-        print(len(files))
         files, endings = extract_files_and_endings(files)
         bboxs = []
-        for file in files:
-            for bbox in collected[file]:
-                if bbox.identifier == h:
-                    bboxs.append(bbox.bbox)
+        if len(files) >= 35:
+            for file in files:
+                for bbox in collected[file]:
+                    if bbox.identifier == h:
+                        bboxs.append(bbox.bbox)
 
-        assert len(files) == len(bboxs)
+            assert len(files) == len(bboxs)
 
-        video_name = str(h)
-        save_video(files,bboxs, OUTDIR, video_name)
+            video_name = str(h)
+            save_video(files,bboxs, OUTDIR, video_name)
 
 def create_identifiers_p2(folder, evals, hash_to_files):
 
