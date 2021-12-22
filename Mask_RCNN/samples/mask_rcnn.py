@@ -192,7 +192,7 @@ def train(model):
     print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=5,
+                epochs=9,
                 layers='all')
 
 ############################################################
