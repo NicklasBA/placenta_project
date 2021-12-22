@@ -240,6 +240,7 @@ if __name__ == '__main__':
         folders = [os.path.join(pdir, i) for i in os.listdir(pdir)]
         save_paths = [os.path.join(outdir,i) for i in os.listdir(pdir)]
 
+        print(f"Evaluating on {len(folders)} folders ")
         for idx, folder in enumerate(folders):
             if os.path.isdir(save_paths[idx]) is False:
                 os.mkdir(save_paths[idx])
