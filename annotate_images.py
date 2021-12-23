@@ -232,18 +232,23 @@ if __name__ == '__main__':
     # else:
     #     in_paths = [args["folder"]]
     #     outdir = os.path.join(args["folder"].rsplit(os.path.sep, 1)[0], "")
-    outdir = r'/scratch/s183993/placenta/raw_data/new_videos'
+    outdir = r'/scratch/s183993/videos/'
 
+    if os.path.isdir(outdir) is False:
+        os.mkdir(outdir)
 
     if args["parentdir"]:
         pdir = args["parentdir"]
         folders = [os.path.join(pdir, i) for i in os.listdir(pdir)]
+        folders = [i for i in folders if os.path.isdir(i)]
         save_paths = [os.path.join(outdir,i) for i in os.listdir(pdir)]
 
         print(f"Evaluating on {len(folders)} folders ")
         for idx, folder in enumerate(folders):
             if os.path.isdir(save_paths[idx]) is False:
                 os.mkdir(save_paths[idx])
+            print("Renaming files")
+            rename_files(folder_path=folder)
             print("Evaluating on " + folder)
             finds_seqs(folder_path=folder, OUTDIR=save_paths[idx]+os.sep)
 
