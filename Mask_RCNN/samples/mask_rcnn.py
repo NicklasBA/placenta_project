@@ -227,6 +227,8 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
 
     for i, img_list in enumerate(images):
         im_list = [skimage.io.imread(i) for i in img_list]
+        breakpoint()
+
         results = model.detect(im_list, verbose=1)
 
         breakpoint()
