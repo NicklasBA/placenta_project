@@ -247,6 +247,8 @@ if __name__ == '__main__':
         for idx, folder in enumerate(folders):
             if os.path.isdir(save_paths[idx]) is False:
                 os.mkdir(save_paths[idx])
+            print("Renaming files")
+            rename_files(folder_path=folder)
             print("Evaluating on " + folder)
             finds_seqs(folder_path=folder, OUTDIR=save_paths[idx]+os.sep)
 
