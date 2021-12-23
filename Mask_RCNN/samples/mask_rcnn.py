@@ -218,7 +218,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
     images = glob.glob(os.path.join(folder, "*.png"))
     collected = {im: {} for im in images}
     diff = len(images) % batch_size
-
+    breakpoint()
     if diff != 0:
         last_ims = [images[-diff:]]
         images = [list(i) for i in np.split(images[:diff], int(len(images)//batch_size))]
@@ -229,8 +229,6 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
     for i, img_list in enumerate(images):
         im_list = [skimage.io.imread(i) for i in img_list]
         results = model.detect(im_list, verbose=1)
-
-        breakpoint()
 
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]
@@ -256,7 +254,7 @@ def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 4):
     :return: saves evaluations dicts as pickle files for each folder in dir
     """
     folders = [os.path.join(dir, i) for i in os.listdir(dir) if os.path.isdir(os.path.join(dir, i))]
-
+    breakpoint()
     for idx, folder in enumerate(folders):
         start = time.time()
         print(f"evaluating on {folder}")
@@ -360,7 +358,7 @@ if __name__ == '__main__':
     else:
         model.load_weights(weights_path, by_name=True)
     # Train or evaluate
-
+    breakpoint()
     print(args.command)
     if args.command == "train":
         train(model)
