@@ -206,7 +206,7 @@ def train(model):
 ############################################################
 
 
-def evaluate_folder(model, folder, outdir, batch_size = 4):
+def evaluate_folder(model, folder, outdir, batch_size = 1):
     """
     :param model: rcnn model trained on RBC
     :param outdir: directory to put evaluation files
@@ -246,7 +246,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
 
     return collected
 
-def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 4):
+def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 1):
     """
 
     :param model: rcnn model to evaluate with
