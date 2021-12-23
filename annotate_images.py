@@ -232,8 +232,10 @@ if __name__ == '__main__':
     # else:
     #     in_paths = [args["folder"]]
     #     outdir = os.path.join(args["folder"].rsplit(os.path.sep, 1)[0], "")
-    outdir = r'/scratch/s183993/placenta/raw_data/new_videos'
+    outdir = r'/scratch/s183993/videos/'
 
+    if os.path.isdir(outdir) is False:
+        os.mkdir(outdir)
 
     if args["parentdir"]:
         pdir = args["parentdir"]
