@@ -206,7 +206,7 @@ def train(model):
 ############################################################
 
 
-def evaluate_folder(model, folder, outdir, batch_size = 4):
+def evaluate_folder(model, folder, outdir, batch_size = 1):
     """
     :param model: rcnn model trained on RBC
     :param outdir: directory to put evaluation files
@@ -218,7 +218,6 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
     images = glob.glob(os.path.join(folder, "*.png"))
     collected = {im: {} for im in images}
     diff = len(images) % batch_size
-
     if diff != 0:
         last_ims = [images[-diff:]]
         images = [list(i) for i in np.split(images[:diff], int(len(images)//batch_size))]
@@ -230,23 +229,22 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
         im_list = [skimage.io.imread(i) for i in img_list]
         results = model.detect(im_list, verbose=1)
 
+        breakpoint()
+
         for idx, res in enumerate(results):
-            collected[img_list[idx]] = results[idx]['rois']
-            if np.sum(results[idx]['rois']) > 0:
-                breakpoint()
+            collected[img_list[idx]] = results[idx]
 
 
-
-        print(f"Calculated {i+1} batches out of {len(images)}")
+        # print(f"Calculated {i+1} batches out of {len(images)}")
 
     print("Evaluated on all images and printing to " + outdir)
     name = folder.split(os.sep)[-1]
     with open(os.path.join(outdir, name), 'wb') as handle:
-        pickle.dump(collected, handle, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(collected, handle, 4)
 
     return collected
 
-def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 4):
+def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 1):
     """
 
     :param model: rcnn model to evaluate with
@@ -256,7 +254,6 @@ def evaluate_all_folders_in_dir(model, dir, outdir, batch_size = 4):
     :return: saves evaluations dicts as pickle files for each folder in dir
     """
     folders = [os.path.join(dir, i) for i in os.listdir(dir) if os.path.isdir(os.path.join(dir, i))]
-
     for idx, folder in enumerate(folders):
         start = time.time()
         print(f"evaluating on {folder}")
@@ -360,7 +357,6 @@ if __name__ == '__main__':
     else:
         model.load_weights(weights_path, by_name=True)
     # Train or evaluate
-
     print(args.command)
     if args.command == "train":
         train(model)
