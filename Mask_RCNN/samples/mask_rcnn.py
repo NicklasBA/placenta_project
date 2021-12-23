@@ -231,18 +231,18 @@ def evaluate_folder(model, folder, outdir, batch_size = 4):
         results = model.detect(im_list, verbose=1)
 
         for idx, res in enumerate(results):
-            collected[img_list[idx]] = results[idx]['rois']
+            collected[img_list[idx]] = results[idx]
             if np.sum(results[idx]['rois']) > 0:
                 breakpoint()
 
 
 
-        print(f"Calculated {i+1} batches out of {len(images)}")
+        # print(f"Calculated {i+1} batches out of {len(images)}")
 
     print("Evaluated on all images and printing to " + outdir)
     name = folder.split(os.sep)[-1]
     with open(os.path.join(outdir, name), 'wb') as handle:
-        pickle.dump(collected, handle, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(collected, handle, 4)
 
     return collected
 
