@@ -238,6 +238,7 @@ if __name__ == '__main__':
     if args["parentdir"]:
         pdir = args["parentdir"]
         folders = [os.path.join(pdir, i) for i in os.listdir(pdir)]
+        folders = [i for i in folders if os.path.isdir(i)]
         save_paths = [os.path.join(outdir,i) for i in os.listdir(pdir)]
 
         print(f"Evaluating on {len(folders)} folders ")
