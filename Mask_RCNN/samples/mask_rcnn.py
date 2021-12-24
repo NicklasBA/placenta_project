@@ -76,8 +76,6 @@ class PlacentaConfig(Config):
     IMAGE_MIN_DIM = 256
     IMAGE_MAX_DIM = 1024
 
-
-
     # Number of classes (including background)
     NUM_CLASSES = 2
 
@@ -194,8 +192,13 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=5,
-                layers='all')
+                layers='heads')
 
+    print("Training all layers")
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=10,
+                layers='all')
 
 ############################################################
 #  Training
