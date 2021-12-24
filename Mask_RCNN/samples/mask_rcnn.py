@@ -68,15 +68,13 @@ class PlacentaConfig(Config):
 
     # We use a GPU with 12GB memory, which can fit two images.
     # Adjust down if you use a smaller GPU.
-    IMAGES_PER_GPU = 2
+    IMAGES_PER_GPU = 1
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
     #Must be devisibile by 2, 6 or mores times, hence we use default for now
     IMAGE_MIN_DIM = 256
     IMAGE_MAX_DIM = 1024
-
-
 
     # Number of classes (including background)
     NUM_CLASSES = 2
@@ -93,7 +91,7 @@ class PlacentaConfig(Config):
 
     # Reduce training ROIs per image because the images are small and have
     # few objects. Aim to allow ROI sampling to pick 33% positive ROIs.
-    #TRAIN_ROIS_PER_IMAGE = 32
+    TRAIN_ROIS_PER_IMAGE = 16
 
 ############################################################
 #  Dataset
@@ -194,8 +192,13 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=5,
-                layers='all')
+                layers='heads')
 
+    print("Training all layers")
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=10,
+                layers='all')
 
 ############################################################
 #  Training
@@ -228,8 +231,6 @@ def evaluate_folder(model, folder, outdir, batch_size = 1):
     for i, img_list in enumerate(images):
         im_list = [skimage.io.imread(i) for i in img_list]
         results = model.detect(im_list, verbose=1)
-
-        breakpoint()
 
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]
