@@ -81,12 +81,18 @@ def rename_files(parentdir,outdir):
         if "p2" not in folder:
             if "NS" in folder:
                 for file in os.listdir(folder):
-                    name = re.search(r'(?<=NS)\w+', folder)
-                    fetal[os.path.join(folder, file)] = "NS" + name.group(0)
+                    try:
+                        name = re.search(r'(?<=NS)\w+', folder)
+                        fetal[os.path.join(folder, file)] = "NS" + name.group(0)
+                    except:
+                        breakpoint()
             else:
                 for file in os.listdir(folder):
-                    name = re.search(r'(?<=D)\w+', folder)
-                    doner[os.path.join(folder, file)] = "D" + name.group(0)
+                    try:
+                        name = re.search(r'(?<=D)\w+', folder)
+                        doner[os.path.join(folder, file)] = "D" + name.group(0)
+                    except:
+                        breakpoint()
 
     for idx, file in enumerate(list(doner.keys())):
         doner[file] = os.path.join(outdir, doner[file] + "_" + str(idx) + ".avi")
