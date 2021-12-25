@@ -192,10 +192,10 @@ def train(model):
     # Low amount of epochs, as networks fits the data in little time
 
     print("Training all layers")
-    model.train(dataset_train, dataset_val,
-                learning_rate=config.LEARNING_RATE,
-                epochs=5,
-                layers='heads')
+    # model.train(dataset_train, dataset_val,
+    #             learning_rate=config.LEARNING_RATE,
+    #             epochs=5,
+    #             layers='heads')
 
     print("Training all layers")
     model.train(dataset_train, dataset_val,
