@@ -20,7 +20,7 @@ import keras.backend as K
 import keras.layers as KL
 import keras.layers as KE
 import keras.utils as KU
-from tensorflow.python.eager import context
+# from tensorflow.python.eager import context
 import keras.models as KM
 
 from mrcnn import utils
