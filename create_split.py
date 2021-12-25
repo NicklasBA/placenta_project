@@ -78,7 +78,8 @@ def rename_files(parentdir,outdir):
     fetal = {}
 
     for folder in folders:
-        if "p2" not in folder:
+
+        if "p2" not in folder and ".zip" not in folder:
             if "NS" in folder:
                 for file in os.listdir(folder):
                     try:
