@@ -98,7 +98,7 @@ def rename_files(parentdir,outdir):
     for idx, file in enumerate(list(doner.keys())):
         doner[file] = os.path.join(outdir, doner[file] + "_" + str(idx) + ".avi")
     for idx, file in enumerate(list(fetal.keys())):
-        fetal[file] = os.path.join(outdir, doner[file] + "_" + str(idx) + ".avi")
+        fetal[file] = os.path.join(outdir, fetal[file] + "_" + str(idx) + ".avi")
 
     move_files_in_dict(doner)
     move_files_in_dict(fetal)
