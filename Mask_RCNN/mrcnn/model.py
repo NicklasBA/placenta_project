@@ -335,10 +335,10 @@ class ProposalLayer(KE.Layer):
         proposals = utils.batch_slice([boxes, scores], nms,
                                       self.config.IMAGES_PER_GPU)
 
-        if not context.executing_eagerly():
-            # Infer the static output shape:
-            out_shape = self.compute_output_shape(None)
-            proposals.set_shape(out_shape)
+        # if not context.executing_eagerly():
+        #     # Infer the static output shape:
+        #     out_shape = self.compute_output_shape(None)
+        #     proposals.set_shape(out_shape)
         return proposals
 
     def compute_output_shape(self, input_shape):
