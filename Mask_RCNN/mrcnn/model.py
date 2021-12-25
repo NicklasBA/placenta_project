@@ -15,13 +15,13 @@ from collections import OrderedDict
 #import multiprocessing
 import numpy as np
 import tensorflow as tf
-import keras as keras
-import keras.backend as K
-import keras.layers as KL
-import keras.layers as KE
-import keras.utils as KU
-# from tensorflow.python.eager import context
-import keras.models as KM
+import tensorflow.keras as keras
+import tensorflow.keras.backend as K
+import tensorflow.keras.layers as KL
+import tensorflow.keras.layers as KE
+import tensorflow.keras.utils as KU
+from tensorflow.python.eager import context
+import tensorflow.keras.models as KM
 
 from mrcnn import utils
 
@@ -335,10 +335,10 @@ class ProposalLayer(KE.Layer):
         proposals = utils.batch_slice([boxes, scores], nms,
                                       self.config.IMAGES_PER_GPU)
 
-        # if not context.executing_eagerly():
-        #     # Infer the static output shape:
-        #     out_shape = self.compute_output_shape(None)
-        #     proposals.set_shape(out_shape)
+        if not context.executing_eagerly():
+            # Infer the static output shape:
+            out_shape = self.compute_output_shape(None)
+            proposals.set_shape(out_shape)
         return proposals
 
     def compute_output_shape(self, input_shape):
