@@ -88,7 +88,9 @@ class PlacentaConfig(Config):
     VALIDATION_STEPS = 50
 
     #Lowered from default due to nan problem
-    LEARNING_RATE = 0.0001
+    # LEARNING_RATE = 0.0001
+    LEARNING_RATE = 0.00005
+
 
     RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
@@ -192,15 +194,15 @@ def train(model):
     # Low amount of epochs, as networks fits the data in little time
 
     print("Training all layers")
-    # model.train(dataset_train, dataset_val,
-    #             learning_rate=config.LEARNING_RATE,
-    #             epochs=5,
-    #             layers='heads')
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=15,
+                layers='heads')
 
     print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=10,
+                epochs=15,
                 layers='all')
 
 ############################################################
