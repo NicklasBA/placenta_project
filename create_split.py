@@ -4,7 +4,8 @@ import shutil
 import numpy as np
 import pickle
 import random
-
+import re
+import shutil
 def create_split(path):
     files = os.listdir(path)
     files = [file for file in files if '.avi' in file or '.mp4' in file]
@@ -65,11 +66,60 @@ def insert_into_frame(frame, names, lab):
     return frame
 
 
+def rename_files(parentdir,outdir):
+
+    if os.path.isdir(outdir) is False:
+        os.mkdir(outdir)
+
+    folders = [os.path.join(parentdir, i) for i in os.listdir(parentdir) if os.path.isdir(os.path.join(parentdir, i))]
+
+
+    doner = {}
+    fetal = {}
+
+    for folder in folders:
+
+        if "p2" not in folder and ".zip" not in folder:
+            if "NS" in folder:
+                for file in os.listdir(folder):
+                    try:
+                        name = re.search(r'(?<=NS)\w+', folder)
+                        fetal[os.path.join(folder, file)] = "NS" + name.group(0)
+                    except:
+                        breakpoint()
+            else:
+                for file in os.listdir(folder):
+                    try:
+                        name = re.search(r'(?<=D)\w+', folder)
+                        doner[os.path.join(folder, file)] = "D" + name.group(0)
+                    except:
+                        breakpoint()
+
+    for idx, file in enumerate(list(doner.keys())):
+        doner[file] = os.path.join(outdir, doner[file] + "_" + str(idx) + ".avi")
+    for idx, file in enumerate(list(fetal.keys())):
+        fetal[file] = os.path.join(outdir, fetal[file] + "_" + str(idx) + ".avi")
+
+    move_files_in_dict(doner)
+    move_files_in_dict(fetal)
+
+def move_files_in_dict(dict):
+    count = 0
+    for key, val in dict.items():
+        shutil.copy(key, val)
+        count+=1
+
+    print(f"Copied files in dictionary, {count} files were placed in new folder")
+
+
+
 if __name__ == '__main__':
-    path = r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox'
+    parentdir = r'/scratch/s183993/videos/'
+    outdir = r'/scratch/s183993/videos_all/'
+    rename_files(parentdir, outdir)
 
-    t, v, te = create_split(path)
+    t, v, te = create_split(outdir)
 
-    t.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/train.csv', header = False,index = False, sep = " ")
-    v.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/val.csv', header = False,index = False, sep = " ")
-    te.to_csv(r'/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox/test.csv', header=False, index= False, sep=" ")
+    t.to_csv(r'/scratch/s183993/train.csv', header = False,index = False, sep = " ")
+    v.to_csv(r'/scratch/s183993/val.csv', header = False,index = False, sep = " ")
+    te.to_csv(r'/scratch/s183993/test.csv', header=False, index= False, sep=" ")
