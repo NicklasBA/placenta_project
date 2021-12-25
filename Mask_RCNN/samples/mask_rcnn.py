@@ -80,18 +80,21 @@ class PlacentaConfig(Config):
     NUM_CLASSES = 2
 
     #High value to decrease training time
-    STEPS_PER_EPOCH = 5000
+    # STEPS_PER_EPOCH = 5000
 
     # Number of validation steps to run at the end of every training epoch.
     # A bigger number improves accuracy of validation stats, but slows
     # down the training.
     VALIDATION_STEPS = 50
 
+    #Lowered from default due to nan problem
+    LEARNING_RATE = 0.0001
+
     RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
     # Reduce training ROIs per image because the images are small and have
     # few objects. Aim to allow ROI sampling to pick 33% positive ROIs.
-    TRAIN_ROIS_PER_IMAGE = 16
+    # TRAIN_ROIS_PER_IMAGE = 16
 
 ############################################################
 #  Dataset
