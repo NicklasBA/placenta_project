@@ -60,5 +60,5 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_new_anno/"
+OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_new_anno_sample8/"
 TURN_OFF_SLOW: False
