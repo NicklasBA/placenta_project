@@ -65,9 +65,9 @@ Now serve the tensorboard by calling in the mkenv envoriment.
 ```
 tensorboard --port=6006 --logdir /scratch/s183993/placenta_project/outputs/
 ```
-# Evaluating Mask-RCNN on Cronus
+# Evaluating Mask-RCNN on Oceanus
 
 ```
-python -m pdb mask_rcnn.py eval --eval_dir="/scratch/s183993/data/" --outdir="/scratch/s183993/mask_rcnn/output/" --weights="/home/s183993/placenta_project/Mask_RCNN/rcnn_weights/mask_rcnn_placenta_0005.h5" --gpu=5
+python mask_rcnn.py eval --eval_dir="/scratch/s183993/placenta/data/" --outdir="/scratch/s183993/mask_rcnn/output/all10/" --weights="/home/s183993/placenta_project/Mask_RCNN/rcnn_weights/all10/mask_rcnn_placenta_0010.h5" --gpu=2
 
 ```
