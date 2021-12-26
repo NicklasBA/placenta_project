@@ -232,7 +232,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 1):
         images = [list(i) for i in np.split(np.array(images), int(len(images)//batch_size))]
 
     for i, image in enumerate(images):
-        results = model.detect(image, verbose=1)[0]
+        results = model.detect([image], verbose=1)[0]
         collected[image] = results
 
     print("Evaluated on all images and printing to " + outdir)
