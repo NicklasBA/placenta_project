@@ -88,9 +88,7 @@ class PlacentaConfig(Config):
     VALIDATION_STEPS = 50
 
     #Lowered from default due to nan problem
-    # LEARNING_RATE = 0.0001
-    LEARNING_RATE = 0.00005
-
+    LEARNING_RATE = 0.0001
 
     RPN_ANCHOR_SCALES = (4, 8, 16, 32, 64)
 
@@ -193,16 +191,16 @@ def train(model):
     # no need to train all layers, just the heads should do it.
     # Low amount of epochs, as networks fits the data in little time
 
-    print("Training all layers")
+    print("Training head layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=15,
+                epochs=5,
                 layers='heads')
 
     print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=15,
+                epochs=5,
                 layers='all')
 
 ############################################################
@@ -236,7 +234,7 @@ def evaluate_folder(model, folder, outdir, batch_size = 1):
     for i, img_list in enumerate(images):
         im_list = [skimage.io.imread(i) for i in img_list]
         results = model.detect(im_list, verbose=1)
-
+        breakpoint()
         for idx, res in enumerate(results):
             collected[img_list[idx]] = results[idx]
 
