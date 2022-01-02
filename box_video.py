@@ -22,7 +22,7 @@ from skimage import measure
 from scipy.ndimage import gaussian_filter
 
 path= r"C:\Users\Nicklas\OneDrive - Danmarks Tekniske Universitet\Undevisning\FetalMaternal_project\Placenta_package\20180307_5_6mbar_500fps_D130\20180307_5_6mbar_500fps_D130.csv"
-df = pd.read_csv (path)
+df = pd.read_csv(path)
         
 df1 = df.groupby(by=['FrameName']).agg(list)
     
@@ -50,7 +50,7 @@ def draw_bboxes(img, bboxes,text, color=(0, 0, 255), thickness=1):
         
 
 img_array = []
-for i in range(len(df)):    
+for i in range(len(df1)):    
     image_paths = glob.glob(os.path.join(folder_path, df.FrameName[i]))
     text = df.FrameName[i]
     image = cv2.imread(image_paths[0])
