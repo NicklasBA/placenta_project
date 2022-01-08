@@ -62,3 +62,14 @@ NUM_SHARDS: 1
 RNG_SEED: 0
 OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_new_anno/"
 TURN_OFF_SLOW: False
+TENSORBOARD:
+  ENABLE: True
+  CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
+  CONFUSION_MATRIX:
+    ENABLE: True
+    SUBSET_PATH: "/home/s183993/placenta_project/tensorboard_video.txt" # Path to txt file contains class names separated by newline characters.
+  MODEL_VIS:
+    ENABLE: True
+    GRAD_CAM:
+      ENABLE: True
+      LAYER_LIST: ['s5/pathway1_res2', 's5/pathway0_res2'] # List of CNN layers to use for Grad-CAM visual
