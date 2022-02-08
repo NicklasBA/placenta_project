@@ -77,9 +77,9 @@ def change_csv_files(path_to_csv, new_path, outdir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sample every second frame from videos')
-    parser.add_argument('--csv_path',desc = 'Path to directory containing csv files of splits', required=True)
-    parser.add_argument('--new_path',desc = 'Directory to where the new videos should be saved', required=True)
-    parser.add_argument('--outdir', desc = 'Directory to save new csv files' ,required=True)
+    parser.add_argument('--csv_path',help = 'Path to directory containing csv files of splits', required=True)
+    parser.add_argument('--new_path',help = 'Directory to where the new videos should be saved', required=True)
+    parser.add_argument('--outdir', help = 'Directory to save new csv files' ,required=True)
     args = vars(parser.parse_args())
 
     if os.path.isdir(args['new_path']) is False:
