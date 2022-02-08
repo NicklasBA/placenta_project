@@ -7,6 +7,7 @@ import cv2
 
 def read_and_save_video(path_to_video, save_path):
 
+    breakpoint()
     cap = cv2.VideoCapture(path_to_video)
 
     if (cap.isOpened() == False):
