@@ -1,5 +1,5 @@
 TRAIN:
-  ENABLE: False
+  ENABLE: True
   DATASET: mydata
   BATCH_SIZE: 8
   EVAL_PERIOD: 2
@@ -12,7 +12,7 @@ DATA:
   TRAIN_CROP_SIZE: 224
   TEST_CROP_SIZE: 256
   INPUT_CHANNEL_NUM: [3, 3]
-  PATH_TO_DATA_DIR: "/scratch/s183993/videos_all/"
+  PATH_TO_DATA_DIR: "/scratch/s183993/sampled_videos/"
 SLOWFAST:
   ALPHA: 8
   BETA_INV: 8
@@ -60,10 +60,10 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_new_anno_sample8/"
+OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_sample_half/"
 TURN_OFF_SLOW: False
 TENSORBOARD:
-  ENABLE: True
+  ENABLE: False
   CLASS_NAMES_PATH: "/home/s183993/placenta_project/classids.json" # Path to json file providing class_name - id mapping.
   CONFUSION_MATRIX:
     ENABLE: True
