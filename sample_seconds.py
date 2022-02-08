@@ -73,7 +73,7 @@ def change_csv_files(path_to_csv, new_path, outdir):
         frame = pd.read_csv(file)
         new_frame = change_frame(frame, new_path)
         name = os.path.basename(file)
-        new_frame.to_csv(os.path.join(outdir, name))
+        new_frame.to_csv(os.path.join(outdir, name), header=False, index=False, sep=" ")
 
         print(f"Saved {name} succesfully")
 
