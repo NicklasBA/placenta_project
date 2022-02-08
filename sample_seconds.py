@@ -82,5 +82,9 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', desc = 'Directory to save new csv files' ,required=True)
     args = vars(parser.parse_args())
 
+    if os.path.isdir(args['new_path']) is False:
+        os.mkdir(args['new_path'])
+    if os.path.isdir(args['outdir']) is False:
+        os.mkdir(args['outdir'])
+
     change_csv_files(path_to_csv=args['csv_path'],new_path=args['new_path'],outdir=args['outdir'])
-    
