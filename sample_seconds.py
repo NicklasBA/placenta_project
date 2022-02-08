@@ -7,7 +7,6 @@ import cv2
 
 def read_and_save_video(path_to_video, save_path):
 
-    breakpoint()
     cap = cv2.VideoCapture(path_to_video)
 
     if (cap.isOpened() == False):
@@ -46,15 +45,18 @@ def change_frame(dataframe, new_path):
     """
 
     videos = []
-
+    diags = []
     for idx, path in enumerate(dataframe[dataframe.columns[0]]):
-        new_name = os.path.join(new_path, os.path.basename(path))
+        pathh = path.split()[0]
+        diag = int(path.split()[1])
+        diags.append(diag)
+        new_name = os.path.join(new_path, os.path.basename(pathh))
         videos.append(new_name)
-        read_and_save_video(path, new_name)
+        read_and_save_video(pathh, new_name)
 
     new_frame = pd.DataFrame()
     new_frame['videos'] = videos
-    new_frame['diags'] = dataframe[dataframe.columns[1]]
+    new_frame['diags'] = diags
     return new_frame
 
 
