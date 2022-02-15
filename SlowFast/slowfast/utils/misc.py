@@ -13,6 +13,8 @@ from fvcore.nn.activation_count import activation_count
 from fvcore.nn.flop_count import flop_count
 from matplotlib import pyplot as plt
 from torch import nn
+import pickle
+
 
 import slowfast.utils.logging as logging
 import slowfast.utils.multiprocessing as mpu
@@ -280,7 +282,7 @@ def aggregate_sub_bn_stats(module):
     return count
 
 
-def launch_job(cfg, init_method, func, daemon=False):
+def launch_job(cfg, init_method, func, daemon=False, return_results = False):
     """
     Run 'func' on one or more GPUs, specified in cfg
     Args:
@@ -292,6 +294,7 @@ def launch_job(cfg, init_method, func, daemon=False):
         daemon (bool): The spawned processes’ daemon flag. If set to True,
             daemonic processes will be created
     """
+    results = None
     if cfg.NUM_GPUS > 1:
         torch.multiprocessing.spawn(
             mpu.run,
@@ -308,7 +311,13 @@ def launch_job(cfg, init_method, func, daemon=False):
             daemon=daemon,
         )
     else:
-        func(cfg=cfg)
+        if return_results:
+            cfg.RETURN_RESULTS = True
+            results = func(cfg=cfg)
+        else:
+            func(cfg=cfg)
+
+    return results
 
 
 def get_class_names(path, parent_path=None, subset_path=None):
@@ -381,3 +390,72 @@ def get_class_names(path, parent_path=None, subset_path=None):
             return
 
     return class_names, class_parent, subset_ids
+
+
+def write_results(results, cfg):
+    """
+    Saves the results from Slowfast.tools.test_net.py which are of class TestMeter from Slowfast.utils.meters into
+    pickle file called "Results.pkl" at the predetermined output directory from the config file
+    :param results: type (object of type TestMeter) containing evaluations
+    :param cfg: Config file containing all basis parameters
+    :return: None: Saves the the results as pickle file at cfg.OUTPUT_DIR
+    """
+
+
+
+    # Ensuring data is detached from the GPU
+    if results.video_preds.device != "cpu":
+        results.video_preds.cpu().numpy()
+    if results.video_labels.device != "cpu":
+        results.video_labels.cpu().numpy()
+
+    num_clips = cfg.TEST.NUM_ENSEMBLE_VIEWS * cfg.TEST.NUM_SPATIAL_CROPS
+    path_to_videos = []
+    labels = []
+    spatial_temporal_idx = []
+
+    with pathmgr.open(os.path.join(cfg.DATA.PATH_TO_DATA_DIR, cfg.get('eval_file', 'test.csv')), "r") as f:
+        for clip_idx, path_label in enumerate(f.read().splitlines()):
+            assert (
+                    len(path_label.split(cfg.DATA.PATH_LABEL_SEPARATOR))
+                    == 2
+            )
+            path, label = path_label.split(
+                cfg.DATA.PATH_LABEL_SEPARATOR
+            )
+            for idx in range(num_clips):
+                path_to_videos.append(path)
+                labels.append(int(label))
+                spatial_temporal_idx.append(idx)
+
+    results_dictionary = combine_predictions_and_names(results.video_preds,labels,path_to_videos)
+
+    with open(os.path.join(cfg.OUTPUT_DIR, 'results.pkl'),'rb') as handle:
+        pickle.dump(results_dictionary, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def combine_predictions_and_names(predictions,labels, names):
+    """
+
+    :param predictions: (list) of Softmax predictions for each spatial crop (i think)
+    :param labels: (list) of True labels of the videos
+    :param names: (list) Names of the videos
+    :return: (dict) with names as keys and predictions and labels as sub keys
+    """
+
+
+    res_dict = {}
+    for idx, name in enumerate(names):
+        if res_dict.get(name, None) is None:
+            res_dict[name] = {}
+            res_dict[name]['predictions'] = [predictions[idx]]
+            res_dict[name]['labels'] = [labels[idx]]
+        else:
+            res_dict[name]['predictions'].append(predictions[idx])
+            res_dict[name]['labels'].append(labels[idx])
+
+    return res_dict
+
+
+
+
