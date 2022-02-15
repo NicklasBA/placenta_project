@@ -10,8 +10,8 @@ import pandas as pd
 
 
 print( "Creating videos from images")
-FILES='/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full/*_6mbar_500fps_*_*'
-#FILES='/scratch/s183993/placenta/raw_data/Placenta_package/*_6mbar_500fps_*_*'
+#FILES='/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_full/*_6mbar_500fps_*_*'
+FILES='/scratch/s183993/placenta/raw_data/Placenta_package/*_6mbar_500fps_*_*'
 # OUTDIR = "/home/s183993/placenta_project/outputs"
 paths = glob.glob(FILES)
 #breakpoint()
