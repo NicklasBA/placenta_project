@@ -61,6 +61,7 @@ def donor_id(path):
 
 df['DonorCode'] = df.paths.apply(donor_code)
 df['DonorType'] = df.paths.apply(donor_type)
+df.drop('paths', inplace=True, axis=1)
 # df[] = df.paths.apply(donor_id)
 df_D = df[df.DonorType == "D"]
 df_NS = df[df.DonorType == "NS"]
