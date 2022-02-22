@@ -52,15 +52,9 @@ def main(filename_pattern, output_dir, overwrite):
     pbar = tqdm(range(len(paths)), desc="Converting folders")
     for num in pbar:
         p = paths[num]
-        p_pattern = os.path.join(p, "*.png")
-        imagepathsw = sorted(glob.glob(p_pattern))
-        pbar.set_postfix_str(s=f'{p}, {len(imagepathsw)} images', refresh=True)
 
-        #filename_file_path = os.path.join(p, "sorted_filenames.txt")
-        #textfile = open(os.path.join(filename_file_path, "sorted_filenames.txt"), "w")
-        #for element in imagepathsw:
-        #    textfile.write(element + "\n")
-        #textfile.close()
+        imagepathsw = sorted(glob.glob(os.path.join(p, "*.png"))) # This
+        pbar.set_postfix_str(s=f'{p}, {len(imagepathsw)} images', refresh=True)
 
         run = runFFmpeg(p, os.path.join(output_dir, os.path.basename(p)+".mp4"), overwrite)
         if run.returncode == 0:

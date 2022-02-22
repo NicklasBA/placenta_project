@@ -17,7 +17,7 @@ DEFAULT_FILES = '/scratch/s183993/placenta/raw_data/videos_blackened_org_bbox_fu
 
 parser = argparse.ArgumentParser(description="Create CSVs for JULIA Training split creator")
 parser.add_argument("-i", '--input',
-                    default='/Users/joachimsecher/Downloads/placenta_images/*',
+                    default=DEFAULT_FILES,
                     help=f"Directory with found single cell videos. Default: {DEFAULT_FILES}")
 parser.add_argument("-o", '--output',
                     default='',
