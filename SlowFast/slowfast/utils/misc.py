@@ -443,7 +443,6 @@ def combine_predictions_and_names(predictions,labels, names):
     :return: (dict) with names as keys and predictions and labels as sub keys
     """
 
-
     res_dict = {}
     for idx, name in enumerate(names):
         if res_dict.get(name, None) is None:
