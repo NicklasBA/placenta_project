@@ -309,6 +309,7 @@ class Kinetics(torch.utils.data.Dataset):
 
             label = self._labels[index]
             frames = utils.pack_pathway_output(self.cfg, frames)
+
             return frames, label, index, {}
         else:
             raise RuntimeError(

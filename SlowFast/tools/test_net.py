@@ -47,6 +47,7 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
     test_meter.iter_tic()
 
     for cur_iter, (inputs, labels, video_idx, meta) in enumerate(test_loader):
+        breakpoint()
         if cfg.NUM_GPUS:
             # Transfer the data to the current GPU device.
             if isinstance(inputs, (list,)):
@@ -199,5 +200,10 @@ def test(cfg):
 
     # # Perform multi-view test on the entire dataset.
     test_meter = perform_test(test_loader, model, test_meter, cfg, writer)
+
     if writer is not None:
         writer.close()
+
+    if cfg.get('RETURN_RESULTS', False):
+        return test_meter
+

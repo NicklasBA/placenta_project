@@ -49,16 +49,15 @@ def insert_items(cfg, args):
     """
 
     for key, val in args.items():
-        if cfg.get(key, None) is not None:
-            if isinstance(val, dict):
-                for k, v in val.items():
-                    if isinstance(v, dict):
-                        raise NotImplementedError("Not implemented yet for two levels of inserting,"
-                                                  " should be changed to recursive function then")
-                    else:
-                        cfg[key][k] = v
-            else:
-                cfg[key] = val
+        if isinstance(val, dict):
+            for k, v in val.items():
+                if isinstance(v, dict):
+                    raise NotImplementedError("Not implemented yet for two levels of inserting,"
+                                              " should be changed to recursive function then")
+                else:
+                    cfg[key][k] = v
+        else:
+            cfg[key] = val
 
     return cfg
 
@@ -118,7 +117,7 @@ def prepare_and_delete_data(cfg):
     :return:
     """
 
-    preproc.run_preprocessing(cfg)
+    preproc.ruszn_preprocessing(cfg)
     shutil.rmtree(cfg.DATA.IMAGE_DIR)
 
 
