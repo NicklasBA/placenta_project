@@ -16,6 +16,7 @@ from visualization import visualize
 import os
 import sys
 import torch
+import argparse
 
 def eval_net(cfg):
     """
@@ -38,7 +39,16 @@ def eval_net(cfg):
     # Perform model visualization.
 
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Find sequences and annotate folders containing the image files')
+    parser.add_argument('--config', required=True)
+    parser.add_argument('--gpu', required=False)
+    args = parse_args()
+    cfg = load_config(args)
+    cfg = assert_and_infer_cfg(cfg)
+    cfg.gpu = args.gpu
 
+    eval_net(cfg)
 
 
 
