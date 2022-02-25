@@ -57,7 +57,7 @@ def make_csv_files(sub_dirs, split):
         videos += [os.path.join(sub_dirs[idx], file) for file in os.listdir(sub_dirs[idx]) if '.avi' in file]
 
     for vid in videos:
-        if 'NS' in os.path.basename(vid):
+        if 'NS' in vid.split("/")[-2]:
             labels.append(1)
         else:
             labels.append(0)
@@ -85,6 +85,7 @@ def calculate_percentage_per_split(sub_dirs, train, test, val):
     num_test = get_num_files(sub_dirs, test)
 
     all_files = num_train+num_val+num_test
+
     percentages = np.array([num_train/all_files, num_val/all_files, num_test/all_files])
 
     return percentages
@@ -106,7 +107,27 @@ def sanity_check(sub1, sub2):
 
     return True
 
+def split_paths(frame):
+    paths = list(frame[0])
+    newp = []
+    for pa in paths:
+        newp.append(pa.split("/")[-2])
+    return set(newp)
+
+
 if __name__ == '__main__':
+    # os.chdir(r'C:\Users\ptrkm\Action Classification\Frames')
+    # train = pd.read_csv('train.csv', header = None, sep = " ")
+    # val = pd.read_csv('val.csv', header = None, sep = " ")
+    # test = pd.read_csv('test.csv', header = None, sep = " ")
+    #
+    # train_set = split_paths(train)
+    # val_set = split_paths(val)
+    # test_set = split_paths(test)
+    # breakpoint()
+
+
+
     parser = argparse.ArgumentParser(description='Makes splits')
     parser.add_argument('--datadir', required=True)
     parser.add_argument('--outdir', required = False)
