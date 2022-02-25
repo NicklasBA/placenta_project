@@ -127,9 +127,9 @@ if __name__ == '__main__':
         val = val_NS + val_D
         test = test_D+test_NS
 
-        train_csv = make_csv_files(datadir, train)
-        val_csv = make_csv_files(datadir, val)
-        test_csv = make_csv_files(datadir, test)
+        train_csv = make_csv_files(sup_dirs2, train)
+        val_csv = make_csv_files(sup_dirs2, val)
+        test_csv = make_csv_files(sup_dirs2, test)
 
         train_csv.to_csv(os.path.join(outdir, 'train.csv'), header = False, index=False, sep = " ")
         val_csv.to_csv(os.path.join(outdir, 'val.csv'), header=False, index=False, sep=" ")
