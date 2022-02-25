@@ -101,6 +101,9 @@ def sanity_check(sub1, sub2):
     for file1, file2 in zip(sub2, sub1):
         if file1 != file2:
             print("They are not the same")
+            return False
+
+    return True
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Makes splits')
@@ -118,19 +121,21 @@ if __name__ == '__main__':
     train_D, val_D, test_D, sup_dirs1 = get_folders_and_split(datadir, 'D')
     train_NS, val_NS, test_NS, sup_dirs2 = get_folders_and_split(datadir, 'NS')
 
-    sanity_check(sup_dirs2, sup_dirs1)
+    check = sanity_check(sup_dirs2, sup_dirs1)
+    if check:
+        train = train_D + train_NS
+        val = val_NS + val_D
+        test = test_D+test_NS
 
-    train = train_D + train_NS
-    val = val_NS + val_D
-    test = test_D+test_NS
+        train_csv = make_csv_files(datadir, train)
+        val_csv = make_csv_files(datadir, val)
+        test_csv = make_csv_files(datadir, test)
 
-    train_csv = make_csv_files(datadir, train)
-    val_csv = make_csv_files(datadir, val)
-    test_csv = make_csv_files(datadir, test)
-
-    train_csv.to_csv(os.path.join(outdir, 'train.csv'), header = False, index=False, sep = " ")
-    val_csv.to_csv(os.path.join(outdir, 'val.csv'), header=False, index=False, sep=" ")
-    test_csv.to_csv(os.path.join(outdir, 'test.csv'), header=False, index=False, sep=" ")
+        train_csv.to_csv(os.path.join(outdir, 'train.csv'), header = False, index=False, sep = " ")
+        val_csv.to_csv(os.path.join(outdir, 'val.csv'), header=False, index=False, sep=" ")
+        test_csv.to_csv(os.path.join(outdir, 'test.csv'), header=False, index=False, sep=" ")
+    else:
+        raise ValueError("This did not go well")
 
 
 
