@@ -26,7 +26,6 @@ def main():
     args = parse_args()
     cfg = load_config(args)
     cfg = assert_and_infer_cfg(cfg)
-    breakpoint()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 
@@ -36,7 +35,7 @@ def main():
 
     # Perform multi-clip testing.
     if cfg.TEST.ENABLE:
-        results = launch_job(cfg=cfg, init_method=args.init_method, func=test)
+        launch_job(cfg=cfg, init_method=args.init_method, func=test)
 
     # Perform model visualization.
     if cfg.TENSORBOARD.ENABLE and (
