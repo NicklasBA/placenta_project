@@ -17,7 +17,7 @@ def get_folders_and_split(ground_path, designation, iter = 100):
     :return: indices for the three splits
     """
 
-    sub_dirs = [os.path.join(ground_path, dir) for dir in os.listdir(ground_path) if designation in dir]
+    sub_dirs = [os.path.join(ground_path, dir) for dir in os.listdir(ground_path)]
 
     diff = 100
 
@@ -26,13 +26,14 @@ def get_folders_and_split(ground_path, designation, iter = 100):
         test = []
         val = []
         for idx, file in enumerate(sub_dirs):
-            mode = np.random.choice([1, 2, 3], p=(0.7, 0.2, 0.1))
-            if mode == 1:
-                train.append(idx)
-            elif mode == 2:
-                val.append(idx)
-            elif mode == 3:
-                test.append(idx)
+            if designation in file:
+                mode = np.random.choice([1, 2, 3], p=(0.7, 0.2, 0.1))
+                if mode == 1:
+                    train.append(idx)
+                elif mode == 2:
+                    val.append(idx)
+                elif mode == 3:
+                    test.append(idx)
 
         percentages = calculate_percentage_per_split(sub_dirs, train, test, val)
         tmp = np.sqrt(np.sum((percentages - HIT)**2))
@@ -43,12 +44,13 @@ def get_folders_and_split(ground_path, designation, iter = 100):
 
     print(f"final weighting {calculate_percentage_per_split(sub_dirs, train_best, test_best, val_best)}")
 
-    return train_best, val_best, test_best
+    return train_best, val_best, test_best, sub_dirs
 
 def make_csv_files(sub_dirs, split):
 
     videos = []
     labels = []
+
 
     for idx in split:
         videos += [os.path.join(sub_dirs[idx], file) for file in os.listdir(sub_dirs[idx]) if '.avi' in file]
@@ -94,6 +96,12 @@ def get_num_files(sub_dirs, split):
 
     return num_files
 
+def sanity_check(sub1, sub2):
+
+    for file1, file2 in zip(sub2, sub1):
+        if file1 != file2:
+            print("They are not the same")
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Makes splits')
     parser.add_argument('--datadir', required=True)
@@ -107,8 +115,10 @@ if __name__ == '__main__':
 
     datadir = args['datadir']
 
-    train_D, val_D, test_D = get_folders_and_split(datadir, 'D')
-    train_NS, val_NS, test_NS = get_folders_and_split(datadir, 'NS')
+    train_D, val_D, test_D, sup_dirs1 = get_folders_and_split(datadir, 'D')
+    train_NS, val_NS, test_NS, sup_dirs2 = get_folders_and_split(datadir, 'NS')
+
+    sanity_check(sup_dirs2, sup_dirs1)
 
     train = train_D + train_NS
     val = val_NS + val_D
