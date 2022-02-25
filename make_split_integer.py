@@ -41,6 +41,7 @@ def get_folders_and_split(ground_path, designation, iter = 100):
             val_best = val.copy()
             test_best = test.copy()
 
+    print(f"final weighting {calculate_percentage_per_split(sub_dirs, train_best, test_best, val_best)}")
 
     return train_best, val_best, test_best
 
