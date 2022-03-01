@@ -33,7 +33,7 @@ def eval_net(cfg):
     else:
         print("test must be enabled for this function, for train call run_net")
 
-
+    breakpoint()
     write_results(results, cfg)
     print(f"Results were saved onto {cfg.OUTPUT_DIR}")
     # Perform model visualization.
