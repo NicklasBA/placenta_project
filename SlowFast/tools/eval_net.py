@@ -45,6 +45,7 @@ if __name__ == '__main__':
     parser.add_argument('--gpu', required=False)
     parser.add_argument('--small', required=False)
     args = parse_args()
+
     cfg = load_config(args)
     cfg = assert_and_infer_cfg(cfg)
     cfg.gpu = args.gpu
