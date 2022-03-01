@@ -433,7 +433,7 @@ def write_results(results, cfg):
 
     results_dictionary = combine_predictions_and_names(results.video_preds,labels,path_to_videos)
 
-    with open(os.path.join(cfg.OUTPUT_DIR, 'results.pkl'),'rb') as handle:
+    with open(os.path.join(cfg.OUTPUT_DIR, 'results.pkl'),'wb') as handle:
         pickle.dump(results_dictionary, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
