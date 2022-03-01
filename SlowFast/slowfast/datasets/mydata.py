@@ -115,6 +115,10 @@ class Mydata(torch.utils.data.Dataset):
                     self._labels.append(int(label))
                     self._spatial_temporal_idx.append(idx)
                     self._video_meta[clip_idx * self._num_clips + idx] = {}
+
+                if self.cfg.get('small', None) is not None:
+                    if clip_idx >= 100:
+                        break
         assert (
             len(self._path_to_videos) > 0
         ), "Failed to load Mydata split {} from {}".format(
