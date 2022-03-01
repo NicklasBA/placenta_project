@@ -47,7 +47,6 @@ if __name__ == '__main__':
     cfg = load_config(args)
     cfg = assert_and_infer_cfg(cfg)
     cfg.gpu = args.gpu
-    cfg.small = True
     cfg.init_method = args.init_method
     cfg.RETURN_RESULTS = True
     eval_net(cfg)
