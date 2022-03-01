@@ -423,10 +423,9 @@ def write_results(results, cfg):
             path, label = path_label.split(
                 cfg.DATA.PATH_LABEL_SEPARATOR
             )
-            for idx in range(num_clips):
-                path_to_videos.append(path)
-                labels.append(int(label))
-                spatial_temporal_idx.append(idx)
+
+            path_to_videos.append(path)
+            labels.append(int(label))
 
             if cfg.get('small', False):
                 if clip_idx >= 10:
