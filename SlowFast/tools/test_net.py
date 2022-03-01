@@ -203,7 +203,6 @@ def test(cfg):
     if writer is not None:
         writer.close()
 
-    breakpoint()
     print(f"Returning results = {cfg.get('RETURN_RESULTS', False)}")
     if cfg.get('RETURN_RESULTS', False):
         return test_meter

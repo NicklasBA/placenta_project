@@ -29,11 +29,10 @@ def eval_net(cfg):
 
     # Perform multi-clip testing.
     if cfg.TEST.ENABLE:
-        results = launch_job(cfg=cfg, init_method=cfg.init_method, func=test)
+        results = launch_job(cfg=cfg, init_method=cfg.init_method, func=test, return_results=True)
     else:
         print("test must be enabled for this function, for train call run_net")
 
-    breakpoint()
     write_results(results, cfg)
     print(f"Results were saved onto {cfg.OUTPUT_DIR}")
     # Perform model visualization.
