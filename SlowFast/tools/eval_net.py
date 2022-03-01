@@ -41,15 +41,14 @@ def eval_net(cfg):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Find sequences and annotate folders containing the image files')
-    parser.add_argument('--config', required=True)
+    parser.add_argument('--cfg', required=True)
     parser.add_argument('--gpu', required=False)
-    parser.add_argument('--small', required=False)
     args = parse_args()
 
     cfg = load_config(args)
     cfg = assert_and_infer_cfg(cfg)
     cfg.gpu = args.gpu
-    cfg.small = args.small
+    cfg.small = True
     cfg.init_method = args.init_method
     cfg.RETURN_RESULTS = True
     eval_net(cfg)
