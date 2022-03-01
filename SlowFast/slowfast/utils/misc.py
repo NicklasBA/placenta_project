@@ -428,6 +428,10 @@ def write_results(results, cfg):
                 labels.append(int(label))
                 spatial_temporal_idx.append(idx)
 
+            if cfg.get('small', False):
+                if clip_idx >= 10:
+                    break
+
     results_dictionary = combine_predictions_and_names(results.video_preds,labels,path_to_videos)
 
     with open(os.path.join(cfg.OUTPUT_DIR, 'results.pkl'),'rb') as handle:
