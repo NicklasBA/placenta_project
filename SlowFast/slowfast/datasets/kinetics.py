@@ -117,6 +117,8 @@ class Kinetics(torch.utils.data.Dataset):
                     self._video_meta[clip_idx * self._num_clips + idx] = {}
 
                 if self.cfg.get('small', None) is not None:
+                    if clip_idx == 0:
+                        print("using only the first 100 files")
                     if clip_idx == 100:
                         break
 
