@@ -116,6 +116,7 @@ class Kinetics(torch.utils.data.Dataset):
                     self._spatial_temporal_idx.append(idx)
                     self._video_meta[clip_idx * self._num_clips + idx] = {}
 
+                breakpoint()
                 if self.cfg.get('small', None) is not None:
                     breakpoint()
                     if clip_idx == 0:
