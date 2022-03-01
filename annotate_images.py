@@ -80,7 +80,6 @@ def find_sequences(folder_path: str):
             for i in seq:
                 if "/" in image_paths[i].split(".")[0].split("_")[-1]:
                     print(image_paths[i])
-        breakpoint()
 
     combine = []
     i = 0
@@ -115,7 +114,7 @@ def find_sequences(folder_path: str):
 
     all_anno_seq = ensure_continuity(all_anno_seq)
     all_anno_seq_ava = ensure_continuity(all_anno_seq_ava)
-    breakpoint()
+
     return all_anno_seq, sequences, all_anno_seq_ava
 
 def ensure_continuity(all_anno_seq):
