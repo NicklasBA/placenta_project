@@ -6,16 +6,28 @@ import sys
 import os
 import sklearn.metrics as met
 import matplotlib.pyplot as plt
+import cv2
 
-
-def read_results(cfg):
+def read_results(cfg,  path = None):
     """
     Function to read the results returned from the eval_net.py function
     :param cfg: Config file
     :return: the results as dictionary
     """
 
-    pcl = pickle.load(open(os.path.join(cfg.OUTPUT_DIR, 'result.pkl'),'rb'))
+    if path is None:
+        pcl = pickle.load(open(os.path.join(cfg.OUTPUT_DIR, 'result.pkl'),'rb'))
+    else:
+        if os.path.isfile(path):
+            pcl = pickle.load(open(path, 'rb'))
+        elif os.path.isdir(path):
+            if os.path.isfile(os.path.join(path, 'results.pkl')):
+                pcl = pickle.load(open(os.path.join(path, 'results.pkl'),'rb'))
+            else:
+                raise ValueError("If path is directory, there should be a file named 'results.pkl' at location")
+        else:
+            raise AttributeError("Path is neither file or directory with appropriate file")
+
     return pcl
 
 def setup_matrices(result_dict):
@@ -25,23 +37,21 @@ def setup_matrices(result_dict):
     :return: np.ndarrays of predictions and labels
     """
 
-    preds = np.zeros((len(result_dict, 2)))
-    labels = np.zeros((len(result_dict, 1)))
+    preds = np.zeros((len(result_dict), 2))
+    labels = np.zeros((len(result_dict), 1))
 
     for idx, (key, val) in enumerate(result_dict.items()):
         assert len(val['predictions']) == len(val['labels'])
 
         if len(val['predictions']) == 1:
-            preds[idx] = val['predictions']
-            labels[idx] = val['labels']
-        else:
-            p = 0
-            if np.allclose(*val['labels']) is False:
-                raise ValueError("Something is wrong here, labels for all crops are not the same")
+            if isinstance(val['predictions'][0], np.ndarray) is False:
+                preds[idx] = val['predictions'][0].numpy()
+            else:
+                preds[idx] = val['predictions'][0]
+
             labels[idx] = val['labels'][0]
-            for i in val['predictions']:
-                p += i
-            preds[idx] = p
+        else:
+            raise ValueError(f"Length of labels should not {len(val['labels'])} be larger than 1 per video")
 
     return preds, labels
 
@@ -66,12 +76,19 @@ def get_simple_metrics(preds, labels):
 
     metrics = {}
 
-    metrics['weighted_accuracy'] = met.balanced_accuracy_score((nlabs, npreds))
-    metrics['accuracy'] = met.accuracy_score((nlabs, npreds))
-    metrics['confusion_matrix'] = conf_mat = met.confusion_matrix((nlabs, npreds))
+    metrics['weighted_accuracy'] = met.balanced_accuracy_score(nlabs, npreds)
+    metrics['accuracy'] = met.accuracy_score(nlabs, npreds)
+    metrics['confusion_matrix'] = conf_mat = met.confusion_matrix(nlabs, npreds)
     metrics['per_class_sensitivity'] = conf_mat.diagonal()/np.sum(conf_mat, axis = 1)
 
     return metrics
+
+def setup_matrix_for_single(pcl):
+
+    preds = np.array([val[0].numpy() if isinstance(val[0], np.ndarray) is False else val[0] for val in pcl['predictions']])
+    labels = np.array([val[0] for val in pcl['labels']])[:, None]
+
+    return preds, labels
 
 
 def calculate_roc_curve(preds, labels):
@@ -85,8 +102,12 @@ def calculate_roc_curve(preds, labels):
     if preds.shape[-1] <= 1:
         raise ValueError(f"Predictions should have shape[-1] > 1 instead of {preds.shape[-1]}")
 
-    if labels.shape[-1] <= 1
-        raise ValueError(f"labels should have shape[-1] > 1 instead of {labels.shape[-1]}")
+
+    if labels.shape[-1] == 1:
+        labels_new = np.zeros(preds.shape)
+        labels_new[np.arange(len(labels)), labels.reshape(-1).astype(int)] = 1
+        labels = labels_new
+
 
     fpr = dict()
     tpr = dict()
@@ -130,6 +151,111 @@ def plot_roc_curve(fpr, tpr,roc_auc, plot = True):
     if plot:
         plt.show()
 
+
+def doner_specific_performance(pcl):
+    """
+
+    :param pcl: (dict) containing predictions and paths to those predictions
+    :return: (dict) containing summary measures for doners
+    """
+
+    dsp = {}
+    for key in pcl.keys():
+        name = os.path.dirname(key)
+        base = os.path.basename(key)
+        if dsp.get(name, None) is None:
+            dsp[name] = {}
+            dsp[name]['predictions'] = list()
+            dsp[name]['labels'] = list()
+            dsp[name]['base'] = list()
+
+        dsp[name]['base'].append(base)
+        dsp[name]['predictions'].append(pcl[key]['predictions'])
+        dsp[name]['labels'].append(pcl[key]['labels'])
+
+    for name in dsp.keys():
+        preds, labels = setup_matrix_for_single(dsp[name])
+        metrics = get_simple_metrics(preds, labels)
+        dsp[name]['metrics'] = metrics
+
+    return dsp
+
+
+def softmax(x):
+    if x.shape[0] > 1:
+        soft = np.exp(x)/np.tile(np.sum(np.exp(x), axis = 1)[:, None],x.shape[1])
+    else:
+        soft = np.exp(x)/np.sum(np.exp(x))
+    return soft
+
+
+def write_metrics(metrics):
+
+    for key, val in metrics.items():
+        print(f"{key} was {val}")
+
+def keys_to_array(pcl, string, metric = 'accuracy'):
+
+    vals = [val['metrics'][metric] for key, val in pcl.items() if string in key]
+
+    return vals
+
+def read_video_length(path):
+    cap = cv2.VideoCapture(path)
+    if cap.isOpened() == False:
+        print("Something went wrong in the reading of the video")
+
+    count = 0
+    while True:
+        ret, frame = cap.read()
+        if ret:
+            count += 1
+        else:
+            break
+    return count
+
+def compare_length_and_accuracy(dsp):
+    """
+
+    :param dsp: (dict) doner specific performance, with keys being the folders containing videos for each doner
+    :return: (dict) copy of dsp with length of videos added
+    """
+
+    keys = list(dsp.keys())
+
+    for key in keys:
+        if os.path.isdir(key):
+            dsp[key]['lengths'] = []
+            for base in dsp[key]['base']:
+                path = os.path.join(key, base)
+                count = read_video_length(path)
+                dsp[key]['lengths'].append(count)
+
+    return dsp
+
+
+
+
+if __name__ == '__main__':
+
+    pcl = read_results(cfg = None, path =r'C:\Users\ptrkm\Action Classification\Results\new_results_test.pkl')
+    dsp =  doner_specific_performance(pcl)
+    dsp = compare_length_and_accuracy(dsp)
+    with open(r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/dsp_test.pkl','wb') as handle:
+        pickle.dump(dsp, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    pcl = read_results(cfg=None, path=r'C:\Users\ptrkm\Action Classification\Results\new_results_val.pkl')
+    dsp = doner_specific_performance(pcl)
+    dsp = compare_length_and_accuracy(dsp)
+    with open(r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/dsp_val.pkl','wb') as handle:
+        pickle.dump(dsp, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    #
+    # if False:
+    #     preds, labels = setup_matrices(pcl)
+    #     metrics = get_simple_metrics(preds, labels)
+    #     write_metrics(metrics)
+    #     fpr, tpr, roc_auc = calculate_roc_curve(preds, labels)
+    #     plot_roc_curve(fpr, tpr,roc_auc)
+    #     breakpoint()
 
 
 
