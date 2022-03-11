@@ -238,12 +238,12 @@ def compare_length_and_accuracy(dsp):
 
 if __name__ == '__main__':
 
-    pcl = read_results(cfg = None, path =r'C:\Users\ptrkm\Action Classification\Results\new_results_test.pkl')
+    pcl = read_results(cfg = None, path =r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/new_results_test.pkl')
     dsp =  doner_specific_performance(pcl)
     dsp = compare_length_and_accuracy(dsp)
     with open(r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/dsp_test.pkl','wb') as handle:
         pickle.dump(dsp, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    pcl = read_results(cfg=None, path=r'C:\Users\ptrkm\Action Classification\Results\new_results_val.pkl')
+    pcl = read_results(cfg=None, path=r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/new_results_val.pkl')
     dsp = doner_specific_performance(pcl)
     dsp = compare_length_and_accuracy(dsp)
     with open(r'/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/dsp_val.pkl','wb') as handle:
