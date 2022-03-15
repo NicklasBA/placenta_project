@@ -59,7 +59,10 @@ def get_user_downloads_folder():
 
     if folder is None:
         folder = "webpage-downloads"
-        os.mkdir(folder)
+        try:
+            os.mkdir(folder)
+        except FileExistsError:
+            pass
         return folder
 
     raise RuntimeError("Download folder could not be found")
