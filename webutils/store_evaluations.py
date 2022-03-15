@@ -47,6 +47,7 @@ def get_user_downloads_folder():
                        os.path.join(os.path.expanduser("~"), "downloads"),
                        os.path.join(os.path.expanduser("~"), "Download"),
                        os.path.join(os.path.expanduser("~"), "download")]
+    folder = None
     for f in folders_to_test:
         if os.path.isdir(f):
             folder = os.path.join(f, "cullunator_videos")
@@ -55,5 +56,10 @@ def get_user_downloads_folder():
             except FileExistsError:
                 pass
             return folder
+
+    if folder is None:
+        folder = "webpage-downloads"
+        os.mkdir(folder)
+        return folder
 
     raise RuntimeError("Download folder could not be found")
