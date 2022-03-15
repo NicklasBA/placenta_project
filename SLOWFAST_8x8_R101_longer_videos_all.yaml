@@ -60,7 +60,7 @@ DATA_LOADER:
 NUM_GPUS: 1
 NUM_SHARDS: 1
 RNG_SEED: 0
-OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_all_files_sample8/"
+OUTPUT_DIR: "/scratch/s183993/outputs/SLOWFAST_8x8_R101_longer_videos/"
 TURN_OFF_SLOW: False
 TENSORBOARD:
   ENABLE: False
