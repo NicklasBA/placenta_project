@@ -9,7 +9,7 @@ HIT = np.array([0.7, 0.2, 0.1])
 
 
 
-def get_folders_and_split(ground_path, designation, iter = 100):
+def get_folders_and_split(ground_path, designation, iter = 100, desort = None):
     """
 
     :param ground_path: Directory containing all subdirectories containing the videos
@@ -17,7 +17,12 @@ def get_folders_and_split(ground_path, designation, iter = 100):
     :return: indices for the three splits
     """
 
-    sub_dirs = [os.path.join(ground_path, dir) for dir in os.listdir(ground_path)]
+    if desort is None:
+        sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path)]
+    else:
+        nogos = pd.read_csv(desort)
+        isin = lambda x, y: np.sum([x in y1 for y1 in y]) > 0
+        sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path) if isin(path, nogos['Bad']) is False]
 
     diff = 100
 
@@ -114,6 +119,9 @@ def split_paths(frame):
         newp.append(pa.split("/")[-2])
     return set(newp)
 
+def get_num(list_of_paths):
+    count = np.sum([len(os.listdir(path)) for path in list_of_paths])
+    return count
 
 if __name__ == '__main__':
     # os.chdir(r'C:\Users\ptrkm\Action Classification\Frames')
@@ -131,6 +139,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Makes splits')
     parser.add_argument('--datadir', required=True)
     parser.add_argument('--outdir', required = False)
+
     args = vars(parser.parse_args())
 
     if args['outdir'] is None:
@@ -140,8 +149,13 @@ if __name__ == '__main__':
 
     datadir = args['datadir']
 
-    train_D, val_D, test_D, sup_dirs1 = get_folders_and_split(datadir, 'D')
-    train_NS, val_NS, test_NS, sup_dirs2 = get_folders_and_split(datadir, 'NS')
+    train_D, val_D, test_D, sup_dirs1 = get_folders_and_split(
+        datadir, 'D', desort=r'/scratch/s183993/bad_files.csv'
+    )
+
+    train_NS, val_NS, test_NS, sup_dirs2 = get_folders_and_split(
+        datadir, 'NS', desort=r'/scratch/s183993/bad_files.csv'
+    )
 
     check = sanity_check(sup_dirs2, sup_dirs1)
     if check:
@@ -152,6 +166,10 @@ if __name__ == '__main__':
         train_csv = make_csv_files(sup_dirs2, train)
         val_csv = make_csv_files(sup_dirs2, val)
         test_csv = make_csv_files(sup_dirs2, test)
+
+        print(f"There were {len(train_csv)} files in train")
+        print(f"There were {len(val_csv)} files in validation")
+        print(f"There were {len(test_csv)} files in test")
 
         train_csv.to_csv(os.path.join(outdir, 'train.csv'), header = False, index=False, sep = " ")
         val_csv.to_csv(os.path.join(outdir, 'val.csv'), header=False, index=False, sep=" ")
