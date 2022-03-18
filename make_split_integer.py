@@ -24,10 +24,8 @@ def get_folders_and_split(ground_path, designation, iter = 100, desort = None):
         isin = lambda x, y: np.sum([x1 in x for x1 in y if isinstance(x1, str)]) > 0
         sub_dirs = []
         for path in os.listdir(ground_path):
-            if isin(path, nogos['Bad']) is False:
+            if isin(path, nogos['Bad']) == False:
                 sub_dirs.append(os.path.join(ground_path, path))
-            else:
-                breakpoint()
         # sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path) if isin(path, nogos['Bad']) is False]
 
     diff = 100
