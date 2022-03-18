@@ -26,6 +26,8 @@ def get_folders_and_split(ground_path, designation, iter = 100, desort = None):
         for path in os.listdir(ground_path):
             if isin(path, nogos['Bad']) is False:
                 sub_dirs.append(os.path.join(ground_path, path))
+            else:
+                breakpoint()
         # sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path) if isin(path, nogos['Bad']) is False]
 
     diff = 100
