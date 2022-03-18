@@ -21,7 +21,7 @@ def get_folders_and_split(ground_path, designation, iter = 100, desort = None):
         sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path)]
     else:
         nogos = pd.read_csv(desort, sep = ";")
-        isin = lambda x, y: np.sum([x in y1 for y1 in y]) > 0
+        isin = lambda x, y: np.sum([x in y1 for y1 in y if isinstance(y1, str)]) > 0
         sub_dirs = [os.path.join(ground_path, path) for path in os.listdir(ground_path) if isin(path, nogos['Bad']) is False]
 
     diff = 100
