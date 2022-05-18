@@ -42,6 +42,13 @@ except Exception:
     ns_class = all_results["CLASSIFIER"]["NS"]
     del all_results
 
+try:
+    tmp = FEEDBACK
+except NameError:
+    FEEDBACK = False
+    def set_feedback():
+        return True, False, False, None
+Show_feedback = False
 # Check video is uploaded and save to disk
 if uploaded_video is not None:
     videofile_name = uploaded_video.name
@@ -59,6 +66,7 @@ if uploaded_video is not None:
         log.error(msg)
         st.error(msg)
 
+feedback = False
 st.title("Current data:")
 data_space = st.empty()
 
@@ -134,6 +142,21 @@ if ANALYSIS_SUCCESSFUL:
             st.warning("⚠️ Possible leakage detected! Further tests are advised. ⚠️ ")
         else:
             st.error("Something went wrong, no conclusion!")
+
+        Show_feedback = True
+
+if Show_feedback:
+    st.subheader("Report what action the doctor has decided to take:")
+    col11, col21, col31 = st.columns(3)
+    col11.button("No further Action needed", on_click=set_feedback)
+    col21.button("Send to further testing", on_click=set_feedback)
+    col31.button("Leakage detected!", on_click=set_feedback)
+    if FEEDBACK:
+        st.success('Action has been written to the test report.')
+        time.sleep(5)
+        UPLOAD_SUCCESSFUL = False
+        uploaded_video = None
+        FEEDBACK = False
 
 if False:
     with st.spinner('Wait for it...'):
